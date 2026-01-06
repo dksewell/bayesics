@@ -377,7 +377,7 @@ aov_b = function(formula,
     ret$pairwise_summary = 
       ret$pairwise_summary |> 
       tibble::as_tibble() |> 
-      dplyr::rename(`Post Mean` = Estimate)
+      dplyr::rename(`Post Mean` = .data$Estimate)
     
     
     
@@ -411,7 +411,7 @@ aov_b = function(formula,
     ret$formula = formula
     ret$data = 
       data |> 
-      dplyr::rename(!!all.vars(formula)[1] := y)
+      dplyr::rename(!!all.vars(formula)[1] := .data$y)
     ret$mc_error = epsilon
     ret$posterior_parameters = 
       list(mu_g = mu_g,
@@ -669,7 +669,7 @@ aov_b = function(formula,
     ret$pairwise_summary = 
       ret$pairwise_summary |> 
       tibble::as_tibble() |> 
-      dplyr::rename(`Post Mean` = Estimate)
+      dplyr::rename(`Post Mean` = .data$Estimate)
     
     # Compute contrasts if requested
     if(!missing(contrasts)){
@@ -698,7 +698,7 @@ aov_b = function(formula,
     ret$formula = formula
     ret$data = 
       data |> 
-      dplyr::rename(!!all.vars(formula)[1] := y)
+      dplyr::rename(!!all.vars(formula)[1] := .data$y)
     ret$mc_error = epsilon
     ret$posterior_parameters = 
       list(mu_g = mu_g,

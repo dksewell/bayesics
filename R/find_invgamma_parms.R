@@ -70,7 +70,8 @@ find_invgamma_parms = function(lower_quantile,
   b = exp(opt$par[2])
   
   if(plot_results){
-    graphics::curve(extraDistr::dinvgamma(x,a,b),
+    temp_dinvgamma <- function(x) extraDistr::dinvgamma(x,a,b)
+    graphics::curve(temp_dinvgamma,
                     from= extraDistr::qinvgamma(0.01,a,b),
                     to = extraDistr::qinvgamma(0.99,a,b),
                     lwd = 3,

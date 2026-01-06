@@ -359,22 +359,22 @@ mediate_b = function(model_m,
       
       E_00 = 
         y_00 |> 
-        dplyr::group_by(posterior_draw) |> 
+        dplyr::group_by(.data$posterior_draw) |> 
         dplyr::summarize(mean = mean(.data[["y_new1"]],)) |> 
         dplyr::pull(mean)
       E_11 = 
         y_11 |> 
-        dplyr::group_by(posterior_draw) |> 
+        dplyr::group_by(.data$posterior_draw) |> 
         dplyr::summarize(mean = mean(.data[["y_new1"]])) |> 
         dplyr::pull(mean)
       E_01 = 
         y_01 |> 
-        dplyr::group_by(posterior_draw) |> 
+        dplyr::group_by(.data$posterior_draw) |> 
         dplyr::summarize(mean = mean(.data[["y_new1"]])) |> 
         dplyr::pull(mean)
       E_10 = 
         y_10 |> 
-        dplyr::group_by(posterior_draw) |> 
+        dplyr::group_by(.data$posterior_draw) |> 
         dplyr::summarize(mean = mean(.data[["y_new1"]])) |> 
         dplyr::pull(mean)
       

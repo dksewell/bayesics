@@ -81,7 +81,7 @@ plot.lm_b = function(x,
     
     plot_list[["fitted_vs_residuals"]] =
       dx_data |>
-      ggplot(aes(y = epsilon,x = yhat)) +
+      ggplot(aes(y = .data$epsilon,x = .data$yhat)) +
       geom_hline(yintercept = 0,
                  linetype = 2,
                  color = "gray35") +
@@ -93,7 +93,7 @@ plot.lm_b = function(x,
     
     plot_list[["qqnorm"]] =
       dx_data |>
-      ggplot(aes(sample = epsilon)) +
+      ggplot(aes(sample = .data$epsilon)) +
       geom_qq(alpha = 0.3) + 
       geom_qq_line() +
       xlab("Theoretical quantiles") +
@@ -169,14 +169,14 @@ plot.lm_b = function(x,
         plot_list[[paste0("pdp_",variable[v])]] = 
           plot_list[[paste0("pdp_",variable[v])]] + 
           geom_line(data = newdata,
-                    aes(x = var_of_interest,
-                        y = y))
+                    aes(x = .data$var_of_interest,
+                        y = .data$y))
       }else{
         plot_list[[paste0("pdp_",variable[v])]] = 
           plot_list[[paste0("pdp_",variable[v])]] + 
           geom_point(data = newdata,
-                     aes(x = var_of_interest,
-                         y = y),
+                     aes(x = .data$var_of_interest,
+                         y = .data$y),
                      size = 3)
       }
       
@@ -227,7 +227,8 @@ plot.lm_b = function(x,
                 PI_level = PI_level)
       newdata[[v]] = 
         newdata[[v]] |> 
-        dplyr::mutate(dplyr::across(`Post Mean`:CI_upper,backtransformation))
+        dplyr::mutate(dplyr::across(where(is.numeric), backtransformation)) # below causes no visible binding for global variable ‘Post Mean’ note 
+        # dplyr::mutate(dplyr::across(`Post Mean`:CI_upper,backtransformation))
     }
     
   }# End: Get exemplar and PI/CI
@@ -266,24 +267,24 @@ plot.lm_b = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]],
-                      aes(ymin = PI_lower,
-                          ymax = PI_upper),
+                      aes(ymin = .data$PI_lower,
+                          ymax = .data$PI_upper),
                       fill = "lightsteelblue3",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]],
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_errorbar(data = newdata[[v]],
                         aes(x = .data[[v]],
-                            ymin = PI_lower,
-                            ymax = PI_upper),
+                            ymin = .data$PI_lower,
+                            ymax = .data$PI_upper),
                         color = "lightsteelblue3") +
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
       }
       
@@ -326,24 +327,24 @@ plot.lm_b = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]],
-                      aes(ymin = CI_lower,
-                          ymax = CI_upper),
+                      aes(ymin = .data$CI_lower,
+                          ymax = .data$CI_upper),
                       fill = "steelblue4",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]],
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_errorbar(data = newdata[[v]],
                         aes(x = .data[[v]],
-                            ymin = CI_lower,
-                            ymax = CI_upper),
+                            ymin = .data$CI_lower,
+                            ymax = .data$CI_upper),
                         color = "steelblue4") +
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
       }
     }
@@ -426,7 +427,7 @@ plot.aov_b = function(x,
     
     plot_list[["residuals_by_group"]] =
       dx_data |>
-      ggplot(aes(y = epsilon,x = group)) +
+      ggplot(aes(y = .data$epsilon,x = .data$group)) +
       geom_hline(yintercept = 0,
                  linetype = 2,
                  color = "gray35") +
@@ -438,7 +439,7 @@ plot.aov_b = function(x,
     
     plot_list[["qqnorm"]] =
       dx_data |>
-      ggplot(aes(sample = epsilon)) +
+      ggplot(aes(sample = .data$epsilon)) +
       geom_qq(alpha = 0.3) +
       geom_qq_line() +
       xlab("Theoretical quantiles") +
@@ -471,18 +472,18 @@ plot.aov_b = function(x,
     
     plot_list[[plot_name_v]] =
       x$data |>
-      ggplot(aes(x = group,
+      ggplot(aes(x = .data$group,
                  y = .data[[all.vars(x$formula)[1]]])) +
       geom_violin(alpha = 0.2) +
       geom_errorbar(data = newdata,
                     aes(x = .data[[all.vars(x$formula)[2]]],
-                        y = `Post Mean`,
-                        ymin = PI_lower,
-                        ymax = PI_upper),
+                        y = .data$`Post Mean`,
+                        ymin = .data$PI_lower,
+                        ymax = .data$PI_upper),
                     color = "lightsteelblue3") +
       geom_point(data = newdata,
                  aes(x = .data[[all.vars(x$formula)[2]]],
-                     y = `Post Mean`),
+                     y = .data$`Post Mean`),
                  size = 3)
     
     
@@ -497,7 +498,7 @@ plot.aov_b = function(x,
     if( (!combine_pi_ci) | !("pi band" %in% type)){
       plot_list[["ci_intervals"]] =
         x$data |>
-        ggplot(aes(x = group,
+        ggplot(aes(x = .data$group,
                    y = .data[[all.vars(x$formula)[1]]])) +
         geom_violin(alpha = 0.2)
     }
@@ -510,13 +511,13 @@ plot.aov_b = function(x,
       plot_list[[plot_name_v]] +
       geom_errorbar(data = newdata,
                     aes(x = .data[[all.vars(x$formula)[2]]],
-                        y = `Post Mean`,
-                        ymin = CI_lower,
-                        ymax = CI_upper),
+                        y = .data$`Post Mean`,
+                        ymin = .data$CI_lower,
+                        ymax = .data$CI_upper),
                     color = "steelblue4") +
       geom_point(data = newdata,
                  aes(x = .data[[all.vars(x$formula)[2]]],
-                     y = `Post Mean`),
+                     y = .data$`Post Mean`),
                  size = 3)
     
   }
@@ -631,31 +632,31 @@ plot.lm_b_bma = function(x,
     plot_list$bpvals = 
       tibble::tibble(quants = bayes_pvalues_quantiles,
                      bpvals  = bpvals) |> 
-      ggplot(aes(x = quants,
-                 y = bpvals)) + 
+      ggplot(aes(x = .data$quants,
+                 y = .data$bpvals)) + 
       geom_line() + 
       geom_point() + 
       geom_polygon(data = tibble::tibble(x = c(0,1,1,0,0),
                                          y = c(0,0,0.05,0.05,0)),
-                   aes(x=x,y=y),
+                   aes(x=.data$x,y=.data$y),
                    color = NA,
                    fill = "firebrick3",
                    alpha = 0.25) +
       geom_polygon(data = tibble::tibble(x = c(0,1,1,0,0),
                                          y = c(1,1,0.95,0.95,1)),
-                   aes(x=x,y=y),
+                   aes(x=.data$x,y=.data$y),
                    color = NA,
                    fill = "firebrick3",
                    alpha = 0.25) + 
       geom_polygon(data = tibble::tibble(x = c(0,1,1,0,0),
                                          y = c(0,0,0.025,0.025,0)),
-                   aes(x=x,y=y),
+                   aes(x=.data$x,y=.data$y),
                    color = NA,
                    fill = "firebrick3",
                    alpha = 0.5) +
       geom_polygon(data = tibble::tibble(x = c(0,1,1,0,0),
                                          y = c(1,1,0.975,0.975,1)),
-                   aes(x=x,y=y),
+                   aes(x=.data$x,y=.data$y),
                    color = NA,
                    fill = "firebrick3",
                    alpha = 0.5) + 
@@ -733,14 +734,14 @@ plot.lm_b_bma = function(x,
         plot_list[[paste0("pdp_",variable[v])]] = 
           plot_list[[paste0("pdp_",variable[v])]] + 
           geom_line(data = newdata,
-                    aes(x = var_of_interest,
-                        y = y))
+                    aes(x = .data$var_of_interest,
+                        y = .data$y))
       }else{
         plot_list[[paste0("pdp_",variable[v])]] = 
           plot_list[[paste0("pdp_",variable[v])]] + 
           geom_point(data = newdata,
-                     aes(x = var_of_interest,
-                         y = y),
+                     aes(x = .data$var_of_interest,
+                         y = .data$y),
                      size = 3)
       }
       
@@ -827,24 +828,24 @@ plot.lm_b_bma = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]]$newdata,
-                      aes(ymin = PI_lower,
-                          ymax = PI_upper),
+                      aes(ymin = .data$PI_lower,
+                          ymax = .data$PI_upper),
                       fill = "lightsteelblue3",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]]$newdata,
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_errorbar(data = newdata[[v]]$newdata,
                         aes(x = .data[[v]],
-                            ymin = PI_lower,
-                            ymax = PI_upper),
+                            ymin = .data$PI_lower,
+                            ymax = .data$PI_upper),
                         color = "lightsteelblue3") +
           geom_point(data = newdata[[v]]$newdata,
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
       }
       
@@ -887,24 +888,24 @@ plot.lm_b_bma = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]]$newdata,
-                      aes(ymin = CI_lower,
-                          ymax = CI_upper),
+                      aes(ymin = .data$CI_lower,
+                          ymax = .data$CI_upper),
                       fill = "steelblue4",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]]$newdata,
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_errorbar(data = newdata[[v]]$newdata,
                         aes(x = .data[[v]],
-                            ymin = CI_lower,
-                            ymax = CI_upper),
+                            ymin = .data$CI_lower,
+                            ymax = .data$CI_upper),
                         color = "steelblue4") +
           geom_point(data = newdata[[v]]$newdata,
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
       }
     }
@@ -1234,9 +1235,9 @@ plot.glm_b = function(x,
     
     plot_list$bpvals = 
       dx_data |> 
-      ggplot(aes(x = T_pred,
-                 y = T_obs,
-                 color = obs_gr_pred)) + 
+      ggplot(aes(x = .data$T_pred,
+                 y = .data$T_obs,
+                 color = .data$obs_gr_pred)) + 
       geom_point() + 
       geom_abline(intercept = 0,
                   slope = 1) + 
@@ -1316,8 +1317,8 @@ plot.glm_b = function(x,
                      y = .data[[all.vars(x$formula)[1]]])) + 
           geom_point(alpha = 0.2) +
           geom_line(data = newdata,
-                    aes(x = var_of_interest,
-                        y = y))
+                    aes(x = .data$var_of_interest,
+                        y = .data$y))
       }else{
         if(x$family$family %in% c("poisson","negbinom")){
           plot_list[[paste0("pdp_",variable[v])]] = 
@@ -1331,16 +1332,16 @@ plot.glm_b = function(x,
             x$data |>
             dplyr::group_by(get(variable[v])) |> 
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-            ggplot(aes(x = `get(variable[v])`,
-                       y = prop1)) + 
+            ggplot(aes(x = .data$`get(variable[v])`,
+                       y = .data$prop1)) + 
             geom_col(fill="gray70")
         }
         
         plot_list[[paste0("pdp_",variable[v])]] = 
           plot_list[[paste0("pdp_",variable[v])]] + 
           geom_point(data = newdata,
-                     aes(x = var_of_interest,
-                         y = y),
+                     aes(x = .data$var_of_interest,
+                         y = .data$y),
                      size = 3)
       }
       
@@ -1424,9 +1425,9 @@ plot.glm_b = function(x,
               x$data |>
               dplyr::group_by(get(v)) |> 
               dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-              dplyr::rename(!!v := `get(v)`) |> 
+              dplyr::rename(!!v := .data$`get(v)`) |> 
               ggplot(aes(x = .data[[v]],
-                         y = prop1)) + 
+                         y = .data$prop1)) + 
               geom_col(fill="gray70")
           }
         }
@@ -1459,9 +1460,9 @@ plot.glm_b = function(x,
                 x$data |>
                 dplyr::group_by(get(v)) |> 
                 dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-                dplyr::rename(!!v := `get(v)`) |> 
+                dplyr::rename(!!v := .data$`get(v)`) |> 
                 ggplot(aes(x = .data[[v]],
-                           y = prop1)) + 
+                           y = .data$prop1)) + 
                 geom_col(fill="gray70") + 
                 ylab("")
             }
@@ -1488,24 +1489,24 @@ plot.glm_b = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]],
-                      aes(ymin = PI_lower,
-                          ymax = PI_upper),
+                      aes(ymin = .data$PI_lower,
+                          ymax = .data$PI_upper),
                       fill = "lightsteelblue3",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]],
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_errorbar(data = newdata[[v]],
                         aes(x = .data[[v]],
-                            ymin = PI_lower,
-                            ymax = PI_upper),
+                            ymin = .data$PI_lower,
+                            ymax = .data$PI_upper),
                         color = "lightsteelblue3") +
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
       }
       
@@ -1528,13 +1529,13 @@ plot.glm_b = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]],
-                      aes(ymin = CI_lower,
-                          ymax = CI_upper),
+                      aes(ymin = .data$CI_lower,
+                          ymax = .data$CI_upper),
                       fill = "steelblue4",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]],
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
@@ -1542,12 +1543,12 @@ plot.glm_b = function(x,
                           newdata[[v]] |> 
                           dplyr::mutate(prop1 = 0.0), # Stupid hack to make ggplot work right.
                         aes(x = .data[[v]],
-                            ymin = CI_lower,
-                            ymax = CI_upper),
+                            ymin = .data$CI_lower,
+                            ymax = .data$CI_upper),
                         color = "steelblue4") +
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
       }
     }
@@ -1696,16 +1697,16 @@ plot.np_glm_b = function(x,
                      y = .data[[all.vars(x$formula)[1]]])) + 
           geom_point(alpha = 0.2) +
           geom_line(data = newdata,
-                    aes(x = var_of_interest,
-                        y = y))
+                    aes(x = .data$var_of_interest,
+                        y = .data$y))
       }else{
         if(x$family$family == "binomial"){
           plot_list[[paste0("pdp_",variable[v])]] = 
             x$data |>
             dplyr::group_by(get(variable[v])) |> 
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-            ggplot(aes(x = `get(variable[v])`,
-                       y = prop1)) + 
+            ggplot(aes(x = .data$`get(variable[v])`,
+                       y = .data$prop1)) + 
             geom_col(fill="gray70")
         }else{
           plot_list[[paste0("pdp_",variable[v])]] = 
@@ -1718,8 +1719,8 @@ plot.np_glm_b = function(x,
         plot_list[[paste0("pdp_",variable[v])]] = 
           plot_list[[paste0("pdp_",variable[v])]] + 
           geom_point(data = newdata,
-                     aes(x = var_of_interest,
-                         y = y),
+                     aes(x = .data$var_of_interest,
+                         y = .data$y),
                      size = 3)
       }
       
@@ -1770,7 +1771,8 @@ plot.np_glm_b = function(x,
       })
       newdata[[v]] = 
         newdata[[v]] |> 
-        dplyr::mutate(dplyr::across(`Post Mean`:CI_upper,backtransformation))
+        dplyr::mutate(dplyr::across(where(is.numeric), backtransformation)) # below causes no visible binding for global variable ‘Post Mean’ note 
+        # dplyr::mutate(dplyr::across(`Post Mean`:CI_upper,backtransformation)) 
       
       
       # Get starter plot
@@ -1782,22 +1784,22 @@ plot.np_glm_b = function(x,
                      y = .data[[all.vars(x$formula)[1]]])) + 
           geom_point(alpha = 0.2) +
           geom_ribbon(data = newdata[[v]],
-                      aes(ymin = CI_lower,
-                          ymax = CI_upper),
+                      aes(ymin = .data$CI_lower,
+                          ymax = .data$CI_upper),
                       fill = "steelblue4",
                       alpha = 0.5) +
           geom_line(data = newdata[[v]],
                     aes(x = .data[[v]],
-                        y = `Post Mean`))
+                        y = .data$`Post Mean`))
       }else{
         if(x$family$family == "binomial"){
           plot_list[[plot_name_v]] =
             x$data |>
             dplyr::group_by(get(v)) |> 
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-            dplyr::rename(!!v := `get(v)`) |> 
+            dplyr::rename(!!v := .data$`get(v)`) |> 
             ggplot(aes(x = .data[[v]],
-                       y = prop1)) + 
+                       y = .data$prop1)) + 
             geom_col(fill="gray70")
         }else{
           plot_list[[plot_name_v]] =
@@ -1814,12 +1816,12 @@ plot.np_glm_b = function(x,
                           newdata[[v]] |> 
                           dplyr::mutate(prop1 = 0.0), # Stupid hack to make ggplot work right.
                         aes(x = .data[[v]],
-                            ymin = CI_lower,
-                            ymax = CI_upper),
+                            ymin = .data$CI_lower,
+                            ymax = .data$CI_upper),
                         color = "steelblue4") +
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
-                         y = `Post Mean`),
+                         y = .data$`Post Mean`),
                      size = 3)
         
       }
@@ -1914,7 +1916,7 @@ plot.mediate_b = function(x,
       
       plot_list$acme = 
         x$posterior_draws |> 
-        ggplot(aes(x = ACME)) +
+        ggplot(aes(x = .data$ACME)) +
         geom_histogram(alpha = 0.5) + 
         theme_classic() +
         ggtitle("Avgerage Causal Mediation Effect")
@@ -1929,13 +1931,13 @@ plot.mediate_b = function(x,
                             names_prefix = "ACME_",
                             values_to = "acme") |> 
         dplyr::mutate(Treatment = 
-                        ifelse(Treatment == "treat",
+                        ifelse(.data$Treatment == "treat",
                                x$treat_value,
                                x$control_value) |> 
                         as.character()) |> 
         ggplot() +
-        geom_histogram(aes(x = acme,
-                           fill = Treatment),
+        geom_histogram(aes(x = .data$acme,
+                           fill = .data$Treatment),
                        alpha = 0.25,
                        position = "identity") + 
         scale_fill_viridis_d() +
@@ -1962,7 +1964,7 @@ plot.mediate_b = function(x,
       
       plot_list$ade = 
         x$posterior_draws |> 
-        ggplot(aes(x = ADE)) +
+        ggplot(aes(x = .data$ADE)) +
         geom_histogram(alpha = 0.5) + 
         theme_classic() +
         ggtitle("Average Direct Effect")
@@ -1978,13 +1980,13 @@ plot.mediate_b = function(x,
                             names_prefix = "ADE_",
                             values_to = "ade") |> 
         dplyr::mutate(Treatment = 
-                        ifelse(Treatment == "treat",
+                        ifelse(.data$Treatment == "treat",
                                x$treat_value,
                                x$control_value) |> 
                         as.character()) |> 
         ggplot() +
-        geom_histogram(aes(x = ade,
-                           fill = Treatment),
+        geom_histogram(aes(x = .data$ade,
+                           fill = .data$Treatment),
                        alpha = 0.25,
                        position = "identity") + 
         scale_fill_viridis_d() +
@@ -2097,12 +2099,12 @@ plot.survfit_b = function(x,
     
     survplot = 
       plotting_df |> 
-      ggplot(aes(x = Time)) + 
-      geom_ribbon(aes(ymin = Lower,
-                      ymax = Upper),
+      ggplot(aes(x = .data$Time)) + 
+      geom_ribbon(aes(ymin = .data$Lower,
+                      ymax = .data$Upper),
                   fill = "lightsteelblue3",
                   alpha = 0.5) +
-      geom_line(aes(y = `S(t)`)) + 
+      geom_line(aes(y = .data$`S(t)`)) + 
       theme_classic()
     
     print(survplot)
@@ -2195,14 +2197,14 @@ plot.survfit_b = function(x,
     
     survplot =
       plotting_df |> 
-      ggplot(aes(x = Time)) + 
-      geom_ribbon(aes(ymin = Lower,
-                      ymax = Upper,
-                      fill = Group),
+      ggplot(aes(x = .data$Time)) + 
+      geom_ribbon(aes(ymin = .data$Lower,
+                      ymax = .data$Upper,
+                      fill = .data$Group),
                   alpha = 0.25,
                   color = NA) +
-      geom_line(aes(y = `S(t)`,
-                    color = Group)) + 
+      geom_line(aes(y = .data$`S(t)`,
+                    color = .data$Group)) + 
       scale_fill_viridis_d() + 
       scale_color_viridis_d() + 
       theme_classic()

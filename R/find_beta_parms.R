@@ -27,7 +27,8 @@ find_beta_parms = function(mean,quantile,left_tail_prob, plot_results = TRUE, se
   b = a * (1.0 - mean) / mean
   
   if(plot_results){
-    graphics::curve(dbeta(x,a,b),
+    temp_dbeta <- function(x) dbeta(x,a,b)
+    graphics::curve(temp_dbeta,
           from= 0, 
           to = 1,
           lwd = 3,

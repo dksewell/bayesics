@@ -155,7 +155,7 @@ t_test_b = function(x,
       ttest_data = 
         tibble::tibble(group = rep(c("x","y"),
                                    c(length(x),
-                                     length(y)))) %>% 
+                                     length(y)))) |> 
         dplyr::mutate(y = c(x,y))
       
       ret = 
@@ -178,11 +178,11 @@ t_test_b = function(x,
         post_means = 
           ret$summary |> 
           dplyr::filter(grepl("Mean : ",ret$summary$Variable)) |> 
-          dplyr::pull(`Post Mean`)
+          dplyr::pull(.data$`Post Mean`)
         post_sds = 
           sqrt(ret$summary |> 
                  dplyr::filter(grepl("Var : ",ret$summary$Variable)) |> 
-                 dplyr::pull(`Post Mean`))
+                 dplyr::pull(.data$`Post Mean`))
         ttest_plot = 
           tibble::tibble(x = 
                            seq(
@@ -195,10 +195,10 @@ t_test_b = function(x,
                                qnorm(0.995,
                                      ret$summary |> 
                                        dplyr::filter(grepl("Mean : ",ret$summary$Variable)) |> 
-                                       dplyr::pull(`Post Mean`),
+                                       dplyr::pull(.data$`Post Mean`),
                                      sqrt(ret$summary |> 
                                             dplyr::filter(grepl("Var : ",ret$summary$Variable)) |> 
-                                            dplyr::pull(`Post Mean`)))
+                                            dplyr::pull(.data$`Post Mean`)))
                              ),
                              l = 50)) |> 
           ggplot(aes(x=x)) +

@@ -25,14 +25,14 @@ predict.aov_b = function(object,
   return(
     object$summary |>
       dplyr::filter(dplyr::row_number() <= G) |> 
-      dplyr::select(Variable, `Post Mean`) |> 
+      dplyr::select(.data$Variable, .data$`Post Mean`) |> 
       dplyr::mutate(Variable = gsub("Mean : ",
                                     "",
                                     gsub(paste0(all.vars(object$formula)[2],
                                                 " : "),
                                          "",
-                                         Variable))) |> 
-      dplyr::rename(!!all.vars(object$formula)[2] := Variable) |> 
+                                         .data$Variable))) |> 
+      dplyr::rename(!!all.vars(object$formula)[2] := .data$Variable) |> 
       dplyr::mutate(PI_lower = 
                       extraDistr::qlst(alpha_pi/2.0,
                                        df = object$posterior_parameters$a_g,
