@@ -51,7 +51,6 @@ cor_test_b = function(x, ...){
 #' 
 #' Lindley, D. V., & Phillips, L. D. (1976). Inference for a Bernoulli process (a Bayesian view). The American Statistician, 30, 112-119.
 #' 
-#' @import DFBA
 #' @export
 #' @rdname cor_test_b
 cor_test_b.default = function(x,

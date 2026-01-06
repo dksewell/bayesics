@@ -46,10 +46,6 @@
 #' (ignored if \code{large_sample_approx = TRUE}.)
 #' 
 #' 
-#' @import stats
-#' @import ggplot2
-#' @importFrom dplyr near
-#' 
 #' @export
 
 

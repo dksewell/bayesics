@@ -51,10 +51,6 @@
 #' probability the bounds of the credible intervals of \eqn{p_1 - p_2} will be 
 #' within \eqn{\pm} \code{mc_error}. (Ignored for a single population proportion.)
 #' 
-#' @import stats
-#' @import ggplot2
-#' @importFrom tibble tibble
-#' @importFrom extraDistr pbbinom
 #' 
 #' @export
 

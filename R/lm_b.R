@@ -88,12 +88,6 @@
 #'  minus \eqn{0.1s_y} to the overall mean of \eqn{y} plus \eqn{0.1s_y}.  
 #'  The result is a ROPE equal to \eqn{|\beta_j| < 0.05s_y/s_j}.  If the covariate is 
 #'  binary, then this is simply \eqn{|\beta_j| < 0.2s_y}.
-#'  
-#' 
-#' @import stats
-#' @import coda
-#' @importFrom extraDistr qlst plst
-#' @importFrom tibble tibble
 #' 
 #' @export
 

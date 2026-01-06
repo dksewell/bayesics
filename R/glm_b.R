@@ -132,12 +132,6 @@
 #' Kruschke JK. Rejecting or Accepting Parameter Values in Bayesian Estimation. Advances in Methods and Practices in Psychological Science. 2018;1(2):270-280. doi:10.1177/2515245918771304
 #' 
 #' Tim Salimans. David A. Knowles. "Fixed-Form Variational Posterior Approximation through Stochastic Linear Regression." Bayesian Anal. 8 (4) 837 - 882, December 2013. https://doi.org/10.1214/13-BA858
-#' 
-#' @import stats
-#' @importFrom tibble tibble
-#' @importFrom mvtnorm dmvt rmvt dmvnorm rmvnorm
-#' @importFrom future.apply future_sapply future_lapply
-#' @import Matrix
 #' @export
 
 

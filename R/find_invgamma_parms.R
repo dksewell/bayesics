@@ -18,9 +18,6 @@
 #' @returns twice the shape and rate of the inverse gamma distribution.
 #' 
 #'
-#' @import stats
-#' @import graphics
-#' @importFrom extraDistr pinvgamma dinvgamma qinvgamma
 #' 
 #' 
 #' 

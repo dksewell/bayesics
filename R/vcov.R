@@ -11,10 +11,6 @@
 #' that for \code{lm_b} and \code{aov_b} objects, this function already takes into account the 
 #' uncertainty around the residual variance.
 #' 
-#' @import Matrix
-#' @import stats
-#' 
-
 #' @rdname vcov
 #' @method vcov aov_b
 #' @export

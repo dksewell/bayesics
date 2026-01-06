@@ -34,9 +34,6 @@
 #' credible interval for \eqn{p}.
 #' @param plot logical.  Should a plot be shown?
 #' 
-#' @import stats
-#' @import ggplot2
-#' @importFrom tibble tibble
 #' 
 #' @export
 

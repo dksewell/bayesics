@@ -26,13 +26,6 @@
 #' }
 #' 
 #' 
-#' @import stats
-#' @importFrom BMS bms
-#' @importFrom janitor clean_names
-#' @importFrom dplyr relocate
-#' @importFrom tibble tibble as_tibble
-#' @importFrom future.apply future_lapply
-#' 
 #' @export
 
 

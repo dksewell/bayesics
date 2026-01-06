@@ -11,8 +11,6 @@
 #' 2/ (2 + 3)
 #' qbeta(0.9,2,3)
 #'
-#' @import stats
-#' @import graphics
 #'
 #' @export 
 
@@ -21,9 +19,9 @@ find_beta_parms = function(mean,quantile,left_tail_prob, plot_results = TRUE, se
   if(missing(mean)) stop("Must provide mean, quantile, and the CDF at that quantile")
   helper = function(a){
     b = a * (1.0 - mean) / mean
-    (pbeta(quantile,a,b) - left_tail_prob)^2
+    (stats::pbeta(quantile,a,b) - left_tail_prob)^2
   }
-  opt = optimize(f = helper,
+  opt = stats::optimize(f = helper,
                  interval = search_bounds)
   a = opt$min
   b = a * (1.0 - mean) / mean

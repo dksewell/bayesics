@@ -12,9 +12,6 @@
 #' @return tibble with estimate, prediction intervals, and credible intervals 
 #' for the mean.
 #' 
-#' @import stats
-#' @importFrom dplyr mutate
-#' @importFrom tibble as_tibble
 #' 
 #' @exportS3Method predict np_glm_b
 

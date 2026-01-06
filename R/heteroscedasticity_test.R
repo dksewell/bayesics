@@ -17,12 +17,6 @@
 #' 
 #' Kass, R. E., & Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773–795.
 #' 
-#' 
-#' @import stats
-#' @importFrom dplyr left_join
-#' @importFrom tibble tibble
-#' @importFrom extraDistr dinvgamma
-#' 
 #' @export
 
 

@@ -4,8 +4,6 @@
 #' @param n_draws integer.  Number of posterior draws to obtain.
 #' @param seed integer.  Always set your seed!!!
 #' 
-#' @import stats
-#' @importFrom extraDistr rinvgamma
 #' 
 #' @export
 

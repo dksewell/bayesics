@@ -14,13 +14,6 @@
 #' @return tibble with estimate (posterior mean), prediction intervals, and credible intervals 
 #' for the mean.
 #' 
-#' @import stats
-#' @importFrom dplyr mutate bind_cols
-#' @importFrom tibble as_tibble
-#' @importFrom mvtnorm rmvnorm
-#' @importFrom future.apply future_sapply future_apply
-#' 
-#' 
 #' @exportS3Method predict glm_b
 
 

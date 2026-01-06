@@ -7,8 +7,6 @@
 #' @references 
 #' Qing Y, Thall PF, Yuan Y. A Bayesian piecewise exponential phase II design for monitoring a time-to-event endpoint. Pharm Stat. 2023 Jan;22(1):34-44. doi: 10.1002/pst.2256. Epub 2022
 #' 
-#' 
-#' @importFrom survival Surv
 #' @export
 
 

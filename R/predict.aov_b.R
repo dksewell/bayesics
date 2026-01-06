@@ -9,10 +9,6 @@
 #' @returns tibble with estimate (posterior mean), prediction intervals, and credible intervals 
 #' for the mean.
 #' 
-#' @importFrom dplyr rename mutate filter select row_number
-#' @importFrom extraDistr qlst
-#' @import rlang
-#' 
 #' 
 #' @exportS3Method predict aov_b
 

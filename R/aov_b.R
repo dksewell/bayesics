@@ -94,15 +94,6 @@
 #' @references 
 #' Charles R. Doss, James M. Flegal, Galin L. Jones, Ronald C. Neath "Markov chain Monte Carlo estimation of quantiles," Electronic Journal of Statistics, Electron. J. Statist. 8(2), 2448-2478, (2014)
 #' 
-#' @import stats
-#' @import utils
-#' @importFrom dplyr rename group_by summarize mutate left_join n
-#' @importFrom extraDistr rinvgamma qlst plst
-#' @import future
-#' @importFrom future.apply future_sapply future_lapply
-#' @importFrom tibble tibble as_tibble
-#' @importFrom mvtnorm dmvt
-#' 
 #' @export
 
 aov_b = function(formula,
