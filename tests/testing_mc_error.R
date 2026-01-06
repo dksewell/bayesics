@@ -1,3 +1,8 @@
+
+run <- FALSE
+
+if (run) {
+  
 # Look into reasonable/achievable mc_errors
 pacman::p_load(bayesics,
                future)
@@ -335,7 +340,7 @@ prop_test_b(c(14,22),
             mc_error = 0.002)
 
 
-
+}
 
 
 

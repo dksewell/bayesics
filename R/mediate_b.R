@@ -58,14 +58,6 @@
 #'  \item other inputs to \code{mediate_b}
 #' }
 #' 
-#' @import stats
-#' @import utils
-#' @importFrom dplyr group_by summarize pull bind_rows
-#' @importFrom tibble tibble
-#' @importFrom future.apply future_sapply future_lapply
-#' @importFrom tidyr pivot_longer
-#' 
-#' 
 #' @export
 
 mediate_b = function(model_m,

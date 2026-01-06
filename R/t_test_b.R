@@ -47,13 +47,6 @@
 #' }
 #' 
 #' 
-#' @import stats
-#' @import ggplot2
-#' @importFrom dplyr mutate pull filter
-#' @importFrom tibble tibble
-#' @importFrom extraDistr qlst plst qinvgamma
-#' 
-#' 
 #' @export
 
 

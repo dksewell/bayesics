@@ -13,8 +13,6 @@
 #' @param which character.  For \code{aov_b} only. Either "means" (for the 
 #' group means) or "pairwise" (for pairwise difference in means).
 #' 
-#' @import stats
-
 #' @export
 credint = function(object,...){
   UseMethod("credint")
@@ -124,7 +122,7 @@ credint.aov_b = function(object,
       combn(1:length(levels(object$data$group)),2)
     for(i in 1:nrow(pw_summ)){
       pw_summ[i,c("Lower","Upper")] = 
-        quantile(object$posterior_draws[,temp[1,i]] - 
+        stats::quantile(object$posterior_draws[,temp[1,i]] - 
                    object$posterior_draws[,temp[2,i]],
                  probs = c(alpha/2, 
                            1 - alpha/2))
@@ -209,10 +207,10 @@ credint.np_glm_b = function(object,
   }else{
     summ$Lower = 
       object$posterior_draws |> 
-      apply(2,quantile,prob = alpha / 2)
+      apply(2,stats::quantile,prob = alpha / 2)
     summ$Upper = 
       object$posterior_draws |> 
-      apply(2,quantile,prob = 1.0 - alpha / 2)
+      apply(2,stats::quantile,prob = 1.0 - alpha / 2)
   }
   
   summ = 
@@ -234,9 +232,9 @@ credint.lm_b_bma = function(object,
   alpha = 1 - CI_level
   summ = object$summary[,c("Lower","Upper")]
   summ$Lower = 
-    apply(object$posterior_draws,2,quantile,probs = alpha/2)
+    apply(object$posterior_draws,2,stats::quantile,probs = alpha/2)
   summ$Upper =
-    apply(object$posterior_draws,2,quantile,probs = 1.0 - alpha/2)
+    apply(object$posterior_draws,2,stats::quantile,probs = 1.0 - alpha/2)
   
   summ = 
     as.matrix(summ)

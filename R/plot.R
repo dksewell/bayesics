@@ -21,18 +21,6 @@
 #' @param PI_level Posterior probability covered by prediction interval
 #' @param ... optional arguments.
 #' 
-#' @import stats
-#' @importFrom dplyr rename group_by summarize mutate near across
-#' @importFrom tibble tibble
-#' @importFrom mvtnorm rmvnorm
-#' @importFrom future.apply future_sapply
-#' @importFrom tidyr pivot_longer
-#' @import ggplot2
-#' @importFrom patchwork wrap_plots
-#' @importFrom cluster pam
-#' @import rlang
-#' 
-
 #' @rdname plot
 #' @method plot lm_b
 #' @export

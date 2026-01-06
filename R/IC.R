@@ -14,14 +14,6 @@
 #' @param ... optional arguments.
 #' The relative monte carlo error of the expected values of the deviance. 
 #' (Ignored for a single population proportion.)
-
-#' 
-#' @import stats
-#' @importFrom mvtnorm rmvnorm
-#' @importFrom future.apply future_sapply
-#' @importFrom extraDistr rinvgamma  
-#' 
-#' @rawNamespace import(stats, except = c(cov2cor, filter, lag, toeplitz, update))
 #' @export
 
 

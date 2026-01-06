@@ -71,15 +71,6 @@
 #'  \item summary - a tibble giving results for regression coefficients.
 #' }
 #' 
-#' 
-#' @import stats
-#' @import utils
-#' @importFrom tibble tibble
-#' @importFrom future.apply future_sapply future_lapply
-#' @importFrom extraDistr rdirichlet
-#' @import Matrix
-#' 
-#' 
 #' @export 
 #' 
 np_glm_b = function(formula,

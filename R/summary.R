@@ -6,11 +6,6 @@
 #' @param CI_level Posterior probability covered by credible interval
 #' @param ... optional arguments.
 #' 
-#' @import stats
-#' @import utils
-#' @importFrom dplyr left_join bind_rows
-#' @importFrom tibble tibble
-#' @importFrom extraDistr qlst qinvgamma
 #' 
 #' @export
 

@@ -19,7 +19,6 @@ Suggests:
     datasets,
     quarto,
     rstanarm,
-    tidyr,
     knitr,
     splines,
     testthat (>= 3.0.0)
@@ -27,7 +26,10 @@ VignetteBuilder:
     quarto
 Imports: 
     coda,
+    tidyr,
     dplyr,
+    rlang,
+    janitor,
     extraDistr,
     mvtnorm,
     Matrix,
@@ -38,7 +40,6 @@ Imports:
     BMS,
     cluster,
     DFBA,
-    ks,
     tibble,
     survival
 Config/testthat/edition: 3

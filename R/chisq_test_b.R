@@ -36,14 +36,6 @@
 #' 
 #' Kass, R. E., & Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773–795.
 #' 
-#' 
-#' 
-#' 
-#' 
-#' @import stats
-#' @importFrom future.apply future_sapply future_lapply
-#' @importFrom extraDistr rdirichlet
-
 #' @export
 independence_b = function(x,
                           sampling_design = "multinomial",

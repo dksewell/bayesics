@@ -12,11 +12,6 @@
 #' @return tibble with estimate (posterior mean), prediction intervals, and credible intervals 
 #' for the mean.
 #' 
-#' @import stats
-#' @importFrom dplyr mutate bind_cols
-#' @importFrom tibble as_tibble
-#' @importFrom extraDistr qlst rlst
-#' 
 #' 
 #' @exportS3Method predict lm_b
 

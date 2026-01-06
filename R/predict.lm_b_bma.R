@@ -20,8 +20,6 @@
 #'    }
 #'  }
 #' 
-#' @import stats
-#' @importFrom dplyr mutate
 #' 
 #' @exportS3Method predict lm_b_bma
 
