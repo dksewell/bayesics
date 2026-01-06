@@ -212,7 +212,7 @@ prop_test_b = function(n_successes,
       results$prop_plot = 
         tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                                l = 50)) |> 
-        ggplot(aes(x=x)) +
+        ggplot(aes(x=.data$x)) +
         stat_function(fun = 
                         function(x){
                           dbeta(x,
@@ -469,7 +469,7 @@ prop_test_b = function(n_successes,
       results$prop_plot = 
         tibble::tibble(x = seq(0.001,0.999,
                                l = 50)) |> 
-        ggplot(aes(x=x)) +
+        ggplot(aes(x=.data$x)) +
         stat_function(fun = 
                         function(x){
                           dbeta(x,
@@ -680,7 +680,7 @@ binom_test_b = function(n_successes,
       results$prop_plot = 
         tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                                l = 50)) |> 
-        ggplot(aes(x=x)) +
+        ggplot(aes(x=.data$x)) +
         stat_function(fun = 
                         function(x){
                           dbeta(x,
@@ -937,7 +937,7 @@ binom_test_b = function(n_successes,
       results$prop_plot = 
         tibble::tibble(x = seq(0.001,0.999,
                                l = 50)) |> 
-        ggplot(aes(x=x)) +
+        ggplot(aes(x=.data$x)) +
         stat_function(fun = 
                         function(x){
                           dbeta(x,

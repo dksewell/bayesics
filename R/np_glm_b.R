@@ -123,18 +123,29 @@ np_glm_b = function(formula,
   }
   
   if(loss == "selfinformation"){
-    if(family$family == "gaussian"){
-      loss_fun = function(y,mu) (y - mu)^2
+    loss_fun <- function(y, mu, phi = NULL) {
+      switch(family$family,
+             gaussian   = (y - mu)^2,
+             binomial   = -dbinom(y,trials,mu/trials,log=T),
+             poisson    = -dpois(y,mu,log=T),
+             negbinom   = -dnbinom(y,mu = mu,size = phi,log=T),
+             stop("Unsupported family")
+      )
     }
-    if(family$family == "binomial"){
-      loss_fun = function(y,mu) -dbinom(y,trials,mu/trials,log=T)
-    }
-    if(family$family == "poisson"){
-      loss_fun = function(y,mu) -dpois(y,mu,log=T)
-    }
-    if(family$family == "negbinom"){
-      loss_fun = function(y,mu,phi) -dnbinom(y,mu = mu,size = phi,log=T)
-    }
+    
+    # below generates multiple local function definitions for ‘loss_fun’ with different formal arguments warning so changed to above
+    # if(family$family == "gaussian"){
+    #   loss_fun = function(y,mu,phi=NULL) (y - mu)^2
+    # }
+    # if(family$family == "binomial"){
+    #   loss_fun = function(y,mu,phi=NULL) -dbinom(y,trials,mu/trials,log=T)
+    # }
+    # if(family$family == "poisson"){
+    #   loss_fun = function(y,mu,phi=NULL) -dpois(y,mu,log=T)
+    # }
+    # if(family$family == "negbinom"){
+    #   loss_fun = function(y,mu,phi) -dnbinom(y,mu = mu,size = phi,log=T)
+    # }
   }
   
   # Extract 
