@@ -86,7 +86,7 @@ bma_inference = function(formula,
                   function(i){
                     suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
                     suppressMessages(
-                      lm_b(paste0(all.vars(formula)[1], " ~ ", 
+                      lm_b(paste0(colnames(X.data)[1], " ~ ", 
                                   paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
                                         collapse = " + ")) |> 
                              as.formula(),
