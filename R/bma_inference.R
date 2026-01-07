@@ -84,6 +84,7 @@ bma_inference = function(formula,
   full_fits = 
     future.apply::future_lapply(1:ncol(var_inclusion),
                   function(i){
+                    suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
                     suppressMessages(
                       lm_b(paste0(all.vars(formula)[1], " ~ ", 
                                   paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
@@ -100,6 +101,7 @@ bma_inference = function(formula,
   post_samples = 
     future.apply::future_lapply(1:length(full_fits),
                   function(i){
+                    suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
                     samples = 
                       get_posterior_draws(full_fits[[i]],
                                           n_draws = mc_draws_by_model[i]) |> 

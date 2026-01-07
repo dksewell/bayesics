@@ -452,6 +452,7 @@ mediate_b = function(model_m,
         do.call(dplyr::bind_rows,
                 future.apply::future_lapply(1:length(batch_size_vector),
                                             function(b){
+                                              suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
                                               draw_y_x_mx(batch_size_vector[b])
                                             },
                                             future.seed = seed + 1)
