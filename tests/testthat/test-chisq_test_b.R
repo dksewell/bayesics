@@ -119,23 +119,23 @@ test_that("Test independence analysis for 2-way tables",{
                        t(test2$prob_p_j_given_i_less_than_p_j))))
   
   
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  expect_no_error(
-  )
-  
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # expect_no_error(
+  # )
+  # 
   
   
   
