@@ -1425,7 +1425,8 @@ plot.glm_b = function(x,
               x$data |>
               dplyr::group_by(get(v)) |> 
               dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-              dplyr::rename(!!v := .data$`get(v)`) |> 
+              # dplyr::rename(!!v := .data$`get(v)`) |> 
+              dplyr::rename(!!v := dplyr::all_of(v)) |> 
               ggplot(aes(x = .data[[v]],
                          y = .data$prop1)) + 
               geom_col(fill="gray70")
@@ -1460,7 +1461,8 @@ plot.glm_b = function(x,
                 x$data |>
                 dplyr::group_by(get(v)) |> 
                 dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-                dplyr::rename(!!v := .data$`get(v)`) |> 
+                # dplyr::rename(!!v := .data$`get(v)`) |> 
+                dplyr::rename(!!v := dplyr::all_of(v)) |> 
                 ggplot(aes(x = .data[[v]],
                            y = .data$prop1)) + 
                 geom_col(fill="gray70") + 
@@ -1797,7 +1799,8 @@ plot.np_glm_b = function(x,
             x$data |>
             dplyr::group_by(get(v)) |> 
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
-            dplyr::rename(!!v := .data$`get(v)`) |> 
+            # dplyr::rename(!!v := .data$`get(v)`) |>
+            dplyr::rename(!!v := dplyr::all_of(v)) |> 
             ggplot(aes(x = .data[[v]],
                        y = .data$prop1)) + 
             geom_col(fill="gray70")
