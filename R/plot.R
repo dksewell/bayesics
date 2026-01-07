@@ -1423,10 +1423,10 @@ plot.glm_b = function(x,
             plot_list[[plot_name_v1]] =
               plot_list[[plot_name_v2]] =
               x$data |>
-              dplyr::group_by(get(v)) |> 
+              # dplyr::group_by(get(v)) |> 
+              dplyr::group_by(.data[[v]]) |> 
               dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
               # dplyr::rename(!!v := .data$`get(v)`) |> 
-              dplyr::rename(!!v := dplyr::all_of(v)) |> 
               ggplot(aes(x = .data[[v]],
                          y = .data$prop1)) + 
               geom_col(fill="gray70")
@@ -1459,10 +1459,10 @@ plot.glm_b = function(x,
             if(x$family$family == "binomial"){
               plot_list[[plot_name_v]] =
                 x$data |>
-                dplyr::group_by(get(v)) |> 
+                # dplyr::group_by(get(v)) |> 
+                dplyr::group_by(.data[[v]]) |> 
                 dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
                 # dplyr::rename(!!v := .data$`get(v)`) |> 
-                dplyr::rename(!!v := dplyr::all_of(v)) |> 
                 ggplot(aes(x = .data[[v]],
                            y = .data$prop1)) + 
                 geom_col(fill="gray70") + 
@@ -1797,10 +1797,10 @@ plot.np_glm_b = function(x,
         if(x$family$family == "binomial"){
           plot_list[[plot_name_v]] =
             x$data |>
-            dplyr::group_by(get(v)) |> 
+            # dplyr::group_by(get(v)) |> 
+            dplyr::group_by(.data[[v]]) |> 
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
             # dplyr::rename(!!v := .data$`get(v)`) |>
-            dplyr::rename(!!v := dplyr::all_of(v)) |> 
             ggplot(aes(x = .data[[v]],
                        y = .data$prop1)) + 
             geom_col(fill="gray70")
