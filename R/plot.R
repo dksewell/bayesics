@@ -569,7 +569,6 @@ plot.aov_b = function(x,
 #' @export
 plot.lm_b_bma = function(x,
                          type = c("diagnostics",
-                                  "pdp",
                                   "ci band",
                                   "pi band"),
                          variable,
@@ -1334,7 +1333,8 @@ plot.glm_b = function(x,
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
             ggplot(aes(x = .data$`get(variable[v])`,
                        y = .data$prop1)) + 
-            geom_col(fill="gray70")
+            geom_col(fill="gray70") + 
+            ylab(all.vars(x$formula)[1])
         }
         
         plot_list[[paste0("pdp_",variable[v])]] = 
@@ -1429,7 +1429,8 @@ plot.glm_b = function(x,
               # dplyr::rename(!!v := .data$`get(v)`) |> 
               ggplot(aes(x = .data[[v]],
                          y = .data$prop1)) + 
-              geom_col(fill="gray70")
+              geom_col(fill="gray70") +
+              ylab(all.vars(x$formula)[1])
           }
         }
         
@@ -1466,7 +1467,7 @@ plot.glm_b = function(x,
                 ggplot(aes(x = .data[[v]],
                            y = .data$prop1)) + 
                 geom_col(fill="gray70") + 
-                ylab("")
+                ylab(all.vars(x$formula)[1])
             }
           }
         }
@@ -1551,7 +1552,8 @@ plot.glm_b = function(x,
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
                          y = .data$`Post Mean`),
-                     size = 3)
+                     size = 3) +
+          ylab(all.vars(x$formula)[1])
       }
     }
     
@@ -1709,7 +1711,8 @@ plot.np_glm_b = function(x,
             dplyr::summarize(prop1 = mean(dplyr::near(.data[[all.vars(x$formula)[1]]], 1))) |> 
             ggplot(aes(x = .data$`get(variable[v])`,
                        y = .data$prop1)) + 
-            geom_col(fill="gray70")
+            geom_col(fill="gray70") +
+            ylab(all.vars(x$formula)[1])
         }else{
           plot_list[[paste0("pdp_",variable[v])]] = 
             x$data |>
@@ -1803,7 +1806,8 @@ plot.np_glm_b = function(x,
             # dplyr::rename(!!v := .data$`get(v)`) |>
             ggplot(aes(x = .data[[v]],
                        y = .data$prop1)) + 
-            geom_col(fill="gray70")
+            geom_col(fill="gray70") + 
+            ylab(all.vars(x$formula)[1])
         }else{
           plot_list[[plot_name_v]] =
             x$data |>
@@ -1825,7 +1829,8 @@ plot.np_glm_b = function(x,
           geom_point(data = newdata[[v]],
                      aes(x = .data[[v]],
                          y = .data$`Post Mean`),
-                     size = 3)
+                     size = 3) + 
+          ylab(all.vars(x$formula)[1])
         
       }
       
