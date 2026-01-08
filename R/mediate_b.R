@@ -58,6 +58,75 @@
 #'  \item other inputs to \code{mediate_b}
 #' }
 #' 
+#' 
+#' @examples
+#' # Simplest case
+#' ## Generate some data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(tr = rnorm(N),
+#'              x1 = rnorm(N))
+#' test_data$m = 
+#'   rnorm(N, 0.4 * test_data$tr - 0.25 * test_data$x1)
+#' test_data$outcome = 
+#'   rnorm(N,-1 + 0.6 * test_data$tr + 1.5 * test_data$m + 0.25 * test_data$x1)
+#' 
+#' ## Fit the mediator and outcome models
+#' m1 = 
+#'   lm_b(m ~ tr + x1,
+#'        data = test_data)
+#' m2 = 
+#'   lm_b(outcome ~ m + tr + x1,
+#'        data = test_data)
+#' ## Estimate the causal mediation quantities
+#' m3 <-
+#'   mediate_b(m1,m2,
+#'             treat = "tr",
+#'             control_value = -2,
+#'             treat_value = 2,
+#'             n_draws = 500,
+#'             mc_error = 0.05,
+#'             ask_before_full_sampling = FALSE)
+#' m3
+#' summary(m3,
+#'         CI_level = 0.9)
+#' 
+#' # More complicated scenario
+#' ## Generate some data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(tr = rep(0:1,N/2),
+#'              x1 = rnorm(N))
+#' test_data$m = 
+#'   rnorm(N, 0.4 * test_data$tr - 0.25 * test_data$x1)
+#' test_data$outcome = 
+#'   rpois(N,exp(-1 + 0.6 * test_data$tr + 1.5 * test_data$m + 0.25 * test_data$x1))
+#' 
+#' ## Fit the mediator and outcome models
+#' m1 = 
+#'   lm_b(m ~ tr + x1,
+#'        data = test_data)
+#' m2 = 
+#'   glm_b(outcome ~ m + tr + x1,
+#'         data = test_data,
+#'         family = poisson())
+#' 
+#' ##  Estimate the causal mediation quantities
+#' m3 <-
+#'   mediate_b(m1,m2,
+#'             treat = "tr",
+#'             control_value = 0,
+#'             treat_value = 1,
+#'             n_draws = 500,
+#'             mc_error = 0.05,
+#'             ask_before_full_sampling = FALSE)
+#' summary(m3)
+#' 
+#' 
+#' 
+#' 
 #' @export
 
 mediate_b = function(model_m,

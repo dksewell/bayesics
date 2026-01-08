@@ -46,6 +46,27 @@
 #' while if \code{prior = "flat"}, \eqn{\Gamma(0.001,0.001)} will be used.  
 #' 
 #' 
+#' @examples
+#' # One sample
+#' poisson_test_b(x = 12)
+#' ## You can compute the posterior probability that the rate is less than r
+#' poisson_test_b(x = 12,
+#'                r = 8)
+#' 
+#' # Two samples
+#' poisson_test_b(x = c(12,20))
+#' 
+#' # Offsets can be included:
+#' poisson_test_b(x = c(12,20),
+#'                offset = c(10,9))
+#' 
+#' # Different priors can be used
+#' poisson_test_b(x = c(12,20),
+#'                prior = "flat")
+#' poisson_test_b(x = c(12,20),
+#'                prior_shape_rate = c(20,1.5))
+#' 
+#' 
 #' 
 #' @export
 

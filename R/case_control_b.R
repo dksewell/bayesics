@@ -46,6 +46,14 @@
 #' (ignored if \code{large_sample_approx = TRUE}.)
 #' 
 #' 
+#' @examples
+#' case_control_b(matrix(c(8,47,1,26),2,2))
+#' 
+#' case_control_b(c(8,47),
+#'                c(1,26))
+#' 
+#' 
+#' 
 #' @export
 
 

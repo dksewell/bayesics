@@ -94,6 +94,61 @@
 #' @references 
 #' Charles R. Doss, James M. Flegal, Galin L. Jones, Ronald C. Neath "Markov chain Monte Carlo estimation of quantiles," Electronic Journal of Statistics, Electron. J. Statist. 8(2), 2448-2478, (2014)
 #' 
+#' 
+#' @examples
+#' # Create data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(x1 = rep(letters[1:5],N/5))
+#' test_data$outcome = 
+#'   rnorm(N,-1 + 2 * (test_data$x1 %in% c("d","e")) )
+#' 
+#' # Fit 1-way ANOVA model
+#' fit1 <-
+#'   aov_b(outcome ~ x1,
+#'         test_data,
+#'         prior_mean_mu = 2,
+#'         prior_mean_nu = 0.5,
+#'         prior_var_shape = 0.01,
+#'         prior_var_rate = 0.01)
+#' fit1
+#' summary(fit1)
+#' plot(fit1)
+#' coef(fit1)
+#' credint(fit1)
+#' credint(fit1,
+#'         CI_level = 0.99)
+#' vcov(fit1)
+#' fit1_predictions <- 
+#'   predict(fit1,
+#'           CI_level = 0.99,
+#'           PI_level = 0.9)
+#' AIC(fit1)
+#' BIC(fit1)
+#' DIC(fit1)
+#' WAIC(fit1)
+#' 
+#' # Implement contrasts
+#' ## One contrast
+#' fit2 <-
+#'   aov_b(outcome ~ x1,
+#'         test_data,
+#'         mc_error = 0.01,
+#'         contrasts = c(-1/3,-1/3,-1/3,1/2,1/2))
+#' fit2$contrasts
+#' summary(fit2)
+#' ## Multiple contrasts
+#' fit3 <-
+#'   aov_b(outcome ~ x1,
+#'         test_data,
+#'         mc_error = 0.01,
+#'         contrasts = rbind(c(-1/3,-1/3,-1/3,1/2,1/2),
+#'                           c(-1/3,-1/3,-1/3,1,0)))
+#' fit3$contrasts
+#' summary(fit3)
+#' 
+#' 
 #' @export
 
 aov_b = function(formula,

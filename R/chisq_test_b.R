@@ -36,6 +36,36 @@
 #' 
 #' Kass, R. E., & Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773–795.
 #' 
+#' 
+#' @examples
+#' # Generate data
+#' set.seed(2025)
+#' N = 500
+#' nR = 5
+#' nC = 3
+#' dep_probs = 
+#'   extraDistr::rdirichlet(1,rep(2,nR*nC)) |> 
+#'   matrix(nR,nC)
+#' 
+#' # Multinomial sampling
+#' ## Test independence
+#' independence_b(round(N * dep_probs))
+#' 
+#' ## Use other priors
+#' independence_b(round(N * dep_probs),
+#'                prior = "uniform")
+#' independence_b(round(N * dep_probs),
+#'                prior_shapes = 2)
+#' independence_b(round(N * dep_probs),
+#'                prior_shapes = matrix(1:(nR*nC),nR,nC))
+#' 
+#' # Fixed marginals
+#' independence_b(round(N * dep_probs),
+#'                sampling_design = "rows")
+#' independence_b(round(N * dep_probs),
+#'                sampling_design = "cols")
+#' 
+#' 
 #' @export
 independence_b = function(x,
                           sampling_design = "multinomial",

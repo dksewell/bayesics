@@ -52,6 +52,26 @@
 #' within \eqn{\pm} \code{mc_error}. (Ignored for a single population proportion.)
 #' 
 #' 
+#' @examples
+#' # Single population
+#' prop_test_b(14,
+#'             19)
+#' # or another way of the same thing;
+#' prop_test_b(14,
+#'             n_total = 14 + 19)
+#' 
+#' # A null value compared against can be added:
+#' prop_test_b(14,
+#'             19,
+#'             p = 0.5)
+#' 
+#' # Two populations
+#' prop_test_b(c(14,22),
+#'             c(19,45))
+#' # or equivalently
+#' prop_test_b(c(14,22),
+#'             n_total = c(14,22) + c(19,45))
+#' 
 #' @export
 
 prop_test_b = function(n_successes,

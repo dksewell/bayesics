@@ -51,6 +51,34 @@ cor_test_b = function(x, ...){
 #' 
 #' Lindley, D. V., & Phillips, L. D. (1976). Inference for a Bernoulli process (a Bayesian view). The American Statistician, 30, 112-119.
 #' 
+#' 
+#' @examples
+#' # Generate data
+#' set.seed(2025)
+#' N = 50
+#' x = rnorm(N)
+#' y = x + 4 * rnorm(N)
+#' 
+#' # Test for non-zero correlation
+#' cor_test_b(x,y)
+#' 
+#' # Input can be in the form of formula and data
+#' cor_test_b(~ asdf + qwer,
+#'            data = data.frame(asdf = x,
+#'                              qwer = y))
+#' 
+#' # Other priors can be used, also.  See help for details.
+#' cor_test_b(x,y,
+#'            prior = "uniform")
+#' cor_test_b(x,y,
+#'            prior = "negative")
+#' cor_test_b(x,y,
+#'            prior = "positive")
+#' cor_test_b(x,y,
+#'            prior_shapes = c(10,10))
+#' 
+#' 
+#' 
 #' @export
 #' @rdname cor_test_b
 cor_test_b.default = function(x,

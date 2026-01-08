@@ -30,6 +30,33 @@
 #' Kass, R. E., & Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773–795.
 #' 
 #' 
+#' @examples
+#' # Generate some binomial data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome = 
+#'   rbinom(N,1,1.0 / (1.0 + exp(-(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) ))))
+#' 
+#' 
+#' # Fit a GLM
+#' fit <-
+#'   glm_b(outcome ~ x1 + x2 + x3,
+#'         data = test_data,
+#'         family = binomial(),
+#'         seed = 2025)
+#' 
+#' # Compute the BF for each coefficient
+#' bayes_factors(fit)
+#' 
+#' # Compute the BF for each variable
+#' bayes_factors(fit,
+#'               by = "variable")
+#' 
+#' 
 #' @export
 
 #' @export

@@ -71,6 +71,34 @@
 #'  \item summary - a tibble giving results for regression coefficients.
 #' }
 #' 
+#' 
+#' @examples
+#' # Generate some data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome = 
+#'   rbinom(N,1,1.0 / (1.0 + exp(-(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) ))))
+#' 
+#' # Fit the GLM via the (non-parametric) loss-likelihood bootstrap.
+#' fit1 <-
+#'   np_glm_b(outcome ~ x1 + x2 + x3,
+#'            data = test_data,
+#'            family = binomial())
+#' fit1
+#' summary(fit1,
+#'         CI_level = 0.99)
+#' plot(fit1)
+#' coef(fit1)
+#' credint(fit1)
+#' predict(fit1,
+#'         newdata = fit1$data[1,])
+#' vcov(fit1)
+#' 
+#' 
 #' @export 
 #' 
 np_glm_b = function(formula,
