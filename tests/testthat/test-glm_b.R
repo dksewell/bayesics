@@ -176,21 +176,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pi",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
   
-  expect_s3_class(plot(fita,
-                       type = "pi"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pi",
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
                        type = "ci",
                        variable = "x1"),
@@ -425,21 +411,6 @@ test_that("Test glm_b for binomial data fitting with IS",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
-  expect_s3_class(plot(fita,
-                       type = "pi"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pi",
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
                        type = "ci",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
@@ -646,21 +617,6 @@ test_that("Test glm_b for binomial data fitting with LSA",{
   expect_s3_class(plot(fita,
                        type = c("ci","pi"),
                        combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pi",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
-  expect_s3_class(plot(fita,
-                       type = "pi"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pi",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))

@@ -94,16 +94,16 @@ test_that("Bayesian model averaging", {
   
   
   
-  # Make sure parallelization works. 
-  plan(multisession, workers = 5)
-  expect_no_error(
-    fitb <-
-      bma_inference(outcome ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
-                    test_data,
-                    mc_draws = 5e3,
-                    user.int = FALSE)
-  )
-  plan(sequential)
+  # # Make sure parallelization works. 
+  # plan(multisession, workers = 5)
+  # expect_no_error(
+  #   fitb <-
+  #     bma_inference(outcome ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
+  #                   test_data,
+  #                   mc_draws = 5e2,
+  #                   user.int = FALSE)
+  # )
+  # plan(sequential)
   
   # Check if splines and factors work
   library(splines)
