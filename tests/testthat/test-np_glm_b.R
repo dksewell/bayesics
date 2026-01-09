@@ -118,16 +118,16 @@ test_that("Test np_glm_b for binomial data fitting with bootstrapping",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -252,16 +252,16 @@ test_that("Test np_glm_b for binomial data fitting with LSA",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -445,16 +445,16 @@ test_that("Test np_glm_b for poisson data fitting with bootstrapping",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -580,16 +580,16 @@ test_that("Test np_glm_b for poisson data fitting with LSA",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -722,16 +722,16 @@ test_that("Test np_glm_b for negative binomial data fitting with bootstrapping",
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -861,16 +861,16 @@ test_that("Test np_glm_b for negative binomial data fitting with LSA",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -1000,16 +1000,16 @@ test_that("Test np_glm_b for gaussian data fitting with bootstrapping",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        exemplar_covariates = fita$data[1,]),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -1163,12 +1163,12 @@ test_that("Test np_glm_b for gaussian data fitting with LSA",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        variable = "x1"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita),

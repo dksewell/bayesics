@@ -4,10 +4,11 @@
 #' 
 #' @param x A linreg object
 #' @param type character. Select any of "diagnostics" ("dx" is also allowed),
-#'  "pdp" (partial dependence plot), "ci band", and/or "pi band".  NOTE: the CI 
-#'  and PI bands only work for numeric variables.  If plotting a 
-#'  \code{mediate_b} object, the valid values for \code{type} are 
-#'  "diagnostics" (or "dx"), "acme", or "ade".
+#'  "pdp" (partial dependence plot), "cred band", and/or "pred band".  
+#'  NOTE: the credible and prediction bands only work for numeric 
+#'  variables.  If plotting a \code{mediate_b} object, the valid 
+#'  values for \code{type} are "diagnostics" (or "dx"), "acme", 
+#'  or "ade".
 #' @param variable character. If type = "pdp" , which variable should be plotted?
 #' @param exemplar_covariates data.frame or tibble with exactly one row.  
 #' Used to fix other covariates while varying the variable of interest for the plot.
@@ -44,20 +45,20 @@ plot.lm_b = function(x,
     type = 
       c("diagnostics",
         #"pdp",
-        "ci band",
-        "pi band")
+        "cred band",
+        "pred band")
   }
   
   type = c("diagnostics",
            "diagnostics",
            "pdp",
-           "ci band",
-           "pi band")[pmatch(tolower(type),
+           "cred band",
+           "pred band")[pmatch(tolower(type),
                              c("diagnostics",
                                "dx",
                                "pdp",
-                               "ci band",
-                               "pi band"))]
+                               "cred band",
+                               "pred band"))]
   
   if(missing(variable)){
     variable = 
@@ -105,7 +106,7 @@ plot.lm_b = function(x,
   
   
   # Get unique values and x sequences for plots
-  if( length(intersect(c("pdp","ci band","pi band"),
+  if( length(intersect(c("pdp","cred band","pred band"),
                        type)) > 0){
     
     x_unique = 
@@ -192,7 +193,7 @@ plot.lm_b = function(x,
   
   
   # If drawing CI/PI bands, get reference covariate values and prediction/CIs
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     
     # Get other covariate values
     if(missing(exemplar_covariates)){
@@ -225,9 +226,15 @@ plot.lm_b = function(x,
                 newdata = newdata[[v]],
                 CI_level = CI_level,
                 PI_level = PI_level)
+      
       newdata[[v]] = 
         newdata[[v]] |> 
-        dplyr::mutate(dplyr::across(where(is.numeric), backtransformation)) # below causes no visible binding for global variable ‘Post Mean’ note 
+        dplyr::mutate(dplyr::across(dplyr::all_of(c("Post Mean",
+                                                    "PI_lower",
+                                                    "PI_upper",
+                                                    "CI_lower",
+                                                    "CI_upper")),
+                                    backtransformation)) # below causes no visible binding for global variable ‘Post Mean’ note 
         # dplyr::mutate(dplyr::across(`Post Mean`:CI_upper,backtransformation))
     }
     
@@ -235,13 +242,13 @@ plot.lm_b = function(x,
   
   
   # Prediction Band plots
-  if("pi band" %in% type){
+  if("pred band" %in% type){
     
     # Get starter plots if !combine_pi_ci
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("ci band" %in% type),
-                      "pi_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+                      "pred_band_","band_"),v)
       
       if(is.numeric(x$data[[v]])){
         plot_list[[plot_name_v]] =
@@ -260,8 +267,8 @@ plot.lm_b = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("ci band" %in% type),
-                      "pi_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+                      "pred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
         plot_list[[plot_name_v]] =
@@ -295,19 +302,19 @@ plot.lm_b = function(x,
     
   }
   
-  if("ci band" %in% type){
+  if("cred band" %in% type){
     
     # Get starter plots if !combine_pi_ci
-    if( (!combine_pi_ci) | !("pi band" %in% type)){
+    if( (!combine_pi_ci) | !("pred band" %in% type)){
       for(v in variable){
         if(is.numeric(x$data[[v]])){
-          plot_list[[paste0("ci_band_",v)]] =
+          plot_list[[paste0("cred_band_",v)]] =
             x$data |> 
             ggplot(aes(x = .data[[v]],
                        y = .data[[all.vars(x$formula)[1]]])) +
             geom_point(alpha = 0.2)
         }else{
-          plot_list[[paste0("ci_band_",v)]] =
+          plot_list[[paste0("cred_band_",v)]] =
             x$data |> 
             ggplot(aes(x = .data[[v]],
                        y = .data[[all.vars(x$formula)[1]]])) +
@@ -318,8 +325,8 @@ plot.lm_b = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("pi band" %in% type),
-                      "ci_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("pred band" %in% type),
+                      "cred_band_","band_"),v)
       
       
       
@@ -354,7 +361,7 @@ plot.lm_b = function(x,
   
   
   # Polish up plots
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     for(v in variable){
       
       for(j in names(plot_list)[grepl("band",names(plot_list)) & grepl(v,names(plot_list))]){
@@ -365,10 +372,10 @@ plot.lm_b = function(x,
             paste0(
               ifelse(
                 grepl("pi_",j),
-                paste0("PI band for ",v),
+                paste0("Prediction band for ",v),
                 ifelse(grepl("ci_",j),
-                       paste0("CI band for ",v),
-                       paste0("CI and PI bands for ",v)
+                       paste0("Credible band for ",v),
+                       paste0("Cred. and Pred. bands for ",v)
                 )
               )
             )
@@ -397,8 +404,8 @@ plot.lm_b = function(x,
 #' @export
 plot.aov_b = function(x,
                       type = c("diagnostics",
-                               "ci band",
-                               "pi band"),
+                               "cred band",
+                               "pred band"),
                       combine_pi_ci = TRUE,
                       return_as_list = FALSE,
                       CI_level = 0.95,
@@ -407,12 +414,12 @@ plot.aov_b = function(x,
   
   type = c("diagnostics",
            "diagnostics",
-           "ci band",
-           "pi band")[pmatch(tolower(type),
+           "cred band",
+           "pred band")[pmatch(tolower(type),
                              c("diagnostics",
                                "dx",
-                               "ci band",
-                               "pi band"))]
+                               "cred band",
+                               "pred band"))]
   
   
   plot_list = list()
@@ -451,7 +458,7 @@ plot.aov_b = function(x,
   
   
   # If drawing CI/PI bands, get newdata for prediction/CIs
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     
     # Get CI and PI values
     newdata =
@@ -463,12 +470,12 @@ plot.aov_b = function(x,
   
   
   # Prediction Band plots
-  if("pi band" %in% type){
+  if("pred band" %in% type){
     
     # Get starter plots
     plot_name_v =
-      ifelse((!combine_pi_ci) | !("ci band" %in% type),
-             "pi_intervals","intervals")
+      ifelse((!combine_pi_ci) | !("cred band" %in% type),
+             "pred_intervals","intervals")
     
     plot_list[[plot_name_v]] =
       x$data |>
@@ -492,11 +499,11 @@ plot.aov_b = function(x,
     
   }
   
-  if("ci band" %in% type){
+  if("cred band" %in% type){
     
     # Get starter plots if !combine_pi_ci
-    if( (!combine_pi_ci) | !("pi band" %in% type)){
-      plot_list[["ci_intervals"]] =
+    if( (!combine_pi_ci) | !("pred band" %in% type)){
+      plot_list[["cred_intervals"]] =
         x$data |>
         ggplot(aes(x = .data$group,
                    y = .data[[all.vars(x$formula)[1]]])) +
@@ -504,8 +511,8 @@ plot.aov_b = function(x,
     }
     
     plot_name_v =
-      ifelse((!combine_pi_ci) | !("pi band" %in% type),
-             "ci_intervals","intervals")
+      ifelse((!combine_pi_ci) | !("pred band" %in% type),
+             "cred_intervals","intervals")
     
     plot_list[[plot_name_v]] =
       plot_list[[plot_name_v]] +
@@ -524,7 +531,7 @@ plot.aov_b = function(x,
   
   
   # Polish up plots
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     
     for(j in names(plot_list)[grepl("intervals",names(plot_list))]){
       plot_list[[j]] =
@@ -535,10 +542,10 @@ plot.aov_b = function(x,
           paste0(
             ifelse(
               grepl("pi_",j),
-              "PI intervals",
+              "Prediction intervals",
               ifelse(grepl("ci_",j),
-                     "CI intervals",
-                     "CI and PI intervals"
+                     "Credible intervals",
+                     "Cred. and Pred. intervals"
               )
             )
           )
@@ -569,8 +576,8 @@ plot.aov_b = function(x,
 #' @export
 plot.lm_b_bma = function(x,
                          type = c("diagnostics",
-                                  "ci band",
-                                  "pi band"),
+                                  "cred band",
+                                  "pred band"),
                          variable,
                          exemplar_covariates,
                          combine_pi_ci = TRUE,
@@ -580,6 +587,7 @@ plot.lm_b_bma = function(x,
                          CI_level = 0.95,
                          PI_level = 0.95,
                          seed = 1,
+                         backtransformation = function(x){x},
                          ...){
   
   alpha_ci = 1.0 - CI_level
@@ -588,13 +596,13 @@ plot.lm_b_bma = function(x,
   type = c("diagnostics",
            "diagnostics",
            "pdp",
-           "ci band",
-           "pi band")[pmatch(tolower(type),
+           "cred band",
+           "pred band")[pmatch(tolower(type),
                              c("diagnostics",
                                "dx",
                                "pdp",
-                               "ci band",
-                               "pi band"))]
+                               "cred band",
+                               "pred band"))]
   
   if(missing(variable)){
     variable = 
@@ -669,7 +677,7 @@ plot.lm_b_bma = function(x,
   
   
   # Get unique values and x sequences for plots
-  if( length(intersect(c("pdp","ci band","pi band"),
+  if( length(intersect(c("pdp","cred band","pred band"),
                        type)) > 0){
     
     x_unique = 
@@ -721,7 +729,7 @@ plot.lm_b_bma = function(x,
                   newdata = 
                     x$data |>
                     dplyr::mutate(!!variable[v] := newdata$var_of_interest[i]))
-        newdata$y[i] = mean(temp_preds$newdata$`Post Mean`)
+        newdata$y[i] = backtransformation(mean(temp_preds$newdata$`Post Mean`))
       }
       
       plot_list[[paste0("pdp_",variable[v])]] = 
@@ -756,7 +764,7 @@ plot.lm_b_bma = function(x,
   
   
   # If drawing CI/PI bands, get reference covariate values and prediction/CIs
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     
     # Get other covariate values
     if(missing(exemplar_covariates)){
@@ -789,19 +797,27 @@ plot.lm_b_bma = function(x,
                 newdata = newdata[[v]],
                 CI_level = CI_level,
                 PI_level = PI_level)
+      newdata[[v]]$newdata = 
+        newdata[[v]]$newdata |> 
+        dplyr::mutate(dplyr::across(dplyr::all_of(c("Post Mean",
+                                                    "PI_lower",
+                                                    "PI_upper",
+                                                    "CI_lower",
+                                                    "CI_upper")),
+                                    backtransformation))
     }
     
   }# End: Get exemplar and PI/CI
   
   
   # Prediction Band plots
-  if("pi band" %in% type){
+  if("pred band" %in% type){
     
     # Get starter plots if !combine_pi_ci
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("ci band" %in% type),
-                      "pi_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+                      "pred_band_","band_"),v)
       
       if(is.numeric(x$data[[v]])){
         plot_list[[plot_name_v]] =
@@ -820,8 +836,8 @@ plot.lm_b_bma = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("ci band" %in% type),
-                      "pi_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+                      "pred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
         plot_list[[plot_name_v]] =
@@ -855,19 +871,19 @@ plot.lm_b_bma = function(x,
     
   }
   
-  if("ci band" %in% type){
+  if("cred band" %in% type){
     
     # Get starter plots if !combine_pi_ci
-    if( (!combine_pi_ci) | !("pi band" %in% type)){
+    if( (!combine_pi_ci) | !("pred band" %in% type)){
       for(v in variable){
         if(is.numeric(x$data[[v]])){
-          plot_list[[paste0("ci_band_",v)]] =
+          plot_list[[paste0("cred_band_",v)]] =
             x$data |> 
             ggplot(aes(x = .data[[v]],
                        y = .data[[all.vars(x$formula)[1]]])) +
             geom_point(alpha = 0.2)
         }else{
-          plot_list[[paste0("ci_band_",v)]] =
+          plot_list[[paste0("cred_band_",v)]] =
             x$data |> 
             ggplot(aes(x = .data[[v]],
                        y = .data[[all.vars(x$formula)[1]]])) +
@@ -878,8 +894,8 @@ plot.lm_b_bma = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("pi band" %in% type),
-                      "ci_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("pred band" %in% type),
+                      "cred_band_","band_"),v)
       
       
       
@@ -914,7 +930,7 @@ plot.lm_b_bma = function(x,
   
   
   # Polish up plots
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     for(v in variable){
       
       for(j in names(plot_list)[grepl("band",names(plot_list)) & grepl(v,names(plot_list))]){
@@ -924,11 +940,11 @@ plot.lm_b_bma = function(x,
           ggtitle(
             paste0(
               ifelse(
-                grepl("pi_",j),
-                paste0("PI band for ",v),
-                ifelse(grepl("ci_",j),
-                       paste0("CI band for ",v),
-                       paste0("CI and PI bands for ",v)
+                grepl("pred_",j),
+                paste0("Prediction band for ",v),
+                ifelse(grepl("cred_",j),
+                       paste0("Credible band for ",v),
+                       paste0("Cred. and Pred. bands for ",v)
                 )
               )
             )
@@ -972,28 +988,28 @@ plot.glm_b = function(x,
     type = 
       c("diagnostics",
         #"pdp",
-        "ci band",
-        "pi band")
-    if(x$family$family != "binomial") type = c(type,"pi band")
+        "cred band",
+        "pred band")
+    if(x$family$family != "binomial") type = c(type,"pred band")
   }
   
   type = c("diagnostics",
            "diagnostics",
            "pdp",
-           "ci band",
-           "pi band")[pmatch(tolower(type),
+           "cred band",
+           "pred band")[pmatch(tolower(type),
                              c("diagnostics",
                                "dx",
                                "pdp",
-                               "ci band",
-                               "pi band"))]
+                               "cred band",
+                               "pred band"))]
   
   if( (x$family$family == "binomial") & 
-      ("pi band" %in% type) ){
-    type = setdiff(type,"pi band")
+      ("pred band" %in% type) ){
+    type = setdiff(type,"pred band")
     if(length(type) == 0){
       warning("Prediction band cannot be supplied for a binomial outcome.\nResults shown will be credible band instead.")
-      type = "ci band"
+      type = "cred band"
     }
   }
   
@@ -1251,7 +1267,7 @@ plot.glm_b = function(x,
   }# End: diagnostics
   
   # Get unique values and x sequences for plots
-  if( length(intersect(c("pdp","ci band","pi band"),
+  if( length(intersect(c("pdp","cred band","pred band"),
                        type)) > 0){
     
     x_unique = 
@@ -1356,7 +1372,7 @@ plot.glm_b = function(x,
   }# End: PDP
   
   # If drawing CI/PI bands, get reference covariate values and prediction/CIs
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     
     # Get other covariate values
     if(missing(exemplar_covariates)){
@@ -1396,12 +1412,12 @@ plot.glm_b = function(x,
       # Get starter plots
       two_plots = 
         (!combine_pi_ci) &
-        ( ("ci band" %in% type) & ("pi band" %in% type) )
+        ( ("cred band" %in% type) & ("pred band" %in% type) )
       if(two_plots){
         plot_name_v1 = 
-          paste0("pi_band_",v)
+          paste0("pred_band_",v)
         plot_name_v2 = 
-          paste0("ci_band_",v)
+          paste0("cred_band_",v)
         
         if(is.numeric(x$data[[v]])){
           plot_list[[plot_name_v1]] =
@@ -1481,12 +1497,12 @@ plot.glm_b = function(x,
   
   
   # Prediction Band plots
-  if("pi band" %in% type){
+  if("pred band" %in% type){
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("ci band" %in% type),
-                      "pi_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+                      "pred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
         plot_list[[plot_name_v]] =
@@ -1520,13 +1536,13 @@ plot.glm_b = function(x,
     
   }
   
-  if("ci band" %in% type){
+  if("cred band" %in% type){
     
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("pi band" %in% type),
-                      "ci_band_","band_"),v)
+        paste0(ifelse((!combine_pi_ci) | !("pred band" %in% type),
+                      "cred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
         plot_list[[plot_name_v]] =
@@ -1562,7 +1578,7 @@ plot.glm_b = function(x,
   
   
   # Polish up plots
-  if( ("pi band" %in% type) | ("ci band" %in% type) ){
+  if( ("pred band" %in% type) | ("cred band" %in% type) ){
     for(v in variable){
       
       for(j in names(plot_list)[grepl("band",names(plot_list)) & grepl(v,names(plot_list))]){
@@ -1572,11 +1588,11 @@ plot.glm_b = function(x,
           ggtitle(
             paste0(
               ifelse(
-                grepl("pi_",j),
-                paste0("PI band for ",v),
-                ifelse(grepl("ci_",j),
-                       paste0("CI band for ",v),
-                       paste0("CI and PI bands for ",v)
+                grepl("pred_",j),
+                paste0("Prediction band for ",v),
+                ifelse(grepl("cred_",j),
+                       paste0("Credible band for ",v),
+                       paste0("Cred. and Pred. bands for ",v)
                 )
               )
             )
@@ -1617,13 +1633,13 @@ plot.np_glm_b = function(x,
   if(missing(type)){
     type = 
       c(#"pdp",
-        "ci band")
+        "cred band")
   }
   
   type = c("pdp",
-           "ci band")[pmatch(tolower(type),
+           "cred band")[pmatch(tolower(type),
                              c("pdp",
-                               "ci band"))]
+                               "cred band"))]
   
   
   if(missing(variable)){
@@ -1740,7 +1756,7 @@ plot.np_glm_b = function(x,
   }# End: PDP
   
   # If drawing CI/PI bands, get reference covariate values and prediction/CIs
-  if("ci band" %in% type){
+  if("cred band" %in% type){
     
     # Get other covariate values
     if(missing(exemplar_covariates)){
@@ -1776,12 +1792,13 @@ plot.np_glm_b = function(x,
       })
       newdata[[v]] = 
         newdata[[v]] |> 
-        dplyr::mutate(dplyr::across(where(is.numeric), backtransformation)) # below causes no visible binding for global variable ‘Post Mean’ note 
-        # dplyr::mutate(dplyr::across(`Post Mean`:CI_upper,backtransformation)) 
-      
+        dplyr::mutate(dplyr::across(dplyr::all_of(c("Post Mean",
+                                                    "CI_lower",
+                                                    "CI_upper")),
+                                    backtransformation))
       
       # Get starter plot
-      plot_name_v = paste0("ci_band_",v)
+      plot_name_v = paste0("cred_band_",v)
       if(is.numeric(x$data[[v]])){
         plot_list[[plot_name_v]] =
           x$data |>
@@ -1837,7 +1854,7 @@ plot.np_glm_b = function(x,
       plot_list[[plot_name_v]] =
         plot_list[[plot_name_v]] +
         theme_classic() +
-        ggtitle(paste0("CI band for ",v))
+        ggtitle(paste0("Credible band for ",v))
       
     }#End: loop through variables
     

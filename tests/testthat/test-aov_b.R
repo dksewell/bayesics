@@ -139,25 +139,25 @@ test_that("Proper prior and heteroscedastic model works", {
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = c("ci","pi"),
+                       type = c("cr","pr"),
                        combine_pi_ci = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi"),
+                       type = "pr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi",
+                       type = "pr",
                        PI_level = 0.8),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        CI_level = 0.999),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -369,25 +369,25 @@ test_that("Proper prior and homoscedastic model works", {
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = c("ci","pi"),
+                       type = c("cr","pr"),
                        combine_pi_ci = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi"),
+                       type = "pr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi",
+                       type = "pr",
                        PI_level = 0.8),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        CI_level = 0.999),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -552,25 +552,25 @@ test_that("Imroper prior and heteroscedastic model works", {
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = c("ci","pi"),
+                       type = c("cr","pr"),
                        combine_pi_ci = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi"),
+                       type = "pr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi",
+                       type = "pr",
                        PI_level = 0.8),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        CI_level = 0.999),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -735,25 +735,25 @@ test_that("Imroper prior and homoscedastic model works", {
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = c("ci","pi"),
+                       type = c("cr","pr"),
                        combine_pi_ci = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi"),
+                       type = "pr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "pi",
+                       type = "pr",
                        PI_level = 0.8),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci"),
+                       type = "cr"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       type = "ci",
+                       type = "cr",
                        CI_level = 0.999),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))

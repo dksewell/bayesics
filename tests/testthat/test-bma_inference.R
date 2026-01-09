@@ -71,28 +71,38 @@ test_that("Bayesian model averaging", {
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       "ci",
+                       "cred",
                        variable = c("x1","x2","x3")),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       "pi",
+                       "pred",
                        variable = c("x1","x2","x3")),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       c("ci","pi"),
+                       c("cr","pr"),
                        variable = c("x1","x2","x3")),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
-                       c("ci","pi"),
+                       c("cr","pr"),
                        combine_pi_ci = FALSE,
                        variable = c("x1","x2","x3")),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   
+  # Test if response transformation works
+  test_data$e_outcome = exp(test_data$outcome)
   
+  ## Test lm_b fit
+  expect_no_error(
+    fita2 <-
+      bma_inference(log(e_outcome) ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
+                    test_data,
+                    user.int = FALSE)
+  )
+  fita
   
   # # Make sure parallelization works. 
   # plan(multisession, workers = 5)

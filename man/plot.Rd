@@ -29,7 +29,7 @@
 
 \method{plot}{aov_b}(
   x,
-  type = c("diagnostics", "ci band", "pi band"),
+  type = c("diagnostics", "cred band", "pred band"),
   combine_pi_ci = TRUE,
   return_as_list = FALSE,
   CI_level = 0.95,
@@ -39,7 +39,7 @@
 
 \method{plot}{lm_b_bma}(
   x,
-  type = c("diagnostics", "ci band", "pi band"),
+  type = c("diagnostics", "cred band", "pred band"),
   variable,
   exemplar_covariates,
   combine_pi_ci = TRUE,
@@ -89,10 +89,11 @@
 \item{x}{A linreg object}
 
 \item{type}{character. Select any of "diagnostics" ("dx" is also allowed),
-"pdp" (partial dependence plot), "ci band", and/or "pi band".  NOTE: the CI
-and PI bands only work for numeric variables.  If plotting a
-\code{mediate_b} object, the valid values for \code{type} are
-"diagnostics" (or "dx"), "acme", or "ade".}
+"pdp" (partial dependence plot), "cred band", and/or "pred band".
+NOTE: the credible and prediction bands only work for numeric
+variables.  If plotting a \code{mediate_b} object, the valid
+values for \code{type} are "diagnostics" (or "dx"), "acme",
+or "ade".}
 
 \item{variable}{character. If type = "pdp" , which variable should be plotted?}
 
