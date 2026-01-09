@@ -72,3 +72,12 @@ empirical odds ratio, \eqn{n_{ij}}, \eqn{i,j = 1,2} are the cells of the
 If the large sample approximation is not used, then inference is made on
 the odds ratio by instead putting uniform priors on \eqn{\Pr(exposure|outcome)}.
 }
+\examples{
+case_control_b(matrix(c(8,47,1,26),2,2))
+
+case_control_b(c(8,47),
+               c(1,26))
+
+
+
+}

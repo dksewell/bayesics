@@ -54,6 +54,36 @@ within the ROPE of \eqn{p_{\cdot j}} if \code{sampling_design = "fixed rows"} or
 \code{"fixed columns"}
 }
 }
+\examples{
+# Generate data
+set.seed(2025)
+N = 500
+nR = 5
+nC = 3
+dep_probs = 
+  extraDistr::rdirichlet(1,rep(2,nR*nC)) |> 
+  matrix(nR,nC)
+
+# Multinomial sampling
+## Test independence
+independence_b(round(N * dep_probs))
+
+## Use other priors
+independence_b(round(N * dep_probs),
+               prior = "uniform")
+independence_b(round(N * dep_probs),
+               prior_shapes = 2)
+independence_b(round(N * dep_probs),
+               prior_shapes = matrix(1:(nR*nC),nR,nC))
+
+# Fixed marginals
+independence_b(round(N * dep_probs),
+               sampling_design = "rows")
+independence_b(round(N * dep_probs),
+               sampling_design = "cols")
+
+
+}
 \references{
 Gunel, Erdogan &  Dickey, James (1974). Bayes factors for independence in contingency tables, Biometrika, 61(3), Pages 545–557, https://doi.org/10.1093/biomet/61.3.545
 

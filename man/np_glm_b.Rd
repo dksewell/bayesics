@@ -99,6 +99,34 @@ By default, the loss function is the self-information loss, i.e., the negative
 log likelihood.  This then resembles a typical \code{glm_b} implementation,
 but is more robust to model misspecification.
 }
+\examples{
+# Generate some data
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rbinom(N,1,1.0 / (1.0 + exp(-(-2 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e")) ))))
+
+# Fit the GLM via the (non-parametric) loss-likelihood bootstrap.
+fit1 <-
+  np_glm_b(outcome ~ x1 + x2 + x3,
+           data = test_data,
+           family = binomial())
+fit1
+summary(fit1,
+        CI_level = 0.99)
+plot(fit1)
+coef(fit1)
+credint(fit1)
+predict(fit1,
+        newdata = fit1$data[1,])
+vcov(fit1)
+
+
+}
 \references{
 S P Lyddon, C C Holmes, S G Walker, General Bayesian updating and the loss-likelihood bootstrap, Biometrika, Volume 106, Issue 2, June 2019, Pages 465–478, https://doi.org/10.1093/biomet/asz006
 }

@@ -35,6 +35,29 @@
 #' @param plot logical.  Should a plot be shown?
 #' 
 #' 
+#' @examples
+#' # Single population
+#' sign_test_b(x = rnorm(50))
+#' 
+#' ## Change ROPE
+#' sign_test_b(x = rnorm(50),
+#'             ROPE = 0.1)
+#' 
+#' ## Change the prior
+#' sign_test_b(x = rnorm(50),
+#'             prior = "uniform")
+#' sign_test_b(x = rnorm(50),
+#'             prior_shapes = c(2,2))
+#' 
+#' ## Two populations
+#' sign_test_b(x = rnorm(50,1),
+#'             y = rnorm(50,0))
+#' 
+#' ## Change reference probability
+#' sign_test_b(x = rnorm(50,1),
+#'             y = rnorm(50,0),
+#'             p0 = 0.7)
+#' 
 #' @export
 
 

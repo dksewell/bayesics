@@ -116,3 +116,64 @@ minus \eqn{0.1s_y} to the overall mean of \eqn{y} plus \eqn{0.1s_y}.
 The result is a ROPE equal to \eqn{|\beta_j| < 0.05s_y/s_j}.  If the covariate is
 binary, then this is simply \eqn{|\beta_j| < 0.2s_y}.
 }
+\examples{
+# Generate some data
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e")) )
+
+# Find good hyperparameters for the residual variance
+s2_hyperparameters = 
+  find_invgamma_parms(lower_R2 = 0.05,
+                      upper_R2 = 0.95,
+                      probability = 0.8,
+                      response_variance = var(test_data$outcome))
+## Check (should equal ~ 0.8)
+extraDistr::pinvgamma((1.0 - 0.05) * var(test_data$outcome),
+                      0.5 * s2_hyperparameters[1],
+                      0.5 * s2_hyperparameters[2]) -
+  extraDistr::pinvgamma((1.0 - 0.95) * var(test_data$outcome),
+                        0.5 * s2_hyperparameters[1],
+                        0.5 * s2_hyperparameters[2])
+
+# Fit the linear model using a conjugate prior
+fit1 <-
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "conj",
+       prior_var_shape = s2_hyperparameters["shape"],
+       prior_var_rate = s2_hyperparameters["rate"])
+fit1
+summary(fit1,
+        CI_level = 0.99)
+plot(fit1)
+coef(fit1)
+credint(fit1,
+        CI_level = 0.9)
+bayes_factors(fit1)
+bayes_factors(fit1,
+              by = "var")
+AIC(fit1)
+BIC(fit1)
+DIC(fit1)
+WAIC(fit1)
+vcov(fit1)
+preds = predict(fit1)
+
+# Try other priors
+fit2 <-
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data) # Default is prior = "zellner"
+fit3 <-
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "improper")
+
+
+
+}

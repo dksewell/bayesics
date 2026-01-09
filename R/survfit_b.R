@@ -1,11 +1,99 @@
 #' Create survival curves
 #' 
 #' Use the semi-parametric piecewise exponential survival model 
-#' to fit a survival curve
+#' to fit a survival curve to one or more samples
+#' 
+#' @details
+#' The approach proposed by Qing et al. (2023) models the survival curve by 
+#' way of piecewise exponential curves.  That is, the hazard function is a 
+#' piecewise function.  The prior on the hazard within each "piece", or 
+#' equivalently the rate of the exponential distribution, is a conjugate 
+#' gamma distribution.  Unless specified, the prior shape and rate for each 
+#' piece is the posterior under the assumption that the data follow a single 
+#' exponential distribution. 
+#' 
+#' Unless prespecified by the user, the number of breaks in the hazard 
+#' function is determined by Bayes factors, which can be quickly 
+#' computed analytically.
+#' 
+#' If more than one population is being compared, then as before Bayes 
+#' factors will be used to determine the number of breaks in each group's 
+#' hazard function, and then Bayes factors will be used to compare the 
+#' hypothesis that each group has a separate survival function vs. the 
+#' null hypothesis that all groups share the same survival function.
+#' 
+#' @param formula Either \code{Surv(time,event) ~ group} for multiple groups, or else 
+#' \code{Surv(time,event) ~ 1} to make inference on a single population.  
+#' The \code{event} variable must equal 1 if the event occurred and 0 if 
+#' right censored.  Currently right censoring is the only type of censoring 
+#' allowed.
+#' @param data A data frame in which the variables specified in the formula will be found.
+#' @param prior_shape The shape parameter used in the gamma priors for the 
+#' hazard rates
+#' @param prior_rate The rate parameter used in the gamma priors for the 
+#' hazard rates
+#' @param max_n_time_bins integer.  Maximum number of time bins, or "pieces", of
+#' the hazard function to be evaluated via Bayes factors.  Ignored if 
+#' \code{n_time_bins} is provided.
+#' @param n_time_bins Number of time bins used for hazard ratio. For a more 
+#' data-driven approach, leave this argument missing and provide 
+#' \code{max_n_time_bins}.
+#' 
+#' @returns Object of class \code{survfit_b} with the following:
+#' \itemize{
+#'  \item \code{posterior_parameters} An \code{n_time_bins}x2 matrix whose 
+#'  columns provide shapes and rates of the gamma posterior distribution of
+#'  each of the piecewise hazard rates. 
+#'  \item \code{intervals} An \code{n_time_bins}x2 matrix whose columns 
+#'  provide the start and endpoints of each time bin.  If comparing multiple samples, 
+#'  a list of such matrices will be provided.
+#'  \item \code{marginal_likelihood}
+#'  \item \code{data}
+#' }
+#' If comparing multiple samples, each group will have a list of 
+#' \code{posterior_parameters} and \code{intervals}.
 #' 
 #' 
 #' @references 
 #' Qing Y, Thall PF, Yuan Y. A Bayesian piecewise exponential phase II design for monitoring a time-to-event endpoint. Pharm Stat. 2023 Jan;22(1):34-44. doi: 10.1002/pst.2256. Epub 2022
+#' 
+#' 
+#' @examples
+#' # Single population
+#' set.seed(2025)
+#' N = 300
+#' test_data = 
+#'   data.frame(outcome = 
+#'                rweibull(N,2,5))
+#' test_data$observed = 
+#'   ifelse(test_data$outcome >= 7, 0, 1)
+#' test_data$outcome =
+#'   ifelse(dplyr::near(test_data$observed,1), test_data$outcome, 7)
+#' fit1 = 
+#'   survfit_b(Surv(test_data$outcome,
+#'                  test_data$observed) ~ 1)
+#' fit1
+#' plot(fit1)
+#' 
+#' # Multiple populations
+#' set.seed(2025)
+#' N = 300
+#' test_data = 
+#'   data.frame(outcome = 
+#'                c(rweibull(2*N/3,2,5),
+#'                  rweibull(N/3,2,10)),
+#'              x1 = rep(letters[1:3],each = N/3))
+#' test_data$observed = 
+#'   ifelse(test_data$outcome >= 9, 0, 1)
+#' test_data$outcome =
+#'   ifelse(dplyr::near(test_data$observed,1), test_data$outcome, 9)
+#' fit2 =
+#'   survfit_b(Surv(outcome,
+#'                  observed) ~ x1,
+#'             data = test_data)
+#' fit2
+#' plot(fit2)
+#' 
 #' 
 #' @export
 

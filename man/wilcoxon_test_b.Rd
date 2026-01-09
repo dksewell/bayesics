@@ -71,6 +71,45 @@ untied pairs for which \eqn{x > y}.  Larger values imply that \eqn{x} is
 stochastically larger than \eqn{y}. For more information, see \link[DFBA]{dfba_mann_whitney}
 and vignette("dfba_mann_whitney",package = "DFBA").
 }
+\examples{
+# Signed rank analysis
+## Generate data
+N = 150
+set.seed(2025)
+test_data = 
+  data.frame(x = rbeta(N,2,10),
+             y = rbeta(N,5,10))
+
+## input differenced data
+wilcoxon_test_b(test_data$x - test_data$y)
+## input paired data vectors individually
+wilcoxon_test_b(test_data$x,
+                test_data$y,
+                paired = TRUE)
+
+## Use different priors
+wilcoxon_test_b(test_data$x - test_data$y,
+                prior = "uniform")
+wilcoxon_test_b(test_data$x - test_data$y,
+                prior_shapes = c(5,5))
+
+## Change ROPE bounds
+wilcoxon_test_b(test_data$x - test_data$y,
+                ROPE = 0.1)
+
+# Rank sum analysis
+## Generate data
+set.seed(2025)
+N = 150
+x = rbeta(N,2,10)
+y = rbeta(N + 1,5,10)
+
+## Perform analysis
+wilcoxon_test_b(x,y)
+
+
+
+}
 \references{
 Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction to Distribution-Free Methods. Cambridge: MIT Press.
 

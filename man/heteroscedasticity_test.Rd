@@ -18,6 +18,55 @@ has been set to FALSE}
 Use Chib's method to compute the Bayes factor to test for
 heteroscedasticity in analysis of variance models.
 }
+\examples{
+# Test homoscedastic case
+## Generate some data
+set.seed(2025)
+N = 200
+test_data = 
+  data.frame(x1 = rep(letters[1:5],N/5))
+test_data$outcome = 
+  rnorm(N,-1 + 2 * (test_data$x1 \%in\% c("d","e")) )
+
+## Fit the anova models
+hetero_model = 
+  aov_b(outcome ~ x1,
+        test_data)
+homo_model = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE)
+
+## Perform test for heteroscedasticity using Bayes factors
+heteroscedasticity_test(hetero_model,
+                        homo_model)
+
+# Test heteroscedastic case
+## Generate some data
+set.seed(2025)
+N = 200
+test_data = 
+  data.frame(x1 = rep(letters[1:5],N/5))
+test_data$outcome = 
+  rnorm(N,
+        -1 + 2 * (test_data$x1 \%in\% c("d","e")),
+        sd = 3 - 2 * (test_data$x1 \%in\% c("d","e")))
+
+## Fit the anova models
+hetero_model = 
+  aov_b(outcome ~ x1,
+        test_data)
+homo_model = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE)
+
+## Perform test for heteroscedasticity using Bayes factors
+heteroscedasticity_test(hetero_model,
+                        homo_model)
+
+
+}
 \references{
 Kass, R. E., & Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773–795.
 }

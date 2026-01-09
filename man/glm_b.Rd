@@ -166,6 +166,74 @@ glm_b is used to fit linear models.  It can be used to carry out
 regression for gaussian, binomial, and poisson data.  Note that if
 the family is gaussian, this is just a wrapper for \code{lm_b}.
 }
+\examples{
+# Generate some negative-binomial data
+set.seed(2025)
+N = 500
+test_data =
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5],
+             time = rexp(N))
+test_data$outcome =
+  rnbinom(N,
+          mu = exp(-2 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e"))) * test_data$time,
+          size = 0.7)
+
+# Fit using variational Bayes (default)
+fit_vb1 <-
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = negbinom(),
+        seed = 2025)
+fit_vb1
+summary(fit_vb1,
+        CI_level = 0.9)
+plot(fit_vb1)
+coef(fit_vb1)
+credint(fit_vb1,
+        CI_level = 0.99)
+bayes_factors(fit_vb1,
+              by = "v")
+preds =
+  predict(fit_vb1)
+
+# Try different priors
+fit_vb2 <-
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = negbinom(),
+        seed = 2025,
+        prior = "normal")
+fit_vb2
+fit_vb3 <-
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = negbinom(),
+        seed = 2025,
+        prior = "improper")
+fit_vb3
+
+# Use Importance sampling instead of VB
+fit_is <-
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = negbinom(),
+        algorithm = "IS",
+        seed = 2025)
+summary(fit_is)
+
+# Use large sample approximation instead of VB
+fit_lsa <-
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = negbinom(),
+        algorithm = "LSA",
+        seed = 2025)
+summary(fit_lsa)
+
+
+}
 \references{
 Kruschke JK. Rejecting or Accepting Parameter Values in Bayesian Estimation. Advances in Methods and Practices in Psychological Science. 2018;1(2):270-280. doi:10.1177/2515245918771304
 

@@ -37,7 +37,26 @@ Find parameters for Inverse gamma prior based on prior mean and one quantile
 \details{
 Either provide the lower and upper quantiles that contain \code{probability}
 of the inverse gamma distribution, or if this is for linear regression, you
-can specify that you are a prior \code{probability} sure that the coefficient
+can specify that you are a priori \code{probability} sure that the coefficient
 of determination (\eqn{R^2}) falls within the two bounds provided, assuming
 that the residual variance is \eqn{1-R^2} times the total variance.
+}
+\examples{
+# When aimed at linear regression via coefficient of determination...
+hypothetical_s2_y = 2.0
+lower_R2 = 0.05
+upper_R2 = 0.85
+find_invgamma_parms(response_variance = hypothetical_s2_y,
+                    lower_R2 = lower_R2,
+                    upper_R2 = upper_R2,
+                    probability = 0.8)
+
+# More arbitrary task...
+find_invgamma_parms(0.3, # hypothetical_s2_y * (1.0 - upper_R2)
+                    1.9, #hypothetical_s2_y * (1.0 - lower_R2)
+                    probability = 0.8)
+
+
+
+
 }

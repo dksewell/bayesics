@@ -86,3 +86,24 @@ One and two sample t-tests on vectors of data
 A one and two sample t-test is nothing more than a special case of
 one-way anova.  See \code{\link{aov_b}} for details.
 }
+\examples{
+# Single population
+t_test_b(rnorm(50))
+# or an alternative input format
+t_test_b(outcome ~ 1,
+         data = data.frame(outcome = rnorm(50)))
+
+# Two populations
+t_test_b(rnorm(50),
+         rnorm(15,1))
+
+# or an alternative input format
+t_test_b(outcome ~ group_variable,
+         data = 
+           data.frame(outcome = c(rnorm(50),
+                                  rnorm(15,1)),
+                      group_variable = rep(c("a","b"),
+                                           c(50,15))))
+
+
+}

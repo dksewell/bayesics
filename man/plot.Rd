@@ -39,7 +39,7 @@
 
 \method{plot}{lm_b_bma}(
   x,
-  type = c("diagnostics", "pdp", "ci band", "pi band"),
+  type = c("diagnostics", "ci band", "pi band"),
   variable,
   exemplar_covariates,
   combine_pi_ci = TRUE,
