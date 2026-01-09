@@ -49,6 +49,9 @@
   CI_level = 0.95,
   PI_level = 0.95,
   seed = 1,
+  backtransformation = function(x) {
+     x
+ },
   ...
 )
 

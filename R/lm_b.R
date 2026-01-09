@@ -70,6 +70,10 @@
 #'  }
 #'  where \eqn{s_y} is the standard deviation of \eqn{y}, and \eqn{s_{x_j}} is 
 #'  the standard deviation of the \eqn{j^{th}} covariate.
+#'  \item Unless \code{prior_var_shape} AND \code{prior_var_rate} are provided, 
+#'  the inverse gamma prior on the residual variance will place 50% prior 
+#'  probability that the correlation between the response and the fitted values 
+#'  is between 0.1 and 0.9.
 #'  \item If \code{prior = "improper"}, then the prior is
 #'  \deqn{
 #'    \pi(\beta,\sigma^2) \propto \frac{1}{\sigma^2}.
@@ -160,8 +164,8 @@ lm_b = function(formula,
                 zellner_g,
                 prior_beta_mean,
                 prior_beta_precision,
-                prior_var_shape = 0.001,
-                prior_var_rate = 0.001,
+                prior_var_shape,
+                prior_var_rate,
                 ROPE,
                 CI_level = 0.95){
   
@@ -241,16 +245,19 @@ lm_b = function(formula,
       message("\nThe g hyperparameter in Zellner's g prior is not specified.  It will be set automatically to n.\n")
       zellner_g = N
     }
-    if(missing(prior_var_shape)){
-      message("\nThe a hyperparameter in the inverse gamma prior is not specified.  It will be set automatically to 0.001.\n")
-      a = 0.001
+    if(missing(prior_var_shape) | missing(prior_var_rate)){
+      message("\nThe hyperparameters for the residual variance were not provided. Instead, the prior will put 50% prior probability that R^2 is between 0.1^2 and 0.9^2.\n")
+      
+      temp_parms = 
+        find_invgamma_parms(response_variance = var(y),
+                            lower_R2 = 0.1^2,
+                            upper_R2 = 0.9^2,
+                            probability = 0.5,
+                            plot_results = FALSE)
+      a = temp_parms[1]
+      b = temp_parms[2]
     }else{
       a = prior_var_shape
-    }
-    if(missing(prior_var_rate)){
-      message("\nThe b hyperparameter in the inverse gamma prior is not specified.  It will be set automatically to 0.001.\n")
-      b = 0.001
-    }else{
       b = prior_var_rate
     }
     
@@ -316,16 +323,19 @@ lm_b = function(formula,
     }else{
       mu = prior_beta_mean
     }
-    if(missing(prior_var_shape)){
-      message("\nThe a hyperparameter in the inverse gamma prior is not specified.  It will be set automatically to 0.001.\n")
-      a = 0.001
+    if(missing(prior_var_shape) | missing(prior_var_rate)){
+      message("\nThe hyperparameters for the residual variance were not provided. Instead, the prior will put 50% prior probability that R^2 is between 0.1^2 and 0.9^2.\n")
+      
+      temp_parms = 
+        find_invgamma_parms(response_variance = var(y),
+                            lower_R2 = 0.1^2,
+                            upper_R2 = 0.9^2,
+                            probability = 0.5,
+                            plot_results = FALSE)
+      a = temp_parms[1]
+      b = temp_parms[2]
     }else{
       a = prior_var_shape
-    }
-    if(missing(prior_var_rate)){
-      message("\nThe b hyperparameter in the inverse gamma prior is not specified.  It will be set automatically to 0.001.\n")
-      b = 0.001
-    }else{
       b = prior_var_rate
     }
     if(missing(prior_beta_precision)){

@@ -12,8 +12,8 @@ lm_b(
   zellner_g,
   prior_beta_mean,
   prior_beta_precision,
-  prior_var_shape = 0.001,
-  prior_var_rate = 0.001,
+  prior_var_shape,
+  prior_var_rate,
   ROPE,
   CI_level = 0.95
 )
@@ -100,6 +100,10 @@ set the prior on the intercept to be flat, this leads to
  }
 where \eqn{s_y} is the standard deviation of \eqn{y}, and \eqn{s_{x_j}} is
 the standard deviation of the \eqn{j^{th}} covariate.
+\item Unless \code{prior_var_shape} AND \code{prior_var_rate} are provided,
+the inverse gamma prior on the residual variance will place 50\% prior
+probability that the correlation between the response and the fitted values
+is between 0.1 and 0.9.
 \item If \code{prior = "improper"}, then the prior is
 \deqn{
    \pi(\beta,\sigma^2) \propto \frac{1}{\sigma^2}.
