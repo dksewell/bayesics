@@ -31,16 +31,21 @@ knitr::opts_chunk$set(
 options(knitr.table.format = "html")
 library(bayesics)
 set.seed(2025)
+
+options(
+  pillar.width = Inf
+)
 ```
 
 
+Linear regression and generalized linear regression are the bread and butter of the practicing statistician.  Below we outline how to implement these fundamental regression techniques in `bayesics`, including diagnostic and other plots, and non-parametric alternatives.  Default priors are described in more detail.
 
 
 # Linear regression with `lm_b` {#sec-lm_b}
 
 
 ## Statistical Model {#sec-lm_model}
-Linear regression is the bread and butter of the practicing statistician.  Mathematically, the model is given by
+Mathematically, the linear regression model is given by
 $$
 \begin{aligned}
   y & = X\beta + \epsilon, \\
@@ -132,7 +137,7 @@ $$
 for $g=n$ by default as is customary for a reference prior, else a user-supplied $g$ (via the `zellner_g` argument).  I.e., $V = X'X$.
 
 
-The other built-in prior is if `prior="conjugate"`.  The prior precision matrix $V$ is set to be a diagonal matrix, with notions from standardized regression motivating the diagonal elements.  In standardized regression, we consider the following:
+The other built-in prior is achieved by setting `prior="conjugate"`.  The prior precision matrix $V$ is set to be a diagonal matrix, with notions from standardized regression motivating the diagonal elements.  In standardized regression, we consider the following:
 $$
   \begin{aligned}
     	y_i^*& = \frac{y_i-\bar y}{s_y}, \\
@@ -153,13 +158,18 @@ $$
   \Rightarrow \beta_{-1} & \sim N\left(0,\frac{25}{4} \text{Diag}\left(\frac{s^2_y}{s^2_j}\right)\right)
 \end{aligned}
 $$
-where $s_y$ is the standard deviation of $y$, $s_j$ is the standard deviation of the $j^{th}$ covariate, $\beta_{-1}$ is the vector of regression coefficients sans the intercept. We can complete $V$ by setting a flat prior on the intercept such that the prior variance is $\frac{25}{4}s_y^2$.
+where $s_y$ is the standard deviation of $y$, $s_j$ is the standard deviation of the $j^{th}$ covariate, $\beta_{-1}$ is the vector of regression coefficients sans the intercept. We can complete $V$ by setting a flat prior on the intercept such that the prior variance is $\frac{25}{4}s_y^2$, and the prior mean equals $\bar y$.
 
 
 ### $\sigma^2$
-By default, the values of $a$ and $b$ are set to be small (0.001) in order to provide a very flat prior on $\sigma^2$.  However, we can find a better prior using the `bayesics` function `find_invgamma_parms()`.
+By default, the values of $a$ and $b$ are set in such a way as to reflect prior beliefs on the coefficient of determination, or equivalently, on the correlation between the outcome and the fitted values.  Specifically, this prior places 50% prior probability that this correlation is between 0.1 and 0.9 in magnitude.  If the user wishes to use different values to build a prior on the residual variance, they can do so via the `find_invgamma_parms` function.  E.g.,
+```{r}
+(find_invgamma_parms(lower_R2 = 0.05^2,
+                     upper_R2 = 0.5^2,
+                     probability = 0.5,
+                     response_variance = 15))
+```
 
-A reasonable approach to building a good prior on $\sigma^2$ via a peak at the data would be to look at the sample variance of the response variable, and then build a prior around that.  If a priori we are 80% sure the covariates will explain between 10% and 90% of the variation in y, then the prior on $\sigma^2$ ought to have 0.8 of its probability mass between $0.1s^2_y$ and $0.9s^2_y$.  This can be accomplished via the `find_invgamma_parms` function.
 
 
 ## `lm_b` Example
@@ -172,8 +182,6 @@ data("airquality",package = "datasets")
 aq =
   airquality |>
   mutate(
-    # Use log(ozone) as response variable
-    log_ozone = log(Ozone),
     # Compute the day of the year
     year_day =
       cumsum(c(0,31,28,31,30,31,30,31,31,30,31,30))[Month] + Day,
@@ -184,29 +192,6 @@ aq =
 The outcome is the ozone in ppb, and the covariates include the solor radiation (Langley), wind speed (MPH), temperature (F), and day of the year.
 
 
-We could use the default $\Gamma(0.001/2,0.001/2)$ flat prior on $\sigma^2$, but instead let's find a reasonable concentrated prior.
-```{r}
-s2_y = var(aq$log_ozone)
-a_and_b =
-  find_invgamma_parms(lower_quantile = 0.1 * s2_y,
-                      upper_quantile = 0.9 * s2_y,
-                      probability = 0.8,
-                      plot = FALSE)
-a_and_b
-# or equivalently:
-find_invgamma_parms(response_variance = s2_y,
-                    lower_R2 = 0.1,
-                    upper_R2 = 0.9,
-                    probability = 0.8)
-# Check, since a solution is not at all guaranteed to exist:
-extraDistr::pinvgamma(0.1 * s2_y,
-                      0.5 * a_and_b[1],
-                      0.5 * a_and_b[2])
-extraDistr::pinvgamma(0.9 * s2_y,
-                      0.5 * a_and_b[1],
-                      0.5 * a_and_b[2],
-                      lower.tail = FALSE)
-```
 
 Now let's use `lm_b` to fit the linear regression model.  We can use diagnostic plots to see that we really do need to use the log of Ozone as the response variable for our model assumptions to hold (mostly).
 
@@ -218,14 +203,12 @@ plot(bad_fit,
      type = "dx")
 ```
 
-Now let's use log(Ozone) with a Zellner's g prior and our concentrated prior on $\sigma^2$:
+Now let's use log(Ozone) with a Zellner's g prior:
 
 ```{r}
 z_fit =
-  lm_b(log_ozone ~ Solar.R + Wind + Temp + year_day,
-       data = aq,
-       prior_var_shape = a_and_b[1],
-       prior_var_rate = a_and_b[2])
+  lm_b(log(Ozone) ~ Solar.R + Wind + Temp + year_day,
+       data = aq)
 ```
 
 We can look again at the diagnostics
@@ -245,41 +228,32 @@ Note that the summary provides:
 * **BF favoring alternative**: Bayes factor comparing $\beta_j\neq0$ vs. $\beta_j=0$.  Alongside this we provide the **Interpretation** given by [@kass1995bayes].
 
 
-We can also visualize our results by plotting the credible and prediction bands for each covariate.  When doing this, the other covariates not actively being plotted need to be fixed at some value.  Partial dependence plots get around this by averaging the predictions over all individuals in the data set, and can be visualized via:
+We can also visualize our results by plotting the credible and prediction bands for each covariate.  When doing this, the other covariates not actively being plotted need to be fixed at some value. The user can either provide specific values, or else the algorithm will find the medoid observation in the training data and use those values.  Note that if a transformation was used on the response, such as we did using `log`, we should add its inverse function under the `backtransformation` argument.
 ```{r}
 plot(z_fit,
-     type = "pdp")
+     type = c("cr","pr"),
+     backtransformation = exp)
 ```
-While PDPs are very useful when there are interaction terms, they don't, however, provide inference, and so often it is more useful to look at credible and prediction bands (dark blue are the credible bands, lighter blue are the prediction bands).  The user can either provide specific values, or else the algorithm will find the medoid observation in the training data and use those values.
-```{r}
-plot(z_fit,
-     type = c("ci","pi"))
-```
-Note that any non-linearities are automatically accounted for.  For example:
+Note that any non-linear associations are automatically accounted for.  For example:
 ```{r}
 z_fit_2 =
-  lm_b(log_ozone ~ Solar.R + I(Solar.R^2) + Wind + Temp + year_day,
-       data = aq,
-       prior_var_shape = a_and_b[1],
-       prior_var_rate = a_and_b[2])
+  lm_b(log(Ozone) ~ Solar.R + I(Solar.R^2) + Wind + Temp + year_day,
+       data = aq)
 
 plot(z_fit_2,
+     type = c("cr","pr"),
      variable = "Solar.R",
-     type = c("ci","pi"))
+     backtransformation = exp)
 ```
 
 Multiple information criteria are available to compare the models:
 ```{r}
-AIC(z_fit)
 AIC(z_fit_2)
 
-BIC(z_fit)
 BIC(z_fit_2)
 
-DIC(z_fit)
 DIC(z_fit_2)
 
-WAIC(z_fit)
 WAIC(z_fit_2)
 ```
 
@@ -314,7 +288,7 @@ Unlike in the linear case, non-Gaussian distributed outcomes do not provide clos
 Variational Bayes (VB) aims to find a distribution under some constraint that minimizes the Kullback-Leibler divergence between the true posterior and the constrained distribution.  There are two main types of VB: Mean Field and Fixed Form.  The former assumes independence between components, and tends towards underestimating uncertainty in the posterior.  `bayesics` uses the latter, where the approximating distribution is constrained to be a multivariate normal with unconstrained covariance matrix.  See [@salimans2013fixed] for details on this algorithm.
 
 ### Large sample approximation
-The Bernstein-Von Mises theorem tells us that our posterior converges to a multivariate normal distribution as the sample size increases.  if `algorithm = "LSA"`, then this limiting distribution is used.  Note that this is the fastest algorithm available, and if the sample size is sufficiently large that the other two algorithms are slow, then the normal approximation is probably a pretty good one.
+The Bernstein-Von Mises theorem tells us that our posterior converges to a multivariate normal distribution as the sample size increases.  If `algorithm = "LSA"`, then this limiting distribution is used.  Note that this is the fastest algorithm available, and if the sample size is sufficiently large that the other two algorithms are slow, then the normal approximation is probably a pretty good one.
 
 ### Importance sampling
 If there are concerns about the large sample approximation holding in the tails of the posterior, importance sampling can be used.  `bayesics` uses a multivariate $t$ distribution with 5 degrees of freedom (although this can be changed through the `proposal_df` argument) in order to better capture the tail behavior, and hence the bounds of the credible interval, ROPE, etc.  As described in `vignette("Introduction-to-bayesics",package="bayesics")`, `glm_b` automatically selects the correct number of samples required to obtain tight estimates on the credible interval bounds.
@@ -353,9 +327,7 @@ vb_fit =
 ```
 
 ```{r}
-print(
-  summary(vb_fit),
-  width = Inf)
+summary(vb_fit)
 ```
 
 
@@ -365,7 +337,7 @@ vb_fit
 coef(vb_fit)
 credint(vb_fit)
 vcov(vb_fit)
-SDratio(vb_fit)
+bayes_factors(vb_fit)
 ```
 
 We can also implement importance sampling or the asymptotic approximation and compare the results.
@@ -395,12 +367,12 @@ We can assess the model adequacy via Bayesian p-values:
 plot(vb_fit,
      type = "dx")
 ```
-From this, we see that the Bayesian p-value is 1, implying that the deviance for the predicted data is always smaller than that of the observed data, or equivalently has a larger likelihood than the observed data.  If this were a serious analysis, we would immediately stop and proceed to the non-parametric methods described below in @sec-np_glm_b.  However, for the purposes of describing the functionality of `bayesics`, we will continue as if this were a good fit.
+From this, we see that the Bayesian p-value is 1, implying that the deviance for the predicted data is always smaller than that of the observed data, or equivalently has a larger likelihood than the observed data.  If this were a serious analysis, we would immediately stop and perhaps try the `negbinom()` family or proceed to the non-parametric methods described below in @sec-np_glm_b.  However, for the purposes of describing the functionality of `bayesics`, we will continue as if this were a good fit.
 
-As with `lm_b`, we can look at partial dependence plots, credible intervals/bands, and prediction intervals/bands.  The visualizations are given on the original scale, and as before, the darker blue corresponds to the credible intervals, and the lighter blue corresponds to prediction intervals.
+As with `lm_b`, we can look at credible bands and prediction bands.  The visualizations are given on the original scale, and as before, the darker blue corresponds to the credible intervals, and the lighter blue corresponds to prediction intervals.
 ```{r}
 plot(vb_fit,
-     type = c("ci","pi"))
+     type = c("cr","pr"))
 ```
 
 We can use the same information criteria to compare models.
@@ -456,7 +428,7 @@ knitr::kable(collated_IC)
 ## Background
 Suppose we do not believe our model is correctly specified ("All models are wrong$\ldots$").  Then in that case, we must rethink what our parameters mean, and how to do inference on them.  [@lyddon2019general] provide a clear description of what the estimand is, and how to go about making inference on it.  Below is a very brief overview; we recommend the reader to read Lyddon et al.'s manuscript in its entirety.
 
-First, it is perhaps obvious yet important to state that the estimand we care about should revolve around the population, not the sample.  Second, it should be reasonable to be able to provide some loss function between an individual and the model parameters (e.g., $(y_i - X_i\beta)$ for linear regression).  Third, if we were able to fully describe the population distribution, then we would select the model parameter which minimizes the loss averaged over the population distribution.  For example, if we were fitting a LOESS model, the "truth"/estimand that we would be aiming for with our finite sample estimation would be the LOESS fit that would be obtained were we to create the fit using the entire population.  
+First, it is perhaps obvious yet important to state that the estimand we care about should revolve around the population, not the sample.  Second, it should be reasonable to be able to provide some loss function between an individual and the model parameters (e.g., $(y_i - X_i\beta)^2$ for linear regression).  Third, if we were able to fully describe the population distribution, then we would select the model parameter which minimizes the loss averaged over the population distribution.  For example, if we were fitting a LOESS model, the "truth"/estimand that we would be aiming for with our finite sample estimation would be the LOESS fit that would be obtained were we to create the fit using the entire population.  
 
 More formally, if we have a parameter $\theta\in\Theta$ and individual observations $y_i\in{\cal Y}$, let $\ell:(\Theta,{\cal Y})\mapsto\Re$ denote our loss function, let $F$ denote the population distribution of the $y_i$'s, then our estimand is $\theta(F)$, denoted as such to emphasize the fact that it is a function of the population distribution of $y$, and given by
 $$
@@ -468,33 +440,37 @@ What is hopefully clear from this is that there is a one-to-one correspondence b
 
 
 ## `np-glm_b` Example
-Now let's see how to implement it in `bayesics`. Let's revisit the breaks in yarn dataset, since clearly from the Bayesian p-value we could see that the Poisson GLM was not the correct model.  Instead of using `glm_b`, we will use the same syntax but use `np_glm_b` instead.   Of note is that there are two ways to do inference.  First, the Bayesian bootstrap can be computed directly, although this is computationally expensive. Because of this, it is recommended to use   Second, there is a large sample approximation that can be used here, and which is the default.
-```{r}
-np_fit = 
-  np_glm_b(breaks ~ wool + tension,
-           data = warpbreaks,
-           family = poisson())
-# Not run:
-# plan(multisession, workers = 10)
+Now let's see how to implement it in `bayesics`. Let's revisit the breaks in yarn dataset, since clearly from the Bayesian p-value we could see that the Poisson GLM was not the correct model.  Instead of using `glm_b`, we will use the same syntax but use `np_glm_b` instead.   Of note is that there are two ways to do inference.  First, the Bayesian bootstrap can be computed directly, although this is computationally expensive. Because of this, it is recommended to use the second approach: there is a large sample approximation that can be used here, and which is the default in `bayesics`.
+
+
+```{r eval=FALSE}
+### Not run
+plan(multisession, workers = 10)
 np_fit_bs = 
   np_glm_b(breaks ~ wool + tension,
            data = warpbreaks,
            family = poisson(),
            n_draws = 500,
            ask_before_full_sampling = FALSE)
+plan(sequential)
 ```
-We can compare the results between the large sample and the exact finite sample inferential methods:
+
+```{r}
+np_fit = 
+  np_glm_b(breaks ~ wool + tension,
+           data = warpbreaks,
+           family = poisson())
+```
+
+We can look at the results:
 ```{r}
 np_fit
-np_fit_bs
 ```
-Despite there being only `r nrow(warpbreaks)` observations, the large sample approximation is nearly identical to the full bootstrap approach.
 
 The following generics work for `np_glm_b` objects:
 ```{r}
-print(
-  summary(np_fit),
-  width = Inf)
+print(np_fit)
+summary(np_fit)
 coef(np_fit)
 credint(np_fit)
 vcov(np_fit)
@@ -534,7 +510,7 @@ paste0("Estimate: ",
   cat()
 ```
 
-In addition, we have the plot generic.  There are no diagnostics, since we are actually assuming the model is mis-specified, nor can there be prediction intervals since we are not assuming a true data generating process, but we can still look at the PDPs and credible intervals/bands:
+In addition, we have the plot generic.  There are no diagnostics, since we are actually assuming the model is mis-specified, nor can there be prediction intervals since we are not assuming a true data generating process, but we can still look at the credible bands:
 ```{r}
 plot(np_fit)
 ```
