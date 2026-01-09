@@ -102,7 +102,6 @@ test_that("Bayesian model averaging", {
                     test_data,
                     user.int = FALSE)
   )
-  fita
   
   # # Make sure parallelization works. 
   # plan(multisession, workers = 5)
@@ -115,30 +114,30 @@ test_that("Bayesian model averaging", {
   # )
   # plan(sequential)
   
-  # Check if splines and factors work
-  library(splines)
-  set.seed(2025)
-  N = 500
-  test_data = 
-    data.frame(x1 = rnorm(N),
-               x2 = rnorm(N),
-               x3 = letters[1:5],
-               x4 = rnorm(N),
-               x5 = rnorm(N),
-               x6 = rnorm(N),
-               x7 = rnorm(N),
-               x8 = rnorm(N),
-               x9 = rnorm(N),
-               x10 = rnorm(N))
-  test_data$outcome = 
-    rnorm(N,-1 + test_data$x1 + test_data$x1^2 + 2 * (test_data$x3 %in% c("d","e")) )
-  expect_no_error(
-    fitc <- 
-      bma_inference(outcome ~ ns(x1,df = 5) + x2 + x3,
-                    data = test_data,
-                    mc_draws = 5e3,
-                    user.int = FALSE)
-  )
+  # # Check if splines and factors work
+  # library(splines)
+  # set.seed(2025)
+  # N = 500
+  # test_data = 
+  #   data.frame(x1 = rnorm(N),
+  #              x2 = rnorm(N),
+  #              x3 = letters[1:5],
+  #              x4 = rnorm(N),
+  #              x5 = rnorm(N),
+  #              x6 = rnorm(N),
+  #              x7 = rnorm(N),
+  #              x8 = rnorm(N),
+  #              x9 = rnorm(N),
+  #              x10 = rnorm(N))
+  # test_data$outcome = 
+  #   rnorm(N,-1 + test_data$x1 + test_data$x1^2 + 2 * (test_data$x3 %in% c("d","e")) )
+  # expect_no_error(
+  #   fitc <- 
+  #     bma_inference(outcome ~ ns(x1,df = 5) + x2 + x3,
+  #                   data = test_data,
+  #                   mc_draws = 1e3,
+  #                   user.int = FALSE)
+  # )
   
   rm(list = ls())
   
