@@ -228,7 +228,7 @@ predict.glm_b = function(object,
                       function(i){
                         rbinom(nrow(yhat_draws),
                                trials,
-                               yhat_draws[,i])
+                               yhat_draws[,i] / trials)
                       },
                       future.seed = seed)
       if(NCOL(y_draws) == 1)
