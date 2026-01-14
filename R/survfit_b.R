@@ -122,13 +122,13 @@ survfit_b = function(formula,
   max_time = max(time)
   
   
-  # If missing prior hyperparameters, use data to get reasonable guess based on t_i\sim exp(\lambda)
+  # Nix this.  # If missing prior hyperparameters, use data to get reasonable guess based on t_i\sim exp(\lambda)
   if(missing(prior_shape) | missing(prior_rate)){
     # Based on posterior updating with unit information gain
     prior_shape = 
-      0.001 + mean(status)
+      0.001 #+ mean(status)
     prior_rate = 
-      0.001 + mean(time)
+      0.001 #+ mean(time)
   }
   
   
@@ -207,39 +207,6 @@ survfit_b = function(formula,
   
   # Begin single group analysis
   if(single_group_analysis){
-    
-    
-    # Create helper for computing posterior parameters
-    # get_post_parms = function(breakpoints){
-    #   bpt_assignment = 
-    #     cut(time,
-    #         breakpoints) |> 
-    #     as.integer()
-    #   n_j = 
-    #     bpt_assignment[which(dplyr::near(status,1))] |> 
-    #     factor(levels = 1:(length(breakpoints) - 1)) |> 
-    #     table() |> 
-    #     as.vector()
-    #   bpt_diffs = diff(breakpoints)
-    #   
-    #   e_ij = matrix(0.0,length(time),length(breakpoints) - 1)
-    #   for(j in 1:ncol(e_ij)){
-    #     e_ij[which(bpt_assignment > j),j] = 
-    #       bpt_diffs[j]
-    #     
-    #     happened_in_this_bin = 
-    #       which(bpt_assignment == j)
-    #     e_ij[happened_in_this_bin,j] = 
-    #       time[happened_in_this_bin] -
-    #       breakpoints[j]
-    #   }
-    #   
-    #   cbind(a_j_tilde =
-    #           prior_shape + n_j,
-    #         b_j_tilde = 
-    #           prior_rate + colSums(e_ij)
-    #   ) 
-    # }
     
     # Try out multiple breakpoints, select the optimal via marginal likelihood
     if(missing(n_time_bins)){
@@ -342,38 +309,6 @@ survfit_b = function(formula,
       split(seq_len(nrow(X)), X$group_names)
     G = length(group_assignments)
     
-    
-    # Create helper for computing posterior parameters
-    # get_post_parms = function(breakpoints,gr){
-    #   bpt_assignment = 
-    #     cut(time[group_assignments[[gr]]],
-    #         breakpoints) |> 
-    #     as.integer()
-    #   n_j = 
-    #     bpt_assignment[which(dplyr::near(status[group_assignments[[gr]]],1))] |> 
-    #     factor(levels = 1:(length(breakpoints) - 1)) |> 
-    #     table() |> 
-    #     as.vector()
-    #   bpt_diffs = diff(breakpoints)
-    #   
-    #   e_ij = matrix(0.0,length(group_assignments[[gr]]),length(breakpoints) - 1)
-    #   for(j in 1:ncol(e_ij)){
-    #     e_ij[which(bpt_assignment > j),j] = 
-    #       bpt_diffs[j]
-    #     
-    #     happened_in_this_bin = 
-    #       which(bpt_assignment == j)
-    #     e_ij[happened_in_this_bin,j] = 
-    #       time[group_assignments[[gr]]][happened_in_this_bin] -
-    #       breakpoints[j]
-    #   }
-    #   
-    #   cbind(a_j_tilde =
-    #           prior_shape + n_j,
-    #         b_j_tilde = 
-    #           prior_rate + colSums(e_ij)
-    #   ) 
-    # }
     
     # Try out multiple breakpoints, select the optimal via marginal likelihood
     J_opt = 
