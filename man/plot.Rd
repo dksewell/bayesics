@@ -16,7 +16,7 @@
   type,
   variable,
   exemplar_covariates,
-  combine_pi_ci = TRUE,
+  combine_pred_cred = TRUE,
   variable_seq_length = 30,
   return_as_list = FALSE,
   CI_level = 0.95,
@@ -30,7 +30,7 @@
 \method{plot}{aov_b}(
   x,
   type = c("diagnostics", "cred band", "pred band"),
-  combine_pi_ci = TRUE,
+  combine_pred_cred = TRUE,
   return_as_list = FALSE,
   CI_level = 0.95,
   PI_level = 0.95,
@@ -42,7 +42,7 @@
   type = c("diagnostics", "cred band", "pred band"),
   variable,
   exemplar_covariates,
-  combine_pi_ci = TRUE,
+  combine_pred_cred = TRUE,
   bayes_pvalues_quantiles = c(0.01, 1:19/20, 0.99),
   variable_seq_length = 30,
   return_as_list = FALSE,
@@ -60,7 +60,7 @@
   type,
   variable,
   exemplar_covariates,
-  combine_pi_ci = TRUE,
+  combine_pred_cred = TRUE,
   variable_seq_length = 30,
   return_as_list = FALSE,
   CI_level = 0.95,
@@ -103,7 +103,7 @@ or "ade".}
 \item{exemplar_covariates}{data.frame or tibble with exactly one row.
 Used to fix other covariates while varying the variable of interest for the plot.}
 
-\item{combine_pi_ci}{logical. If type includes both "ci band" and "pi band",
+\item{combine_pred_cred}{logical. If type includes both "cred band" and "pred band",
 should the credible band be superimposed on the prediction band or
 plotted separately?}
 

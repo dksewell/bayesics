@@ -12,7 +12,7 @@
 #' @param variable character. If type = "pdp" , which variable should be plotted?
 #' @param exemplar_covariates data.frame or tibble with exactly one row.  
 #' Used to fix other covariates while varying the variable of interest for the plot.
-#' @param combine_pi_ci logical. If type includes both "ci band" and "pi band", 
+#' @param combine_pred_cred logical. If type includes both "cred band" and "pred band", 
 #' should the credible band be superimposed on the prediction band or 
 #' plotted separately?
 #' @param variable_seq_length integer. Number of points used to draw pdp.
@@ -29,7 +29,7 @@ plot.lm_b = function(x,
                      type,
                      variable,
                      exemplar_covariates,
-                     combine_pi_ci = TRUE,
+                     combine_pred_cred = TRUE,
                      variable_seq_length = 30,
                      return_as_list = FALSE,
                      CI_level = 0.95,
@@ -244,10 +244,10 @@ plot.lm_b = function(x,
   # Prediction Band plots
   if("pred band" %in% type){
     
-    # Get starter plots if !combine_pi_ci
+    # Get starter plots if !combine_pred_cred
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("cred band" %in% type),
                       "pred_band_","band_"),v)
       
       if(is.numeric(x$data[[v]])){
@@ -267,7 +267,7 @@ plot.lm_b = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("cred band" %in% type),
                       "pred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
@@ -304,8 +304,8 @@ plot.lm_b = function(x,
   
   if("cred band" %in% type){
     
-    # Get starter plots if !combine_pi_ci
-    if( (!combine_pi_ci) | !("pred band" %in% type)){
+    # Get starter plots if !combine_pred_cred
+    if( (!combine_pred_cred) | !("pred band" %in% type)){
       for(v in variable){
         if(is.numeric(x$data[[v]])){
           plot_list[[paste0("cred_band_",v)]] =
@@ -325,7 +325,7 @@ plot.lm_b = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("pred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("pred band" %in% type),
                       "cred_band_","band_"),v)
       
       
@@ -371,9 +371,9 @@ plot.lm_b = function(x,
           ggtitle(
             paste0(
               ifelse(
-                grepl("pi_",j),
+                grepl("pred_",j),
                 paste0("Prediction band for ",v),
-                ifelse(grepl("ci_",j),
+                ifelse(grepl("cred_",j),
                        paste0("Credible band for ",v),
                        paste0("Cred. and Pred. bands for ",v)
                 )
@@ -406,7 +406,7 @@ plot.aov_b = function(x,
                       type = c("diagnostics",
                                "cred band",
                                "pred band"),
-                      combine_pi_ci = TRUE,
+                      combine_pred_cred = TRUE,
                       return_as_list = FALSE,
                       CI_level = 0.95,
                       PI_level = 0.95,
@@ -474,7 +474,7 @@ plot.aov_b = function(x,
     
     # Get starter plots
     plot_name_v =
-      ifelse((!combine_pi_ci) | !("cred band" %in% type),
+      ifelse((!combine_pred_cred) | !("cred band" %in% type),
              "pred_intervals","intervals")
     
     plot_list[[plot_name_v]] =
@@ -501,8 +501,8 @@ plot.aov_b = function(x,
   
   if("cred band" %in% type){
     
-    # Get starter plots if !combine_pi_ci
-    if( (!combine_pi_ci) | !("pred band" %in% type)){
+    # Get starter plots if !combine_pred_cred
+    if( (!combine_pred_cred) | !("pred band" %in% type)){
       plot_list[["cred_intervals"]] =
         x$data |>
         ggplot(aes(x = .data$group,
@@ -511,7 +511,7 @@ plot.aov_b = function(x,
     }
     
     plot_name_v =
-      ifelse((!combine_pi_ci) | !("pred band" %in% type),
+      ifelse((!combine_pred_cred) | !("pred band" %in% type),
              "cred_intervals","intervals")
     
     plot_list[[plot_name_v]] =
@@ -541,9 +541,9 @@ plot.aov_b = function(x,
         ggtitle(
           paste0(
             ifelse(
-              grepl("pi_",j),
+              grepl("pred_",j),
               "Prediction intervals",
-              ifelse(grepl("ci_",j),
+              ifelse(grepl("cred_",j),
                      "Credible intervals",
                      "Cred. and Pred. intervals"
               )
@@ -580,7 +580,7 @@ plot.lm_b_bma = function(x,
                                   "pred band"),
                          variable,
                          exemplar_covariates,
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          bayes_pvalues_quantiles = c(0.01,1:19/20,0.99),
                          variable_seq_length = 30,
                          return_as_list = FALSE,
@@ -813,10 +813,10 @@ plot.lm_b_bma = function(x,
   # Prediction Band plots
   if("pred band" %in% type){
     
-    # Get starter plots if !combine_pi_ci
+    # Get starter plots if !combine_pred_cred
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("cred band" %in% type),
                       "pred_band_","band_"),v)
       
       if(is.numeric(x$data[[v]])){
@@ -836,7 +836,7 @@ plot.lm_b_bma = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("cred band" %in% type),
                       "pred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
@@ -873,8 +873,8 @@ plot.lm_b_bma = function(x,
   
   if("cred band" %in% type){
     
-    # Get starter plots if !combine_pi_ci
-    if( (!combine_pi_ci) | !("pred band" %in% type)){
+    # Get starter plots if !combine_pred_cred
+    if( (!combine_pred_cred) | !("pred band" %in% type)){
       for(v in variable){
         if(is.numeric(x$data[[v]])){
           plot_list[[paste0("cred_band_",v)]] =
@@ -894,7 +894,7 @@ plot.lm_b_bma = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("pred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("pred band" %in% type),
                       "cred_band_","band_"),v)
       
       
@@ -973,7 +973,7 @@ plot.glm_b = function(x,
                       type,
                       variable,
                       exemplar_covariates,
-                      combine_pi_ci = TRUE,
+                      combine_pred_cred = TRUE,
                       variable_seq_length = 30,
                       return_as_list = FALSE,
                       CI_level = 0.95,
@@ -1411,7 +1411,7 @@ plot.glm_b = function(x,
       
       # Get starter plots
       two_plots = 
-        (!combine_pi_ci) &
+        (!combine_pred_cred) &
         ( ("cred band" %in% type) & ("pred band" %in% type) )
       if(two_plots){
         plot_name_v1 = 
@@ -1501,7 +1501,7 @@ plot.glm_b = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("cred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("cred band" %in% type),
                       "pred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
@@ -1541,7 +1541,7 @@ plot.glm_b = function(x,
     
     for(v in variable){
       plot_name_v = 
-        paste0(ifelse((!combine_pi_ci) | !("pred band" %in% type),
+        paste0(ifelse((!combine_pred_cred) | !("pred band" %in% type),
                       "cred_band_","band_"),v)
       
       if(is.numeric(x_seq[[v]])){
