@@ -13,17 +13,17 @@ test_that("Test single population semi-parametric survival curve fitting",{
   # Check fitting function
   expect_no_error(
     fita <-
-      survfit_b(survival::Surv(test_data$outcome,
+      survfit_b(Surv(test_data$outcome,
                      test_data$observed) ~ 1)
   )
   expect_error(
     fita <-
-      survfit_b(survival::Surv(test_data$outcome,
+      survfit_b(Surv(test_data$outcome,
                      test_data$observed))
   )
   expect_no_error(
     fitb <-
-      survfit_b(survival::Surv(outcome,
+      survfit_b(Surv(outcome,
                      observed) ~ 1,
                 data = test_data)
   )
@@ -64,13 +64,13 @@ test_that("Test multiple populations via semi-parametric survival curve fitting"
   # Check fitting function
   expect_no_error(
     fita <-
-      survfit_b(survival::Surv(outcome,
+      survfit_b(Surv(outcome,
                      observed) ~ x1,
                 data = test_data)
   )
   expect_no_error(
     fitb <-
-      survfit_b(survival::Surv(test_data$outcome,
+      survfit_b(Surv(test_data$outcome,
                      test_data$observed) ~ test_data$x1)
   )
   
