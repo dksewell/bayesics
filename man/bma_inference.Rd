@@ -9,7 +9,9 @@ bma_inference(
   data,
   zellner_g = nrow(data),
   CI_level = 0.95,
-  mc_draws = 10000,
+  ROPE,
+  mcmc_draws = 10000,
+  mc_error = 0.001,
   seed = 1,
   ...
 )
@@ -24,7 +26,16 @@ g prior.}
 
 \item{CI_level}{Level for credible interval}
 
-\item{mc_draws}{Integer. Number of draws in Monte Carlo integration. Passed into \code{\link[BMS]{bms}}}
+\item{ROPE}{vector of positive values giving ROPE boundaries for each regression
+coefficient.  Optionally, you can not include a ROPE boundary for the intercept.
+If missing, defaults go to those suggested by Kruchke (2018).}
+
+\item{mcmc_draws}{Integer. Number of draws passed into \code{\link[BMS]{bms}}}
+
+\item{mc_error}{The number of posterior draws will ensure that with 99\%
+probability the bounds of the credible intervals will be within \eqn{\pm}
+\code{mc_error}\eqn{\times 4s_y}, that is, within 100\code{mc_error}\% of the
+trimmed range of y.}
 
 \item{seed}{Integer. Always set your seed!!!}
 

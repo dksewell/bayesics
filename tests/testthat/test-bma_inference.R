@@ -43,13 +43,14 @@ test_that("Bayesian model averaging", {
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   expect_named(s,
-               c("Variable","Post Mean","Lower","Upper","ROPE","Prob Dir"))
+               c("Variable","Post Mean","Lower","Upper","Prob Dir","ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
   expect_type(s$Upper,"double")
-  expect_type(s$ROPE,"double")
   expect_type(s$`Prob Dir`,"double")
+  expect_type(s$ROPE,"double")
+  expect_type(s$`ROPE bounds`,"character")
   
   # Make sure predict works
   expect_no_error(predict(fita))
@@ -87,7 +88,7 @@ test_that("Bayesian model averaging", {
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
                        c("cr","pr"),
-                       combine_pi_ci = FALSE,
+                       combine_pred_cred = FALSE,
                        variable = c("x1","x2","x3")),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))

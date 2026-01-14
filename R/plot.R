@@ -628,6 +628,7 @@ plot.lm_b_bma = function(x,
     
     T_pred = 
       preds$posterior_draws$ynew |> 
+      backtransformation() |> 
       apply(1,quantile,probs = bayes_pvalues_quantiles)
     
     T_obs = quantile(x$data[[ all.vars(x$formula)[1] ]],
