@@ -250,7 +250,9 @@ survfit_b = function(formula,
       
       ml_values = c(NA,numeric(max_n_time_bins - 1))
       for(J in 2:max_n_time_bins){
-        bpts = quantile(trimmed_time,seq(0,1,l = 1 + J))
+        bpts = 
+          quantile(trimmed_time,seq(0,1,l = 1 + J)) |> 
+          unique()
         bpts[1] = 0.0
         a_b_tilde = 
           get_post_parms(bpts)
@@ -269,7 +271,9 @@ survfit_b = function(formula,
     
     # Get best (or pre-specified) breakpoints
     ret = list()
-    bpts = quantile(trimmed_time,seq(0,1,l = 1 + J_opt))
+    bpts = 
+      quantile(trimmed_time,seq(0,1,l = 1 + J_opt)) |> 
+      unique()
     bpts[1] = 0.0
     ret$posterior_parameters = 
       get_post_parms(bpts)
@@ -306,6 +310,8 @@ survfit_b = function(formula,
     for(j in seq_along(X)){
       if(!is.factor(X[[j]])){
         X[[j]] <- factor(X[[j]])
+      }else{
+        X[[j]] <- factor(X[[j]],ordered = FALSE)
       }
     }
     
@@ -389,7 +395,9 @@ survfit_b = function(formula,
         
         ml_values = c(NA,numeric(max_n_time_bins - 1) - Inf)
         for(J in 2:max_n_time_bins){
-          bpts = quantile(trimmed_time[[g]],seq(0,1,l = 1 + J))
+          bpts = 
+            quantile(trimmed_time[[g]],seq(0,1,l = 1 + J)) |> 
+            unique()
           if(anyDuplicated(bpts))
             next
           bpts[1] = 0.0
