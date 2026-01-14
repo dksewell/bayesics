@@ -466,3 +466,10 @@ survfit_b = function(formula,
   }#End: multiple group analysis
   
 }
+
+
+#' @export
+Surv = function(...){
+  survival::Surv(...)
+}
+
