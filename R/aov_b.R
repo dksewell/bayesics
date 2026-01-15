@@ -271,7 +271,7 @@ aov_b = function(formula,
                        data = data)
       ret$BF_for_different_vs_same_means = 
         exp(
-          mvtnorm::dmvt(data$y,
+          mvtnorm::dmvt(as.vector(data$y),
                         df = prior_var_shape,
                         delta = rep(prior_mean_mu,nrow(data)),
                         sigma = 
@@ -280,7 +280,7 @@ aov_b = function(formula,
                           (diag(nrow(data)) + 
                              1.0 / prior_mean_nu * tcrossprod(X)),
                         log = TRUE) - 
-            mvtnorm::dmvt(data$y,
+            mvtnorm::dmvt(as.vector(data$y),
                           df = prior_var_shape,
                           delta = rep(prior_mean_mu,nrow(data)),
                           sigma = 
@@ -553,7 +553,7 @@ aov_b = function(formula,
                        data = data)
       ret$BF_for_different_vs_same_means = 
         exp(
-          mvtnorm::dmvt(data$y,
+          mvtnorm::dmvt(as.vector(data$y),
                         df = prior_var_shape,
                         delta = rep(prior_mean_mu,nrow(data)),
                         sigma = 
@@ -562,7 +562,7 @@ aov_b = function(formula,
                           (diag(nrow(data)) + 
                              1.0 / prior_mean_nu * tcrossprod(X)),
                         log = TRUE) - 
-            mvtnorm::dmvt(data$y,
+            mvtnorm::dmvt(as.vector(data$y),
                           df = prior_var_shape,
                           delta = rep(prior_mean_mu,nrow(data)),
                           sigma = 
