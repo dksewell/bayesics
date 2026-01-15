@@ -34,8 +34,7 @@ if (run) {
   remotes::install_github("dksewell/bayesics")
   
   
-  pacman::p_load(coda,
-                 dplyr,
+  pacman::p_load(dplyr,
                  extraDistr,
                  mvtnorm,
                  Matrix,
@@ -46,7 +45,7 @@ if (run) {
                  BMS,
                  cluster,
                  DFBA,
-                 linreg,
+                 bayesics,
                  future)
   
   beepr::beep(4)
