@@ -17,6 +17,18 @@ if (run) {
                   path = "C:/Users/dksewell/Downloads",
                   vignettes = FALSE)
   
+  # CRAN checks
+  devtools::check(manual = T, remote = T, run_dont_test = F, 
+                  args = "--no-tests", # so we don’t run the tests scripts that take a lot of time
+                  vignettes = F)
+  
+  # grep -R "@param" R/ | grep -E "@param\s+[a-zA-Z0-9_.]+\s*$"
+  # grep -R "@param" R/
+  # grep -R "@return" R/
+  # grep -R "@details" R/
+  # grep -R "@examples" R/
+  # R CMD Rd2pdf --no-clean .
+  
   # Install from tarball
   pacman::p_unload(bayesics)
   install.packages("C:/Users/dksewell/Downloads/bayesics_2.0.0.tar.gz",
@@ -40,7 +52,7 @@ if (run) {
                  BMS,
                  cluster,
                  DFBA,
-                 linreg,
+                 bayesics,
                  future)
   
   beepr::beep(4)

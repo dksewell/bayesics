@@ -1,0 +1,162 @@
+stats::
+  model.matrix aov_b bma_inference glm_b IC lm_b np_glm_b plot predict.glm_b predict.lm_b predict.lm_b_bma predict.np_glm_b
+  model.frame bma_inference get_posterior_draws glm_b IC lm_b mediate_b np_glm_b predict.glm_b predict.lm_b predict.lm_b_bma predict.np_glm_b
+  model.response glm_b IC lm_b mediate_b np_glm_b plot
+  model.offset glm_b IC np_glm_b plot predict.glm_b predict.np_glm_b
+  density aov_b mediate_b np_glm_b poisson_test_b prop_test_b
+  quantile aov_b bma_inference mediate_b poisson_test_b predict.glm_b predict.lm_b_bma predict.np_glm_b prop_test_b summary
+  dnorm glm_b heteroscedasticity_test IC SDratio t_test_b
+  rnorm aov_b IC
+  pnorm aov_b case_control_b glm_b np_glm_b
+  qnorm case_control_b chisq_test_b credint glm_b mediate_b np_glm_b predict.np_glm_b prop_test_b summary t_test_b
+  model.frame bma_inference
+  model.response bma_inference
+  na.omit bma_inference vcov
+  terms bma_inference glm_b lm_b np_glm_b plot SDratio
+  qlnorm case_control_b
+  dlnorm case_control_b
+  rbeta case_control_b prop_test_b
+  qbeta chisq_test_b prop_test_b sign_test_b
+  pbeta cor_test_b find_beta_parms sign_test_b wilcoxon_test_b
+  dbeta find_beta_parms wilcoxon_test_b
+  optimize find_beta_parms np_glm_b
+  optim find_invgamma_parms glm_b np_glm_b
+  binomial glm_b np_glm_b
+  gaussian glm_b np_glm_b
+  poisson glm_b np_glm_b
+  family glm_b np_glm_b
+  glm glm_b np_glm_b
+  offset glm_b
+  dbinom glm_b IC plot
+  rbinom plot
+  dpois glm_b IC plot
+  rpois plot predict.glm_b
+  dnbinom glm_b IC plot
+  rnbinom plot predict.glm_b
+  pgamma poisson_test_b
+  qgamma poisson_test_b
+  dgamma poisson_test_b
+  rgamma poisson_test_b
+  coef glm_b np_glm_b
+  var IC t_test_b
+  sd IC lm_b np_glm_b
+  lm lm_b
+  sigma lm_b
+  weighted.mean np_glm_b
+  delete.response plot
+
+  
+utils::
+  combn aov_b summary
+  askYesNo mediate_b np_glm_b
+  capture.output mediate_b
+  
+  
+dplyr::
+  n aov_b
+  rename aov_b plot predict.aov_b
+  group_by aov_b mediate_b plot
+  summarize aov_b mediate_b plot
+  mutate aov_b plot predict.aov_b predict.glm_b predict.lm_b predict.lm_b_bma predict.np_glm_b SDratio t_test_b wilcoxon_test_b
+  left_join aov_b heteroscedasticity_test summary
+  relocate bma_inference
+  near case_control_b plot
+  pull mediate_b t_test_b
+  bind_rows mediate_b summary
+  filter predict.aov_b t_test_b
+  select predict.aov_b
+  bind_cols predict.glm_b predict.lm_b
+  across plot
+
+tibble::
+  tibble aov_b cor_test_b glm_b heteroscedasticity_test lm_b mediate_b np_glm_b plot prop_test_b SDratio sign_test_b summary t_test_b wilcoxon_test_b
+  as_tibble aov_b bma_inference predict.glm_b predict.lm_b predict.np_glm_b
+  
+mvtnorm::
+  dmvt aov_b glm_b SDratio
+  rmvt glm_b
+  dmvnorm glm_b SDratio
+  rmvnorm glm_b IC plot predict.glm_b
+
+
+future.apply::
+  future_sapply aov_b chisq_test_b glm_b IC mediate_b np_glm_b plot predict.glm_b
+  future_lapply aov_b bma_inference chisq_test_b glm_b mediate_b np_glm_b
+  future_apply predict.glm_b
+
+  
+extraDistr::
+  qlst aov_b lm_b predict.aov_b predict.lm_b summary t_test_b
+  plst aov_b lm_b t_test_b
+  rlst predict.lm_b
+  dlst SDratio
+  rdirichlet chisq_test_b np_glm_b
+  pinvgamma find_invgamma_parms
+  dinvgamma find_invgamma_parms heteroscedasticity_test
+  qinvgamma find_invgamma_parms summary t_test_b
+  rinvgamma aov_b get_posterior_draws IC
+  pbbinom prop_test_b
+
+BMS::
+  bms bma_inference
+
+janitor::
+  clean_names bma_inference
+  
+ggplot2::
+  ggplot <too many>
+  aes <too many>
+  stat_function case_control_b cor_test_b
+  scale_color_manual case_control_b cor_test_b
+  theme_classic case_control_b cor_test_b
+  xlab case_control_b cor_test_b
+  ylab case_control_b cor_test_b
+  labs case_control_b cor_test_b
+  ggtitle case_control_b cor_test_b
+  geom_density case_control_b
+  geom_hline
+  geom_point
+  geom_qq
+  geom_line
+  geom_violin
+  geom_ribbon
+  geom_errorbar
+  geom_polygon
+  scale_color_viridis_d
+  theme
+  geom_col
+  geom_histogram
+  scale_fill_viridis_d
+  guides
+  guide_legend
+  ylim
+
+DFBA::
+  dfba_bivariate_concordance cor_test_b
+  dfba_wilcoxon wilcoxon_test_b
+  dfba_mann_whitney wilcoxon_test_b
+
+
+graphics::
+  curve find_beta_parms find_invgamma_parms
+  abline find_invgamma_parms
+
+Matrix::
+  Diagonal glm_b np_glm_b vcov
+
+tidyr::
+  pivot_longer mediate_b plot
+
+cluster::
+  pam plot
+
+patchwork::
+  wrap_plots
+
+rlang:: plot predict.aov_b
+  :=
+  !!
+
+
+
+
