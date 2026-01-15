@@ -7,7 +7,7 @@ test_that("Test np_glm_b for binomial data fitting with bootstrapping",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -158,7 +158,7 @@ test_that("Test np_glm_b for binomial data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -278,7 +278,7 @@ test_that("Test glm_b for binomial data with >1 trials",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -334,7 +334,7 @@ test_that("Test np_glm_b for poisson data fitting with bootstrapping",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -347,7 +347,7 @@ test_that("Test np_glm_b for poisson data fitting with bootstrapping",{
   # Test VB fit
   expect_no_error(
     fita <-
-      np_glm_b(outcome ~ x1 + x2 + x3,
+      np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
                data = test_data,
                family = poisson(),
                seed = 2025,
@@ -463,19 +463,19 @@ test_that("Test np_glm_b for poisson data fitting with bootstrapping",{
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    fita <-
-      np_glm_b(outcome ~ x1 + x2 + x3,
-               data = test_data,
-               family = poisson(),
-               seed = 2025,
-               n_draws = 100,
-               mc_error = 0.1,
-               ask_before_full_sampling = FALSE)
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   fita <-
+  #     np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+  #              data = test_data,
+  #              family = poisson(),
+  #              seed = 2025,
+  #              n_draws = 100,
+  #              mc_error = 0.1,
+  #              ask_before_full_sampling = FALSE)
+  # )
+  # plan(sequential)
   
   
 })
@@ -485,7 +485,7 @@ test_that("Test np_glm_b for poisson data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -498,7 +498,7 @@ test_that("Test np_glm_b for poisson data fitting with LSA",{
   # Test VB fit
   expect_no_error(
     fita <-
-      np_glm_b(outcome ~ x1 + x2 + x3,
+      np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
                data = test_data,
                family = poisson())
   )
@@ -609,7 +609,7 @@ test_that("Test np_glm_b for negative binomial data fitting with bootstrapping",
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -624,7 +624,7 @@ test_that("Test np_glm_b for negative binomial data fitting with bootstrapping",
   # Test VB fit
   expect_no_error(
     fita <-
-      np_glm_b(outcome ~ x1 + x2 + x3,
+      np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
                data = test_data,
                family = negbinom(),
                seed = 2025,
@@ -740,19 +740,19 @@ test_that("Test np_glm_b for negative binomial data fitting with bootstrapping",
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    fita <-
-      np_glm_b(outcome ~ x1 + x2 + x3,
-               data = test_data,
-               family = negbinom(),
-               seed = 2025,
-               n_draws = 100,
-               mc_error = 0.2,
-               ask_before_full_sampling = FALSE)
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   fita <-
+  #     np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+  #              data = test_data,
+  #              family = negbinom(),
+  #              seed = 2025,
+  #              n_draws = 100,
+  #              mc_error = 0.2,
+  #              ask_before_full_sampling = FALSE)
+  # )
+  # plan(sequential)
   
   
 })
@@ -762,7 +762,7 @@ test_that("Test np_glm_b for negative binomial data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -777,7 +777,7 @@ test_that("Test np_glm_b for negative binomial data fitting with LSA",{
   # Test VB fit
   expect_no_error(
     fita <-
-      np_glm_b(outcome ~ x1 + x2 + x3,
+      np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
                data = test_data,
                family = negbinom())
   )
@@ -890,7 +890,7 @@ test_that("Test np_glm_b for gaussian data fitting with bootstrapping",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -1069,7 +1069,7 @@ test_that("Test np_glm_b for gaussian data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),

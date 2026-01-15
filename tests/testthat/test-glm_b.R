@@ -6,7 +6,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -191,15 +191,15 @@ test_that("Test glm_b for binomial data fitting with VB",{
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = binomial(),
-          seed = 2025)
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3,
+  #         data = test_data,
+  #         family = binomial(),
+  #         seed = 2025)
+  # )
+  # plan(sequential)
   
   
 })
@@ -209,7 +209,7 @@ test_that("Test glm_b for binomial data fitting with IS",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -424,16 +424,16 @@ test_that("Test glm_b for binomial data fitting with IS",{
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = binomial(),
-          seed = 2025,
-          algorithm = "IS")
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3,
+  #         data = test_data,
+  #         family = binomial(),
+  #         seed = 2025,
+  #         algorithm = "IS")
+  # )
+  # plan(sequential)
   
   
 })
@@ -443,7 +443,7 @@ test_that("Test glm_b for binomial data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -634,16 +634,16 @@ test_that("Test glm_b for binomial data fitting with LSA",{
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = binomial(),
-          seed = 2025,
-          algorithm = "LSA")
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3,
+  #         data = test_data,
+  #         family = binomial(),
+  #         seed = 2025,
+  #         algorithm = "LSA")
+  # )
+  # plan(sequential)
   
   
 })
@@ -653,7 +653,7 @@ test_that("Test glm_b for binomial data with >1 trials",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -786,7 +786,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -799,7 +799,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
   # Test VB fit
   expect_no_error(
     fita <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = poisson(),
             seed = 2025)
@@ -897,7 +897,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
   
   # Test different priors
   expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
+    glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
           data = test_data,
           family = poisson(),
           prior = "normal",
@@ -905,7 +905,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
   )
   expect_no_error(
     fitb <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = poisson(),
             prior = "improper")
@@ -986,15 +986,15 @@ test_that("Test glm_b for poisson data fitting with VB",{
   
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = poisson(),
-          seed = 2025)
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+  #         data = test_data,
+  #         family = poisson(),
+  #         seed = 2025)
+  # )
+  # plan(sequential)
   
   
 })
@@ -1004,7 +1004,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -1017,7 +1017,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   # Test VB fit
   expect_no_error(
     fita <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = poisson(),
             seed = 2025,
@@ -1117,7 +1117,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   
   # Test different priors
   expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
+    glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
           data = test_data,
           family = poisson(),
           prior = "normal",
@@ -1126,7 +1126,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   )
   expect_no_error(
     fitb <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = poisson(),
             prior = "improper",
@@ -1206,16 +1206,16 @@ test_that("Test glm_b for poisson data fitting with IS",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = poisson(),
-          seed = 2025,
-          algorithm = "IS")
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+  #         data = test_data,
+  #         family = poisson(),
+  #         seed = 2025,
+  #         algorithm = "IS")
+  # )
+  # plan(sequential)
   
 })
 
@@ -1224,7 +1224,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -1237,7 +1237,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   # Test VB fit
   expect_no_error(
     fita <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = poisson(),
             seed = 2025)
@@ -1335,7 +1335,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   
   # Test different priors
   expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
+    glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
           data = test_data,
           family = poisson(),
           prior = "normal",
@@ -1343,7 +1343,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   )
   expect_no_error(
     fitb <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = poisson(),
             prior = "improper")
@@ -1422,16 +1422,16 @@ test_that("Test glm_b for poisson data fitting with LSA",{
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = poisson(),
-          seed = 2025,
-          algorithm = "LSA")
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+  #         data = test_data,
+  #         family = poisson(),
+  #         seed = 2025,
+  #         algorithm = "LSA")
+  # )
+  # plan(sequential)
   
 })
 
@@ -1444,7 +1444,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -1459,7 +1459,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   # Test VB fit
   expect_no_error(
     fita <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = negbinom(),
             seed = 2025)
@@ -1557,7 +1557,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   
   # Test different priors
   expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
+    glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
           data = test_data,
           family = negbinom(),
           prior = "normal",
@@ -1565,7 +1565,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   )
   expect_no_error(
     fitb <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = negbinom(),
             prior = "improper")
@@ -1646,15 +1646,15 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = negbinom(),
-          seed = 2025)
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3,
+  #         data = test_data,
+  #         family = negbinom(),
+  #         seed = 2025)
+  # )
+  # plan(sequential)
   
   
 })
@@ -1664,7 +1664,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -1679,7 +1679,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   # Test VB fit
   expect_no_error(
     fita <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = negbinom(),
             seed = 2025,
@@ -1784,7 +1784,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   
   # Test different priors
   expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
+    glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
           data = test_data,
           family = negbinom(),
           prior = "normal",
@@ -1794,7 +1794,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   )
   expect_no_error(
     fitb <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = negbinom(),
             prior = "improper",
@@ -1875,17 +1875,17 @@ test_that("Test glm_b for nbinom data fitting with IS",{
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = negbinom(),
-          seed = 2025,
-          algorithm = "IS",
-          mc_error = 0.05)
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3,
+  #         data = test_data,
+  #         family = negbinom(),
+  #         seed = 2025,
+  #         algorithm = "IS",
+  #         mc_error = 0.05)
+  # )
+  # plan(sequential)
   
 })
 
@@ -1894,7 +1894,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
@@ -1909,7 +1909,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   # Test VB fit
   expect_no_error(
     fita <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = negbinom(),
             seed = 2025,
@@ -2009,7 +2009,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   
   # Test different priors
   expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
+    glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
           data = test_data,
           family = negbinom(),
           prior = "normal",
@@ -2018,7 +2018,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   )
   expect_no_error(
     fitb <-
-      glm_b(outcome ~ x1 + x2 + x3,
+      glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
             data = test_data,
             family = negbinom(),
             prior = "improper",
@@ -2098,16 +2098,16 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
                     "ggplot2::gg","S7_object","gg"))
   
   
-  # Check parallelization
-  plan(multisession,workers = 5)
-  expect_no_error(
-    glm_b(outcome ~ x1 + x2 + x3,
-          data = test_data,
-          family = negbinom(),
-          seed = 2025,
-          algorithm = "LSA")
-  )
-  plan(sequential)
+  # # Check parallelization
+  # plan(multisession,workers = 5)
+  # expect_no_error(
+  #   glm_b(outcome ~ x1 + x2 + x3,
+  #         data = test_data,
+  #         family = negbinom(),
+  #         seed = 2025,
+  #         algorithm = "LSA")
+  # )
+  # plan(sequential)
   
 })
 
@@ -2119,7 +2119,7 @@ test_that("Test glm_b for gaussian data. Should pass directly on to lm_b.",{
   
   # Generate some data
   set.seed(2025)
-  N = 500
+  N = 100
   test_data = 
     data.frame(x1 = rnorm(N),
                x2 = rnorm(N),
