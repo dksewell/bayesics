@@ -1,0 +1,23 @@
+* Add ... to, e.g., plot.lm_b()
+
+* Don't export S3 objects, just the methods
+
+* Don't abbreviate argument names within the functions
+
+* preface any variables in dplyr with .data$
+
+* Anytime X is in dyplr mutates, run an intermediate step.
+
+* Anytime I open an issue, include some code that will reproduce the error.
+
+* For splines, add attributes(<terms>)$predvars and attributes(<terms>)$dataClasses for model.frame
+* Also make sure factor levels are being correctly saved as attributes for factors.
+* Focus on how terms is getting info from lm object.
+
+* How to handle missingness
+
+* Don't use class(asdf) = "fdsa".  Instead use structure(list(...),class = "fdsa").  Do this at the very end.
+
+* add conditional logistic regression
+
+* add glm_b to mediation_b

@@ -1,0 +1,2340 @@
+<<<<<<< HEAD
+#' New idea:
+#' Instead of normal approximation, use mvt approximation via
+#' taking KL(t(mu,Sigma,df),\pi(\beta)) 
+#' \approx \sum_{\ell} \log( t(\beta^{(\ell)}; mu,Sigma,df) - pi ).
+#' If we do this for each marginal distribution of \beta_j, this 
+#' is just a 1-dim integral.  
+#' 
+
+=======
+# Get rid of Jeffrey's prior for wilcoxon.  Not correct!
+# Add:
+#   
+>>>>>>> methods1
+# Add example code to documentation
+# Make sample size automatically adapt to MC error for glm_b.
+# Add WLS
+# Add SUBSET
+# Maybe add AR(p) 
+
+library(linreg)
+library(future)
+
+
+# Helper functions --------------------------------------------------------
+
+beta_parms = find_beta_parms(2/5,0.68,0.9)
+beta_parms[1] / sum(beta_parms)
+pbeta(0.68,beta_parms[1],beta_parms[2])
+
+igamma_parms = find_invgamma_parms(10 / 4,5,0.75)
+extraDistr::pinvgamma(10/4,igamma_parms[1] * 0.5,igamma_parms[2] * 0.5)
+extraDistr::pinvgamma(4.1,igamma_parms[1] * 0.5,igamma_parms[2] * 0.5)
+
+rm(list=ls())
+
+
+
+# Linear regression -------------------------------------------------------
+
+# Create data
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+
+
+# Conjugate prior
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "conj")
+fitb = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "conj",
+       CI_level = 0.9)
+fita
+fitb
+
+## Make sure summary.lm_b works
+summary(fita)
+
+## Make sure coef.lm_b works
+coef(fita)
+
+## Make sure prior hyperparameters work
+fitc = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "conj",
+       prior_beta_mean = rep(2,7),
+       prior_beta_precision = diag(7) * 0.1,
+       prior_var_shape = 2,
+       prior_var_rate = 2,
+       CI_leve = 0.9)
+fita
+fitc
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = PI_lower, 
+                  ymax = PI_upper), 
+              fill = "lightsteelblue") +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+## Make sure information criteria work
+null_model = 
+  lm_b(outcome ~ 1,
+        data = test_data)
+AIC(fita)
+AIC(null_model)
+BIC(fita)
+BIC(null_model)
+DIC(fita)
+DIC(null_model)
+WAIC(fita)
+WAIC(null_model)
+
+## Make sure Savage-Dickey ratio works
+SDratio(fita)
+
+## Make sure plotting function works
+plot(fita,
+     type = "diagnostics")
+plot(fita,
+     type = "pdp")
+test = 
+  plot(fita,
+       type = "pdp",
+       return_as_list = TRUE)
+patchwork::wrap_plots(test)
+plot(fita,
+     type = "pdp",
+     variable = "x1")
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fita,
+     type = "pi",
+     variable = "x1")
+plot(fita,
+     type = "pi",
+     variable = "x1",
+     PI_level = 0.5)
+plot(fita,
+     type = "pi")
+plot(fita,
+     type = "pi",
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = "ci",
+     variable = "x1")
+plot(fita,
+     type = "ci")
+plot(fita,
+     type = "ci",
+     CI_level = 0.999)
+plot(fita)
+
+
+
+
+# Zellner-g prior
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "zellner")
+fitb = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "zellner",
+       CI_level = 0.9)
+fita
+fitb
+
+## Make sure summary.lm_b works
+summary(fita)
+
+## Make sure coef.lm_b works
+coef(fita)
+
+## Make sure prior hyperparameters work
+fitc = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "zellner",
+       zellner_g = 10)
+fita
+fitc
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = PI_lower, 
+                  ymax = PI_upper), 
+              fill = "lightsteelblue") +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+## Make sure information criteria work
+AIC(fita)
+BIC(fita)
+DIC(fita)
+WAIC(fita)
+
+## Make sure Savage-Dickey ratio works
+SDratio(fita)
+
+## Make sure plotting function works
+plot(fita,
+     type = "diagnostics")
+plot(fita,
+     type = "pdp")
+test = 
+  plot(fita,
+       type = "pdp",
+       return_as_list = TRUE)
+patchwork::wrap_plots(test)
+plot(fita,
+     type = "pdp",
+     variable = "x1")
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fita,
+     type = "pi",
+     variable = "x1")
+plot(fita,
+     type = "pi")
+plot(fita,
+     type = "pi",
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = "ci",
+     variable = "x1")
+plot(fita,
+     type = "ci")
+
+
+rm(list = setdiff(ls(),"test_data"))
+
+
+# Improper prior
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "impr")
+fitb = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "impr",
+       CI_level = 0.9)
+fita
+fitb
+
+## Make sure summary.lm_b works
+summary(fita)
+
+## Make sure coef.lm_b works
+coef(fita)
+
+## Make sure prior hyperparameters DO NOT work
+fitc = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data,
+       prior = "impr",
+       zellner_g = 5,
+       prior_beta_mean = rep(2,7),
+       prior_beta_precision = diag(7) * 0.1,
+       prior_var_shape = 2,
+       prior_var_rate = 2,
+       CI_leve = 0.95)
+all.equal(summary(fita),
+          summary(fitc))
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+predict(fita,
+        CI_level = 0.8) |> 
+  head()
+predict(fita,
+        PI_level = 0.8) |> 
+  head()
+
+
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = PI_lower, 
+                  ymax = PI_upper), 
+              fill = "lightsteelblue") +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+## Make sure information criteria work
+AIC(fita)
+BIC(fita)
+DIC(fita)
+WAIC(fita)
+
+## Make sure Savage-Dickey ratio DOES NOT works
+SDratio(fita)
+
+## Make sure plotting function works
+plot(fita,
+     type = "diagnostics")
+plot(fita,
+     type = "pdp")
+test = 
+  plot(fita,
+       type = "pdp",
+       return_as_list = TRUE)
+patchwork::wrap_plots(test)
+plot(fita,
+     type = "pdp",
+     variable = "x1")
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fita,
+     type = "pi",
+     variable = "x1")
+plot(fita,
+     type = "pi")
+plot(fita,
+     type = "pi",
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = "ci",
+     variable = "x1")
+plot(fita,
+     type = "ci")
+
+rm(list=ls())
+
+
+
+
+# Check BMA ---------------------------------------------------------------
+
+
+# Create data
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5],
+             x4 = rnorm(N),
+             x5 = rnorm(N),
+             x6 = rnorm(N),
+             x7 = rnorm(N),
+             x8 = rnorm(N),
+             x9 = rnorm(N),
+             x10 = rnorm(N))
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+
+# Check to make sure print.lm_b_bma and coef.lm_b_bma works
+fita = 
+  bma_inference(outcome ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
+                test_data,
+                user.int = FALSE)
+fita
+coef(fita)
+
+# Make sure parallelization works. 
+plan(multisession, workers = 10)
+fitb = 
+  bma_inference(outcome ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
+                test_data,
+                mc_draws = 5e3,
+                user.int = FALSE)
+plan(sequential)
+fitb
+
+## Make sure summary.lm_b_bma works
+summary(fita)
+summary(fita,
+        CI_level = 0.8)
+
+
+# Test predictions
+preds = 
+  predict(fita)
+colnames(preds$newdata)
+plot(outcome ~ `Post Mean`,
+     data = preds$newdata)
+dim(preds$posterior_draws$mean_of_ynew)
+dim(preds$posterior_draws$ynew)
+
+
+# Test plotting
+plot(fita,
+     "dx")
+
+plot(fita,
+     "pdp",
+     variable = c("x1","x2","x3"))
+
+plot(fita,
+     "ci",
+     variable = c("x1","x2","x3"))
+plot(fita,
+     "ci",
+     variable = c("x1","x2","x3"),
+     CI_level = 0.99)
+plot(fita,
+     "pi",
+     variable = c("x1","x2","x3"))
+plot(fita,
+     "pi",
+     variable = c("x1","x2","x3"),
+     PI_level = 0.5)
+plot(fita,
+     c("ci","pi"),
+     variable = c("x1","x2","x3"))
+plot(fita,
+     c("ci","pi"),
+     combine_pi_ci = FALSE,
+     variable = c("x1","x2","x3"))
+
+rm(list = ls())
+
+
+# ANOVA -------------------------------------------------------------------
+
+# Create data
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rep(letters[1:5],N/5))
+test_data$outcome = 
+  rnorm(N,-1 + 2 * (test_data$x1 %in% c("d","e")) )
+
+
+# Proper, heteroscedastic
+
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  aov_b(outcome ~ x1,
+        test_data,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+
+fitb = 
+  aov_b(outcome ~ x1,
+        test_data,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01,
+        CI_level = 0.9)
+fita
+fitb
+
+## Make sure summary.aov_b works
+summary(fita)
+
+## Make sure coef.aov_b works
+coef(fita)
+
+## Make sure prior hyperparameters work
+fitc = 
+  aov_b(outcome ~ x1,
+        test_data,
+        prior_mean_mu = 200,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01,
+        CI_level = 0.9)
+fita
+fitc
+
+## Make sure prediction function works
+predict(fita)
+predict(fita,
+        CI_level = 0.8)
+predict(fita,
+        PI_level = 0.8)
+
+## Make sure information criteria work
+AIC(fita)
+BIC(fita)
+DIC(fita)
+WAIC(fita)
+
+## Make sure plotting function works
+plot(fita,
+     type = "diagnostics")
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fita,
+     type = "pi")
+plot(fita,
+     type = "pi",
+     PI_level = 0.8)
+plot(fita,
+     type = "ci")
+plot(fita,
+     type = "ci",
+     CI_level = 0.999)
+plot(fita)
+
+
+## Make sure parallelization works
+plan(multisession,workers = 5)
+fitd = 
+  aov_b(outcome ~ x1,
+        test_data,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+fitd
+fita
+plan(sequential)
+
+rm(list = setdiff(ls(),"test_data"))
+
+
+# Proper, homoscedastic
+
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+
+fitb = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01,
+        CI_level = 0.8)
+fita
+fitb
+
+## Make sure summary.aov_b works
+summary(fita)
+
+## Make sure coef.aov_b works
+coef(fita)
+
+## Make sure prior hyperparameters work
+fitc = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        prior_mean_mu = 200,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01,
+        CI_level = 0.9)
+fita
+fitc
+
+## Make sure prediction function works
+predict(fita)
+predict(fita,
+        CI_level = 0.8)
+predict(fita,
+        PI_level = 0.8)
+
+## Make sure information criteria work
+AIC(fita)
+BIC(fita)
+DIC(fita)
+WAIC(fita)
+
+rm(list = setdiff(ls(),"test_data"))
+
+
+
+# Improper, heteroscedastic
+
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = TRUE,
+        improper = TRUE)
+
+fitb = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = TRUE,
+        improper = TRUE,
+        CI_level = 0.8)
+fita
+fitb
+
+## Make sure summary.aov_b works
+summary(fita)
+
+## Make sure coef.aov_b works
+coef(fita)
+
+## Make sure prior hyperparameters DO NOT work
+fitc = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = TRUE,
+        prior_mean_mu = 200,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01,
+        improper = TRUE)
+all.equal(summary(fita)$summary,
+          summary(fitc)$summary)
+
+## Make sure prediction function works
+predict(fita)
+predict(fita,
+        CI_level = 0.8)
+predict(fita,
+        PI_level = 0.8)
+
+
+## Make sure information criteria work
+AIC(fita)
+BIC(fita)
+DIC(fita)
+WAIC(fita)
+
+rm(list = setdiff(ls(),"test_data"))
+
+
+
+# Improper, homoscedastic
+
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        improper = TRUE)
+
+fitb = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        improper = TRUE,
+        CI_level = 0.8)
+fita
+fitb
+
+## Make sure summary.aov_b works
+summary(fita)
+
+## Make sure coef.aov_b works
+coef(fita)
+
+## Make sure prior hyperparameters DO NOT work
+fitc = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        prior_mean_mu = 200,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01,
+        improper = TRUE)
+all.equal(summary(fita)$summary,
+          summary(fitc)$summary)
+
+## Make sure prediction function works
+predict(fita)
+predict(fita,
+        CI_level = 0.8)
+predict(fita,
+        PI_level = 0.8)
+
+## Make sure information criteria work
+AIC(fita)
+BIC(fita)
+DIC(fita)
+WAIC(fita)
+
+rm(list = ls())
+
+
+
+# Heteroscedasticity test for AOV -----------------------------------------
+
+
+# Test homoscedastic case
+set.seed(2025)
+N = 100
+test_data = 
+  data.frame(x1 = rep(letters[1:5],N/5))
+test_data$outcome = 
+  rnorm(N,-1 + 2 * (test_data$x1 %in% c("d","e")) )
+
+hetero_model = 
+  aov_b(outcome ~ x1,
+        test_data,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+homo_model = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+heteroscedasticity_test(hetero_model,
+                        homo_model)
+
+# Test heteroscedastic case
+set.seed(2025)
+N = 100
+test_data = 
+  data.frame(x1 = rep(letters[1:5],N/5))
+test_data$outcome = 
+  rnorm(N,
+        -1 + 2 * (test_data$x1 %in% c("d","e")),
+        sd = 3 - 2 * (test_data$x1 %in% c("d","e")))
+
+hetero_model = 
+  aov_b(outcome ~ x1,
+        test_data,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+homo_model = 
+  aov_b(outcome ~ x1,
+        test_data,
+        heteroscedastic = FALSE,
+        prior_mean_mu = 2,
+        prior_mean_nu = 0.5,
+        prior_var_shape = 0.01,
+        prior_var_rate = 0.01)
+heteroscedasticity_test(hetero_model,
+                        homo_model)
+
+
+# Mediation ---------------------------------------------------------------
+
+# Binary treatment
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(tr = rep(0:1,N/2),
+             x1 = rnorm(N))
+test_data$m = 
+  rnorm(N, 0.4 * test_data$tr - 0.25 * test_data$x1)
+test_data$outcome = 
+  rnorm(N,-1 + 0.6 * test_data$tr + 1.5 * test_data$m + 0.25 * test_data$x1)
+
+m1 = 
+  lm_b(m ~ tr + x1,
+       data = test_data)
+m2 = 
+  lm_b(outcome ~ m + tr + x1,
+       data = test_data)
+m3 = 
+  mediate_b(m1,m2,
+            treat = "tr",
+            control_value = 0,
+            treat_value = 1)
+
+m3
+
+# Continuous treatment
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(tr = rnorm(N),
+             x1 = rnorm(N))
+test_data$m = 
+  rnorm(N, 0.4 * test_data$tr - 0.25 * test_data$x1)
+test_data$outcome = 
+  rnorm(N,-1 + 0.6 * test_data$tr + 1.5 * test_data$m + 0.25 * test_data$x1)
+
+m1 = 
+  lm_b(m ~ tr + x1,
+       data = test_data)
+m2 = 
+  lm_b(outcome ~ m + tr + x1,
+       data = test_data)
+m3 = 
+  mediate_b(m1,m2,
+            treat = "tr",
+            control_value = 0,
+            treat_value = 1)
+m3
+
+rm(list=ls())
+
+
+# Test glm_b (binary) -----------------------------------------------------
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rbinom(N,1,1.0 / (1.0 + exp(-(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) ))))
+
+table(test_data$outcome,test_data$x3) |>
+  prop.table(2)
+boxplot(x1 ~ outcome,test_data)
+
+# IS
+## Zellner
+fita =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        seed = 2025)
+fitb =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        seed = 2025,
+        CI_level = 0.8)
+fita
+fitb
+coef(fita)
+summary(fita)
+summary(fita,
+        CI_level = 0.8)
+summary(fita,
+        interpretable_scale = FALSE)
+preds = predict(fita)
+boxplot(`Post Mean` ~ outcome, data = preds)
+SDratio(fita)
+
+## Make sure information criteria work
+null_model = 
+  glm_b(outcome ~ 1,
+        data = test_data,
+        family = binomial(),
+        seed = 2025)
+AIC(fita)
+AIC(null_model)
+BIC(fita)
+BIC(null_model)
+DIC(fita)
+DIC(null_model)
+WAIC(fita)
+WAIC(null_model)
+
+
+
+## Normal
+fitc =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        prior = "normal",
+        seed = 2025)
+fita
+fitc
+coef(fitc)
+summary(fitc)
+SDratio(fitc)
+
+
+## improper
+fitc =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        prior = "improper")
+fita
+fitc
+coef(fitc)
+summary(fitc)
+SDratio(fitc)
+
+
+# Large sample approx
+## Zellner
+fitb =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        n_draws = NA,
+        seed = 2025)
+fitc =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        n_draws = NA,
+        seed = 2025,
+        CI_level = 0.8)
+fita
+fitb
+fitc
+coef(fitb)
+summary(fitb)
+preds = predict(fitb)
+boxplot(`Post Mean` ~ outcome, data = preds)
+SDratio(fitb)
+
+## Make sure information criteria work
+null_model = 
+  glm_b(outcome ~ 1,
+        data = test_data,
+        family = binomial(),
+        n_draws = NA,
+        seed = 2025)
+AIC(fitb)
+AIC(null_model)
+BIC(fitb)
+BIC(null_model)
+DIC(fitb)
+DIC(null_model)
+WAIC(fitb)
+WAIC(null_model)
+
+
+
+
+## Normal
+fitd =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        prior = "normal",
+        n_draws = NA,
+        seed = 2025)
+fitd
+coef(fitb)
+summary(fitb)
+
+## improper
+fite =
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial(),
+        n_draws = NA,
+        prior = "improper")
+fite
+coef(fite)
+summary(fite)
+
+# Make sure other link functions work, including failing to give a default rope
+fitf = 
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial("probit"),
+        seed = 2025)
+fitf
+summary(fitf)
+fitg = 
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        family = binomial("probit"),
+        seed = 2025,
+        n_draws = NA)
+fitg
+summary(fitg)
+
+
+
+# Check plotting functionality
+plot(fita,
+     type = "diagnostics")
+plot(fitb,
+     type = "diagnostics")
+plot(fita,
+     type = "pdp")
+plot(fitb,
+     type = "pdp")
+plot(fita,
+     type = "pdp",
+     variable = "x1")
+plot(fitb,
+     type = "pdp",
+     variable = "x1")
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fitb,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fita,
+     type = "pi",
+     variable = "x1")
+plot(fitb,
+     type = "pi",
+     variable = "x1")
+plot(fita,
+     type = "ci",
+     variable = "x1")
+plot(fitb,
+     type = "ci",
+     variable = "x1")
+plot(fita,
+     type = "ci")
+plot(fitb,
+     type = "ci")
+plot(fita,
+     type = "ci",
+     CI_level = 0.999)
+plot(fitb,
+     type = "ci",
+     CI_level = 0.999)
+plot(fita)
+plot(fitb)
+
+
+rm(list=ls())
+
+# Test glm_b (Poisson) ----------------------------------------------------
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5],
+             time = rexp(N))
+test_data$outcome = 
+  rpois(N,exp(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e"))) * test_data$time)
+
+
+# IS
+## Zellner
+fita =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        seed = 2025)
+fitb =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        seed = 2025,
+        CI_level = 0.8)
+fita
+fitb
+coef(fita)
+summary(fita)
+summary(fita,
+        CI_level = 0.8)
+summary(fita,
+        interpretable_scale = FALSE)
+preds = predict(fita)
+colnames(preds)
+plot(`Post Mean` ~ outcome, 
+     data = preds |> dplyr::arrange(outcome))
+SDratio(fita)
+
+
+## Make sure information criteria work
+null_model = 
+  glm_b(outcome ~ 1 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        seed = 2025)
+AIC(fita)
+AIC(null_model)
+BIC(fita)
+BIC(null_model)
+DIC(fita)
+DIC(null_model)
+WAIC(fita)
+WAIC(null_model)
+
+## Normal
+fitc =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        prior = "normal",
+        seed = 2025)
+fita
+fitc
+coef(fitc)
+summary(fitc)
+
+## improper
+fitc =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        prior = "improper")
+fita
+fitc
+coef(fitc)
+summary(fitc)
+SDratio(fitc)
+
+
+# Large sample approx
+## Zellner
+fitb =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        n_draws = NA,
+        seed = 2025)
+fitc =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        n_draws = NA,
+        seed = 2025,
+        CI_level = 0.8)
+fita
+fitb
+fitc
+coef(fitb)
+summary(fitb)
+summary(fitb,
+        CI_level = 0.8)
+summary(fitb,
+        interpretable_scale = FALSE)
+preds = predict(fitb)
+str(preds)
+plot(`Post Mean` ~ outcome, data = preds |> dplyr::arrange(outcome))
+SDratio(fitb)
+
+
+## Make sure information criteria work
+null_model = 
+  glm_b(outcome ~ 1 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        n_draws = NA,
+        seed = 2025)
+AIC(fitb)
+AIC(null_model)
+BIC(fitb)
+BIC(null_model)
+DIC(fitb)
+DIC(null_model)
+WAIC(fitb)
+WAIC(null_model)
+
+
+
+## Normal
+fitd =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        prior = "normal",
+        n_draws = NA,
+        seed = 2025)
+fitd
+coef(fitb)
+summary(fitb)
+
+## improper
+fite =
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = poisson(),
+        n_draws = NA,
+        prior = "improper")
+fite
+coef(fite)
+summary(fite)
+
+
+
+# Check plotting functionality asdf
+plot(fita,
+     type = "diagnostics")
+plot(fitb,
+     type = "diagnostics")
+plot(fita,
+     type = "pdp")
+plot(fitb,
+     type = "pdp")
+plot(fita,
+     type = "pdp",
+     variable = "x1")
+plot(fitb,
+     type = "pdp",
+     variable = "x1")
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     variable = "x1",
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fitb,
+     type = c("ci","pi"),
+     combine_pi_ci = TRUE)
+plot(fita,
+     type = c("ci","pi"),
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = c("ci","pi"),
+     combine_pi_ci = FALSE,
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = "pi",
+     variable = "x1")
+plot(fitb,
+     type = "pi",
+     variable = "x1")
+plot(fita,
+     type = "pi",
+     variable = "x1",
+     PI_level = 0.5)
+plot(fitb,
+     type = "pi",
+     variable = "x1",
+     PI_level = 0.5)
+plot(fita,
+     type = "pi")
+plot(fitb,
+     type = "pi")
+plot(fita,
+     type = "pi",
+     exemplar_covariates = fita$data[1,])
+plot(fitb,
+     type = "pi",
+     exemplar_covariates = fita$data[1,])
+plot(fita,
+     type = "ci",
+     variable = "x1")
+plot(fitb,
+     type = "ci",
+     variable = "x1")
+plot(fita,
+     type = "ci")
+plot(fitb,
+     type = "ci")
+plot(fita,
+     type = "ci",
+     CI_level = 0.999)
+plot(fitb,
+     type = "ci",
+     CI_level = 0.999)
+plot(fita)
+plot(fitb)
+
+
+
+rm(list=ls())
+
+
+# Test glm_b (Gaussian) ----------------------------------------------------
+
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+
+fita = 
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        prior = "normal",
+        family = "gaussian")
+fitb = 
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        prior = "zellner",
+        family = "gaussian")
+fitb = 
+  glm_b(outcome ~ x1 + x2 + x3,
+        data = test_data,
+        prior = "zellner",
+        zellner_g = 10,
+        family = "gaussian")
+
+
+rm(list = ls())
+
+
+# Test loss-likelihood approach (Gaussian) --------------------------------
+
+# Create data
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+
+
+# Bootstrapping approach - sequential
+plan(sequential)
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          n_draws = 100,
+          seed = 2025)
+fitb = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          n_draws = 100,
+          seed = 2025,
+          CI_level = 0.8)
+fita
+fitb
+
+## Make sure summary.np_glm_b works
+summary(fita)
+
+## Make sure coef.lm_b works
+coef(fita)
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+plot(outcome ~ `Post Mean`, data = preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot2::ggplot(ggplot2::aes(x = y)) +
+  ggplot2::geom_ribbon(ggplot2::aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  ggplot2::geom_line(ggplot2::aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  ggplot2::theme_minimal()
+
+
+
+
+
+# Bootstrapping approach - parallel
+plan(multisession, workers = 10)
+## Make sure future.seed is reproducible, CI_level works (and print.lm_b works)
+fita = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          n_draws = 100,
+          seed = 2025)
+fitb = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          n_draws = 100,
+          seed = 2025)
+fitc = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          n_draws = 100,
+          seed = 2025,
+          CI_level = 0.8)
+all.equal(fita$summary,
+          fitb$summary)
+fita
+fitc
+plan(sequential)
+
+## Make sure summary.np_glm_b works
+summary(fita)
+
+## Make sure coef.lm_b works
+coef(fita)
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+## Check that parallelization is speeding things up
+
+system.time({
+  fitd = 
+    np_glm_b(outcome ~ x1 + x2 + x3,
+            data = test_data,
+            family = gaussian(),
+            n_draws = 500,
+            seed = 2025)
+})
+# user  system elapsed 
+# 11.76    6.28   23.77 
+
+plan(sequential)
+system.time({
+  fite = 
+    np_glm_b(outcome ~ x1 + x2 + x3,
+            data = test_data,
+            family = gaussian(),
+            n_draws = 500,
+            seed = 2025)
+})
+# user  system elapsed 
+# 6.84    0.07    7.00 # Eh?  Not sure what's happening.
+fitd
+fite
+
+plan(sequential)
+
+
+rm(list = setdiff(ls(),c("fita","test_data")))
+
+
+
+
+# large sample approach
+## Make sure CI_level works (and print.lm_b works)
+fitb = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          seed = 2025)
+fitc = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          seed = 2025,
+          CI_level = 0.8)
+fita
+fitb
+fitc
+
+## Make sure summary.np_glm_b works
+summary(fitb)
+
+## Make sure coef.lm_b works
+coef(fitb)
+
+## Make sure prediction function works
+preds0a = 
+  predict(fitb)
+head(preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+
+# Check plotting functionality
+plot(fita,
+     type = "pdp")
+plot(fitb,
+     type = "pdp")
+plot(fita,
+     type = "pdp",
+     variable = "x1")
+plot(fitb,
+     type = "pdp",
+     variable = "x1")
+plot(fita,
+     type = "pdp",
+     variable = "x3")
+plot(fitb,
+     type = "pdp",
+     variable = "x3")
+plot(fita,
+     type = "ci",
+     variable = "x1")
+plot(fitb,
+     type = "ci",
+     variable = "x1")
+plot(fita,
+     type = "ci")
+plot(fita,
+     type = "ci",
+     CI_level = 0.999)
+plot(fitb,
+     type = "ci")
+plot(fitb,
+     type = "ci",
+     CI_level = 0.999)
+plot(fita)
+plot(fitb)
+
+
+
+# Test GLS
+## Bootstrapping
+fitd = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          loss = "gls",
+          n_draws = 100,
+          seed = 2025)
+fitd
+summary(fitd)
+coef(fitd)
+preds0d = 
+  predict(fitd)
+head(preds0d)
+
+## large sample approx
+fite = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = gaussian(),
+          loss = "gls",
+          seed = 2025)
+fitd
+fite
+summary(fite)
+coef(fite)
+preds0e = 
+  predict(fite)
+head(preds0e)
+
+
+
+
+rm(list = ls())
+
+
+# Test loss-likelihood approach (Binomial) --------------------------------
+
+# Create data
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rbinom(N,1,1.0 / (1.0 + exp(-(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) ))))
+table(test_data$outcome,test_data$x3) |>
+  prop.table(2)
+boxplot(x1 ~ outcome,test_data)
+# 
+# formula = outcome ~ x1 + x2 + x3
+# data = test_data
+# family = binomial()
+# n_draws = 10
+# loss = "selfinformation"
+# CI_level = 0.95
+
+# Bootstrapping approach - sequential
+plan(sequential)
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          n_draws = 500,
+          seed = 2025)
+fitb = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          n_draws = 100,
+          trials = rep(1,N),
+          seed = 2025,
+          CI_level = 0.8)
+fita
+fitb
+
+## Make sure summary.np_glm_b works
+summary(fita)
+
+## Make sure coef.lm_b works
+coef(fita)
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+boxplot(`Post Mean` ~ outcome, data = preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+
+rm(list = setdiff(ls(),c("fita","test_data")))
+
+
+
+# large sample approach
+## Make sure CI_level works (and print.lm_b works)
+fitb = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          seed = 2025)
+fitc = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          seed = 2025,
+          CI_level = 0.8)
+fita
+fitb
+fitc
+
+## Make sure summary.np_glm_b works
+summary(fitb)
+
+## Make sure coef.lm_b works
+coef(fitb)
+
+## Make sure prediction function works
+preds0b = 
+  predict(fitb)
+head(preds0b)
+boxplot(`Post Mean` ~ outcome, data = preds0a)
+
+
+# Make sure parallelization works
+plan(multisession,
+     workers = 10)
+## Make sure CI_level works (and print.lm_b works)
+fitd = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          n_draws = 100,
+          seed = 2025)
+fita
+fitd
+summary(fitd)
+coef(fitd)
+preds0d = 
+  predict(fitd)
+head(preds0d)
+
+
+# Make sure gls works
+## Bootstrapping - parallelized
+fite = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          loss = "gls",
+          n_draws = 250,
+          seed = 2025)
+fitd
+fite
+summary(fite)
+coef(fite)
+preds0e = 
+  predict(fite)
+head(preds0e)
+
+## Bootstrapping - sequential
+plan(sequential)
+fitf = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          loss = "gls",
+          n_draws = 250,
+          seed = 2025)
+fite
+fitf
+summary(fitf)
+coef(fitf)
+preds0f = 
+  predict(fitf)
+head(preds0f)
+
+## Large sample approx
+fitg = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = binomial(),
+          loss = "gls",
+          seed = 2025)
+fitf
+fitg
+summary(fitg)
+coef(fitg)
+preds0f = 
+  predict(fitg)
+head(preds0f)
+
+
+
+rm(list = ls())
+
+
+# Test loss-likelihood approach (Poisson) ---------------------------------
+
+# Create data
+
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5],
+             time = rexp(N))
+test_data$outcome = 
+  rpois(N,exp(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e"))) * test_data$time)
+
+
+# Bootstrapping approach - sequential
+plan(sequential)
+## Make sure CI_level works (and print.lm_b works)
+fita = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          n_draws = 250,
+          seed = 2025)
+fitb = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = poisson(),
+          n_draws = 100,
+          trials = rep(1,N),
+          seed = 2025,
+          CI_level = 0.8)
+fita
+fitb
+
+## Make sure summary.np_glm_b works
+summary(fita)
+summary(fita,
+        CI_level = 0.8)
+
+## Make sure coef.lm_b works
+coef(fita)
+glm(outcome ~ x1 + x2 + x3 + offset(log(time)),
+    data = test_data,
+    family = poisson())
+
+## Make sure prediction function works
+preds0a = 
+  predict(fita)
+head(preds0a)
+preds0a[order(preds0a$outcome),] |> 
+  ggplot(aes(x = y)) +
+  geom_ribbon(aes(ymin = CI_lower, 
+                  ymax = CI_upper), 
+              fill = "steelblue3") +
+  geom_line(aes(y = `Post Mean`), 
+            color = "steelblue4", 
+            linewidth = 1, 
+            linetype = "solid",
+            alpha = 0.5) +
+  theme_minimal()
+
+
+# Bootstrapping approach - parallelized
+plan(multisession, workers = 10)
+## Make sure CI_level works (and print.lm_b works)
+fitc = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          n_draws = 250,
+          seed = 2025)
+fita
+fitc
+summary(fitc)
+coef(fitc)
+head(predict(fitc))
+
+
+
+# large sample approach
+## Make sure CI_level works (and print.lm_b works)
+fitd = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          seed = 2025)
+fite = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          seed = 2025,
+          CI_level = 0.8)
+fita
+fitd
+fite
+
+## Make sure summary.np_glm_b works
+summary(fitd)
+summary(fitd,
+        CI_level = 0.8)
+
+## Make sure coef.lm_b works
+coef(fitd)
+
+## Make sure prediction function works
+head(predict(fitd))
+
+
+
+# Make sure gls works
+## Bootstrapping - parallelized
+fite = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          loss = "gls",
+          n_draws = 250,
+          seed = 2025)
+fitd
+fite
+summary(fite)
+coef(fite)
+head(predict(fite))
+
+
+## Bootstrapping - sequential
+plan(sequential)
+fitf = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          loss = "gls",
+          n_draws = 250,
+          seed = 2025)
+fite
+fitf
+summary(fitf)
+coef(fitf)
+head(predict(fitf))
+
+
+## Large sample approx
+fitg = 
+  np_glm_b(outcome ~ x1 + x2 + x3,
+          data = test_data,
+          family = poisson(),
+          loss = "gls",
+          seed = 2025)
+fitf
+fitg
+summary(fitg)
+coef(fitg)
+preds0f = 
+  predict(fitg)
+head(preds0f)
+
+
+
+
+# Check if custom loss function will work.
+fitg = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          loss = function(y,mu) (y-mu)^2,
+          n_draws = 250,
+          seed = 2025)
+fitg
+summary(fitg)
+coef(fitg)
+head(predict(fitg))
+fith = 
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+          data = test_data,
+          family = poisson(),
+          loss = function(y,mu) (y-mu)^2,
+          seed = 2025)
+fith
+summary(fith)
+coef(fith)
+head(predict(fith))
+
+
+
+
+# Test prop_test_b --------------------------------------------------------
+
+prop_test_b(14,
+            19)
+
+prop_test_b(14,
+            n_total = 19)
+
+prop_test_b(14,
+            19,
+            p = 0.45)
+
+
+
+prop_test_b(c(14,22),
+            c(19,45))
+
+prop_test_b(c(99,1),
+            n_total = c(100,50))
+
+
+prop_test_b(c(14,22),
+            c(19,45),
+            ROPE = c(1.0 / 1.05, 1.05))
+
+
+
+# Test t_test_b -----------------------------------------------------------
+
+t_test_b(rnorm(50))
+t_test_b(outcome ~ 1,
+         data = data.frame(outcome = rnorm(50)))
+t_test_b(rnorm(50),
+         rnorm(15,1))
+t_test_b(outcome ~ asdf,
+         data = 
+           data.frame(outcome = c(rnorm(50),
+                                  rnorm(15,1)),
+                      asdf = rep(c("a","b"),c(50,15))))
+
+t_test_b(rnorm(50),
+         rnorm(15,1),
+         paired = TRUE)
+t_test_b(rnorm(50),
+         rnorm(50,1),
+         paired = TRUE)
+
+
+# Test poisson_test_b -----------------------------------------------------
+
+poisson_test_b(x = 12)
+poisson_test_b(x = 12,
+               r = 11)
+poisson_test_b(x = 12,
+               offset = 2,
+               r = 11)
+
+poisson_test_b(x = 12,
+               offset = 2,
+               r = 11,
+               prior = "flat")
+
+poisson_test_b(x = 12,
+               offset = 2,
+               r = 11,
+               prior_shape_rate = c(1,1))
+
+poisson_test_b(x = c(12,20),
+               offset = c(10,9),
+               prior = "flat")
+
+poisson_test_b(x = c(12,20),
+               offset = c(10,9),
+               prior = "jeff")
+
+poisson_test_b(x = c(12,20),
+               offset = c(10,9),
+               prior = "jeff")
+
+
+
+# sign_test_b -------------------------------------------------------------
+
+# Test input
+sign_test_b(x = rnorm(50))
+sign_test_b(x = rnorm(50,1))
+sign_test_b(x = rbinom(50,1,0.6))
+sign_test_b(x = rnorm(50,1),
+            y = rnorm(50,0))
+
+# Test prior
+sign_test_b(x = rnorm(50,0),
+            y = rnorm(50,1),
+            prior = "uniform")
+sign_test_b(x = rnorm(50,0),
+            y = rnorm(50,1),
+            prior_shapes = c(2,2))
+
+# Test ROPE
+sign_test_b(x = rnorm(50,1),
+            ROPE = 0.1)
+sign_test_b(x = rnorm(50,1),
+            ROPE = c(0.45,0.7))
+
+# Test changing p0
+sign_test_b(x = rnorm(50,1),
+            p0 = 0.7)
+sign_test_b(x = rnorm(50,1),
+            p0 = 0.7,
+            ROPE = 0.1)
+sign_test_b(x = rnorm(50,1),
+            p0 = 0.7,
+            ROPE = 0.3)
+
+
+
+
+# Case-control study ------------------------------------------------------
+
+# Test input
+case_control_b(matrix(c(8,47,1,26),2,2))
+case_control_b(c(8,47),
+               c(1,26))
+case_control_b(x = matrix(c(8,47,1,26),2,2))
+
+# Test large sample
+case_control_b(x = 5 + matrix(c(8,47,1,26),2,2))
+
+# Test ROPE
+case_control_b(x = matrix(c(8,47,1,26),2,2),
+               ROPE = 1.05)
+case_control_b(x = 5 + matrix(c(8,47,1,26),2,2),
+               ROPE = 1.05)
+
+# Test prior
+case_control_b(x = 5 + matrix(c(8,47,1,26),2,2),
+               ROPE = 1.05)
+case_control_b(x = 5 + matrix(c(8,47,1,26),2,2),
+               ROPE = 1.05,
+               prior_mean = 10)
+case_control_b(x = 5 + matrix(c(8,47,1,26),2,2),
+               ROPE = 1.05,
+               prior_sd = 0.01)
+
+
+
+# Wilcoxon signed rank test -----------------------------------------------
+
+N = 15
+set.seed(2025)
+
+# Small samples
+## Test if analysis is done correctly
+test_data_small = 
+  data.frame(x = rbeta(N,2,10),
+             y = rbeta(N,5,10))
+test_data_small_null = 
+  data.frame(x = rbeta(N,2,10),
+             y = rbeta(N,2,10))
+hist(test_data_small$x - test_data_small$y)
+wilcoxon_test_b(test_data_small$x - test_data_small$y)
+hist(test_data_small_null$x - test_data_small_null$y)
+wilcoxon_test_b(test_data_small_null$x - test_data_small_null$y)
+
+## Test input
+wilcoxon_test_b(test_data_small$x,
+                test_data_small$y,
+                paired = TRUE)
+
+## Test priors
+wilcoxon_test_b(test_data_small$x - test_data_small$y,
+                prior = "jeff")
+wilcoxon_test_b(test_data_small$x - test_data_small$y,
+                prior = "uniform")
+wilcoxon_test_b(test_data_small$x - test_data_small$y,
+                prior_shapes = c(5,5))
+
+## Test ROPE
+wilcoxon_test_b(test_data_small$x - test_data_small$y,
+                ROPE = 0.1)
+wilcoxon_test_b(test_data_small$x - test_data_small$y,
+                ROPE = c(0.4,0.65))
+
+## Test returned object
+test = 
+  wilcoxon_test_b(test_data_small$x - test_data_small$y)
+str(test[-7])
+test$prob_plot
+
+
+# Large samples
+N = 150
+set.seed(2025)
+test_data_big = 
+  data.frame(x = rbeta(N,2,10),
+             y = rbeta(N,5,10))
+test_data_big_null = 
+  data.frame(x = rbeta(N,5,10),
+             y = rbeta(N,5,10))
+
+## Test if analysis is done correctly
+hist(test_data_big$x - test_data_big$y)
+wilcoxon_test_b(test_data_big$x - test_data_big$y)
+hist(test_data_big_null$x - test_data_big_null$y)
+wilcoxon_test_b(test_data_big_null$x - test_data_big_null$y)
+
+## Test input
+wilcoxon_test_b(test_data_big$x,
+                test_data_big$y,
+                paired = TRUE)
+
+## Test priors
+wilcoxon_test_b(test_data_big$x - test_data_big$y,
+                prior = "jeff")
+wilcoxon_test_b(test_data_big$x - test_data_big$y,
+                prior = "uniform")
+wilcoxon_test_b(test_data_big$x - test_data_big$y,
+                prior_shapes = c(5,5))
+
+## Test ROPE
+wilcoxon_test_b(test_data_big$x - test_data_big$y,
+                ROPE = 0.1)
+wilcoxon_test_b(test_data_big$x - test_data_big$y,
+                ROPE = c(0.4,0.65))
+
+## Test returned object
+test = 
+  wilcoxon_test_b(test_data_big$x - test_data_big$y)
+str(test[-6])
+test$prob_plot
+
+
+# Wilcoxon rank sum test --------------------------------------------------
+
+
+# Small samples
+N = 15
+x = rbeta(N,2,10)
+y = rbeta(N + 1,5,10)
+y_null = rbeta(N+1,2,10)
+curve(dbeta(x,2,10)); curve(dbeta(x,5,10),add= T,lty = 2,col=2)
+
+## Test if analysis is done correctly
+wilcoxon_test_b(x,y)
+wilcoxon_test_b(x,y_null)
+
+## Test priors
+wilcoxon_test_b(x,
+                y,
+                prior = "jeff")
+wilcoxon_test_b(x,
+                y,
+                prior = "uniform")
+wilcoxon_test_b(x,
+                y,
+                prior_shapes = c(5,5))
+
+## Test ROPE
+wilcoxon_test_b(x,
+                y,
+                ROPE = 0.1)
+wilcoxon_test_b(x,
+                y,
+                ROPE = c(0.1,0.8))
+
+
+
+# cor_test_b --------------------------------------------------------------
+
+set.seed(2025)
+N = 50
+x = rnorm(N)
+y = x + 4 * rnorm(N)
+
+# Check input
+cor_test_b(x,y)
+cor_test_b(~ asdf + qwer,
+           data = data.frame(asdf = x,
+                             qwer = y))
+
+# Check tau
+cor_test_b(x,y,
+           tau = 0.04)
+
+# Check ROPE
+cor_test_b(x,y,
+           ROPE = 0.1)
+cor_test_b(x,y,
+           ROPE = c(-0.9,0.02))
+
+# Check prior
+cor_test_b(x,y,
+           prior = "uniform")
+cor_test_b(x,y,
+           prior = "negati")
+cor_test_b(x,y,
+           prior = "pos")
+cor_test_b(x,y,
+           prior_shapes = c(10,10))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
