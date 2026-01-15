@@ -9,7 +9,7 @@
 #' @param CI_level numeric. Credible interval level.
 #' @param ... optional arguments.
 #' 
-#' @return tibble with estimate, prediction intervals, and credible intervals 
+#' @returns tibble with estimate, prediction intervals, and credible intervals 
 #' for the mean.
 #' 
 #' 
@@ -55,7 +55,7 @@ predict.np_glm_b = function(object,
       message("Assuming all observations correspond to Bernoulli, i.e., Binomial with one trial.")
       trials = rep(1.0,N)
     }else{
-      if(class(trials) == "character") trials = newdata[[trials]]
+      if(is.character(trials)) trials = newdata[[trials]]
       trials = as.numeric(trials)
     }
   }else{

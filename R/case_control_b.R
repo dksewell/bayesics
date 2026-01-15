@@ -6,7 +6,8 @@
 #' If \code{large_sample_approx = TRUE} (the default if left missing and all 
 #' cell counts are at least 5), then the likelihood is
 #' \deqn{
-#'  \log(\hat\omega) \sim N\left(\log(\omega,\frac{1/n_{11}} + \frac{1/n_{12}} + \frac{1/n_{21}} + \frac{1/n_{22}} \right),
+#'  \log(\hat\omega) \sim N\left(\log(\omega),\frac{1}{n_{11}} + \frac{1}{n_{12}} + 
+#'  \frac{1}{n_{21}} + \frac{1}{n_{22}} \right),
 #' }
 #' where \eqn{\omega} is the odds ratio, \eqn{\hat\omega} is the 
 #' empirical odds ratio, \eqn{n_{ij}}, \eqn{i,j = 1,2} are the cells of the 

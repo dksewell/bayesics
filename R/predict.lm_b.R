@@ -9,7 +9,7 @@
 #' @param n_draws If desired, the number of posterior samples drawn.
 #' @param ... optional arguments.
 #' 
-#' @return tibble with estimate (posterior mean), prediction intervals, and credible intervals 
+#' @returns tibble with estimate (posterior mean), prediction intervals, and credible intervals 
 #' for the mean.
 #' 
 #' 

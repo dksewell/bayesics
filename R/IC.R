@@ -8,12 +8,10 @@
 #' 
 #' @param object aov_b, lm_b, or glm_b object
 #' @param seed integer.  Always set your seed!!!
-#' @param mc_relative_error The number of posterior draws will ensure that 
+#' @param mc_error The number of posterior draws will ensure that 
 #' with 99% probability the posterior mean of the deviance for DIC will be 
 #' within \eqn{\pm}\code{mc_error}E(deviance).
-#' @param ... optional arguments.
-#' The relative monte carlo error of the expected values of the deviance. 
-#' (Ignored for a single population proportion.)
+#' @param ... Passed to methods.
 #' @export
 
 
@@ -165,7 +163,7 @@ AIC.aov_b = function(object, ...){
 #' @exportS3Method DIC lm_b 
 DIC.lm_b = function(object,
                     seed = 1,
-                    mc_relative_error = 0.01,
+                    mc_error = 0.01,
                     ...){
   set.seed(seed)
   
@@ -218,7 +216,7 @@ DIC.lm_b = function(object,
   E_D_draws = -2.0 * rowSums(llik)
   n_draws = 
     var(E_D_draws) / 
-    (mean(E_D_draws) * mc_relative_error)^2 *
+    (mean(E_D_draws) * mc_error)^2 *
     qnorm(0.5 * (1.0 - 0.99))^2
   ## Get remaining draws if needed.
   if(n_draws > 500){

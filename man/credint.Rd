@@ -2,6 +2,7 @@
 % Please edit documentation in R/credint.R
 \name{credint}
 \alias{credint}
+\alias{credint.lm_b}
 \alias{credint.aov_b}
 \alias{credint.glm_b}
 \alias{credint.np_glm_b}
@@ -9,6 +10,8 @@
 \title{Credible Intervals for Model Parameters}
 \usage{
 credint(object, ...)
+
+\method{credint}{lm_b}(object, CI_level = 0.95, ...)
 
 \method{credint}{aov_b}(object, CI_level = 0.95, which = "means", ...)
 
@@ -21,14 +24,12 @@ credint(object, ...)
 \arguments{
 \item{object}{a fitted model object from \code{bayesics}}
 
+\item{...}{Passed to methods.}
+
 \item{CI_level}{the credible level required}
 
 \item{which}{character.  For \code{aov_b} only. Either "means" (for the
 group means) or "pairwise" (for pairwise difference in means).}
-
-\item{parm}{a specification of which parameters are to be given confidence
-intervals, either a vector of numbers or a vector of names. If missing, all
-parameters are considered.}
 }
 \description{
 Computes credible intervals for one or more parameters in a

@@ -41,6 +41,7 @@
 #' be asked if they want to complete the full sampling.  Defaults to 
 #' TRUE, as this can be a computationally intensive procedure.
 #' @param CI_level numeric. Credible interval level.
+#' @param seed integer.  Always set your seed!!!
 #' @param mc_error positive scalar.  The number of posterior samples will, 
 #' with high probability, estimate the CI bounds up to 
 #' \eqn{\pm}\code{mc_error}\eqn{\times}\code{sd(y)}.
@@ -49,7 +50,7 @@
 #' values which are too high might take up significant memory (allocates 
 #' on the order of \code{batch_size}\eqn{\times}\code{nrow(model_y$data)}).
 #' 
-#' @return A list with the following elements:
+#' @returns A list with the following elements:
 #' \itemize{
 #'  \item \code{summary} - tibble giving results for causal mediation quantities
 #'  \item \code{posterior_draws} (of counterfactual expectations)

@@ -13,10 +13,9 @@
 #' @importFrom graphics curve
 #' @importFrom utils capture.output askYesNo combn
 #' @importFrom tidyr pivot_longer
-#' @importFrom rlang .data :=
+#' @importFrom rlang .data := is_formula
 #' @importFrom survival Surv
 #' @importFrom BMS bms
 #' @importFrom stats AIC BIC as.formula binomial coef cov dbeta dbinom delete.response density dgamma dlnorm dnbinom dnorm dpois gaussian glm lm model.frame model.matrix model.offset model.response na.omit optim optimize pbeta pgamma pnorm poisson predict qbeta qgamma qlnorm qnorm quantile rbeta rbinom resid rgamma rnbinom rnorm rpois sd sigma terms var vcov weighted.mean
-# #' @import coda
 NULL
 

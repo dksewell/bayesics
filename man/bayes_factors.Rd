@@ -16,11 +16,16 @@ bayes_factors(object, ...)
 \method{bayes_factors}{survfit_b}(object, object2, ...)
 }
 \arguments{
-\item{object}{lm_b or glm_b object}
+\item{object}{lm_b, glm_b, or survfit_b object}
+
+\item{...}{Passed to methods.}
 
 \item{by}{character.  Either "coefficient" or "variable".  If the former,
 Bayes factors will be computed for each regression coefficient separately.
 If the latter, Bayes factors will be computed for each covariate separately.}
+
+\item{object2}{a second survfit_b object.  Not used for
+other classes.}
 }
 \description{
 Bayes factors for Bayesian regression objects using the Savage-Dickey ratio

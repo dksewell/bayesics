@@ -9,7 +9,7 @@
 #' @param seed integer. Always set your seed!!!
 #' @param ... optional arguments.
 #' 
-#' @return list.
+#' @returns list.
 #' \itemize{
 #'  \item newdata tibble with estimate, prediction intervals, and credible intervals 
 #' for the mean.

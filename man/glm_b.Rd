@@ -112,7 +112,6 @@ weights that match the rows of the returned \code{proposal_draws}.
 \item \code{effective_sample_size}
 \item \code{mc_error}
 }
-\item
 \item other inputs into \code{glm_b}
 }
 

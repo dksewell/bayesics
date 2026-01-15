@@ -5,6 +5,8 @@
 #' Returns the posterior covariance matrix of the main parameters of a fitted \code{bayesics} object
 #' 
 #' @param object a fitted model object from \code{bayesics}.
+#' @param ... Passed to methods.
+#' 
 #' @returns A matrix of the covariance matrix for the regression coefficients.  If the posterior 
 #' is a multivariate t distribution (or consists of independent t's in the case of heteroscedastic 
 #' 1-way ANOVA), the degrees of freedom are returned as the \code{df} attribute of the matrix.  Note 

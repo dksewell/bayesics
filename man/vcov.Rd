@@ -18,6 +18,8 @@
 }
 \arguments{
 \item{object}{a fitted model object from \code{bayesics}.}
+
+\item{...}{Passed to methods.}
 }
 \value{
 A matrix of the covariance matrix for the regression coefficients.  If the posterior

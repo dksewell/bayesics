@@ -60,8 +60,12 @@
 #' probability the bounds of the credible intervals will be within \eqn{\pm} 
 #' \code{mc_error}\eqn{\times 4s_y}, that is, within 100\code{mc_error}% of the 
 #' trimmed range of y.
+#' @param compute_bayes_factor logical.  Computing the BF can be done 
+#'  analytically, but it requires an nxn matrix.  If this will require more 
+#'  than 1GB of memory, compute_bayes_factor will automatically be set to 
+#'  FALSE.  This setting can be overridden by setting \code{compute_bayes_factor="force"}.
 #' 
-#' @return Object of class "aov_b" with the following elements:
+#' @returns Object of class "aov_b" with the following elements:
 #' \itemize{
 #'  \item summary - tibble giving the summary of the model parameters
 #'  \item BF_for_different_vs_same_means - Bayes factor in favor of the full 
@@ -88,7 +92,6 @@
 #'  }
 #'  \item \code{mc_error} - absolute errors used to determine number of 
 #'  posterior draws for accurate interval estimation
-#'  \item other inputs by user
 #' }
 #' 
 #' @references 

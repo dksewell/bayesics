@@ -18,10 +18,13 @@
 #' 
 #' Interpretation is taken from Kass and Raftery.
 #' 
-#' @param object lm_b or glm_b object
+#' @param object lm_b, glm_b, or survfit_b object
+#' @param object2 a second survfit_b object.  Not used for 
+#' other classes.
 #' @param by character.  Either "coefficient" or "variable".  If the former, 
 #' Bayes factors will be computed for each regression coefficient separately. 
 #' If the latter, Bayes factors will be computed for each covariate separately.
+#' @param ... Passed to methods.
 #' 
 #' @references 
 #' 

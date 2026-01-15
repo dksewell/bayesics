@@ -6,19 +6,17 @@
 #' fitted model.
 #' 
 #' @param object a fitted model object from \code{bayesics}
-#' @param parm a specification of which parameters are to be given confidence 
-#' intervals, either a vector of numbers or a vector of names. If missing, all 
-#' parameters are considered.
 #' @param CI_level the credible level required
 #' @param which character.  For \code{aov_b} only. Either "means" (for the 
 #' group means) or "pairwise" (for pairwise difference in means).
+#' @param ... Passed to methods.
 #' 
 #' @export
 credint = function(object,...){
   UseMethod("credint")
 }
 
-#' @rdname IC
+#' @rdname credint
 #' @exportS3Method credint lm_b 
 credint.lm_b = function(object,
                         CI_level = 0.95,

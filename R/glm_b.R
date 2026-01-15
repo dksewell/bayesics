@@ -56,7 +56,7 @@
 #' probably work.)
 #' 
 #' 
-#' @return glm_b() returns an object of class "glm_b", which behaves as a list with 
+#' @returns glm_b() returns an object of class "glm_b", which behaves as a list with 
 #' the following elements:
 #' \itemize{
 #'  \item \code{summary} - tibble giving results for regression coefficients
@@ -76,7 +76,6 @@
 #'    \item \code{effective_sample_size} 
 #'    \item \code{mc_error} 
 #'  }
-#'  \item
 #'  \item other inputs into \code{glm_b}
 #' }
 #' 
@@ -420,8 +419,8 @@ glm_b = function(formula,
             message()
           y = ifelse(y == min(y),0,1)
         }
-        if(class(y) == "character") y = factor(y)
-        if(class(y) == "factor"){
+        if(is.character(y)) y = factor(y)
+        if(is.factor(y)){
           paste0("Treating ",
                  levels(y)[2],
                  " as '1' and ",
@@ -435,7 +434,7 @@ glm_b = function(formula,
         message("Assuming all observations correspond to Bernoulli, i.e., Binomial with one trial.")
         trials = rep(1.0,N)
       }else{
-        if(class(trials) == "character") trials = data[[trials]]
+        if(is.character(trials)) trials = data[[trials]]
         trials = as.numeric(trials)
       }
     }
@@ -1054,27 +1053,6 @@ glm_b = function(formula,
   }
 }
 
-
-#' @export
-negbinom = function(){
-  list(family = "negbinom",
-       link = "log",
-       linkfun = 
-         function(mu){
-           log(mu)
-         },
-       linkinv = function(eta){
-         pmax(exp(eta), .Machine$double.eps)
-       },
-       variance = function(mu,phi){
-         mu + mu^2 / phi
-       },
-       aic = function(y,n,mu,wt,dev){
-         -2.0 * sum(dnbinom(y,mu = mu,size=dev,log=TRUE) * wt)
-       }
-  ) |> 
-    structure(class = "family")
-}
 
 
 

@@ -65,7 +65,7 @@
 #' posterior draws will ensure that with 99% probability the bounds of the 
 #' credible intervals will be within \eqn{\pm} \code{mc_error}.
 #' 
-#' @return np_glm_b() returns an object of class "np_glm_b", which behaves as
+#' @returns np_glm_b() returns an object of class "np_glm_b", which behaves as
 #' a list with the following elements:
 #' \itemize{
 #'  \item summary - a tibble giving results for regression coefficients.
@@ -145,7 +145,7 @@ np_glm_b = function(formula,
   
   
   # Get loss function
-  if(class(loss) == "function"){
+  if(is.function(loss)){
     loss_fun = loss
     loss = "custom"
   }
@@ -268,8 +268,8 @@ np_glm_b = function(formula,
           message()
         y = ifelse(y == min(y),0,1)
       }
-      if(class(y) == "character") y = factor(y)
-      if(class(y) == "factor"){
+      if(is.character(y)) y = factor(y)
+      if(is.factor(y)){
         paste0("Treating ",
                levels(y)[2],
                " as '1' and ",
@@ -283,7 +283,7 @@ np_glm_b = function(formula,
       message("Assuming all observations correspond to Bernoulli, i.e., Binomial with one trial.")
       trials = rep(1.0,N)
     }else{
-      if(class(trials) == "character") trials = data[[trials]]
+      if(is.character(trials)) trials = data[[trials]]
       trials = as.numeric(trials)
     }
   }

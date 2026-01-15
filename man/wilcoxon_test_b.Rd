@@ -26,7 +26,8 @@ missing) values will be omitted.}
 \item{paired}{if \code{TRUE} and \code{y} is supplied, x-y will be the input of the Bayesian
 Wilcoxon signed rank test.}
 
-\item{p}{\itemize{
+\item{p}{numeric.
+\itemize{
 \item Signed rank: \code{wilcox_test_b} will return the
 posterior probability that the population proportion of positive values
 (i.e., \eqn{x>y}) is greater than this value.

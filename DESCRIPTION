@@ -25,7 +25,6 @@ Suggests:
 VignetteBuilder: 
     quarto
 Imports: 
-    coda,
     tidyr,
     dplyr,
     rlang,

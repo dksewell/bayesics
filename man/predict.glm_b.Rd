@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict.glm_b.R
 \name{predict.glm_b}
 \alias{predict.glm_b}
-\title{Predict method for lm_b model fits}
+\title{Predict method for glm_b model fits}
 \usage{
 \method{predict}{glm_b}(
   object,
@@ -16,7 +16,7 @@
 )
 }
 \arguments{
-\item{object}{Object of class lm_b}
+\item{object}{Object of class glm_b}
 
 \item{newdata}{An optional data.frame in which to look for variables with which
 to predict.}
@@ -30,6 +30,8 @@ observation if family = binomial().}
 
 \item{seed}{integer.  Always set your seed!!!}
 
+\item{n_draws}{integer.  Number of posterior draws used for prediction}
+
 \item{...}{optional arguments.}
 }
 \value{
@@ -37,5 +39,5 @@ tibble with estimate (posterior mean), prediction intervals, and credible interv
 for the mean.
 }
 \description{
-Predict method for lm_b model fits
+Predict method for glm_b model fits
 }

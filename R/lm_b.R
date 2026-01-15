@@ -34,7 +34,7 @@
 #' If missing, defaults go to those suggested by Kruchke (2018).
 #' @param CI_level numeric. Credible interval level.
 #' 
-#' @return lm_b() returns an object of class "lm_b", which behaves as a list with 
+#' @returns lm_b() returns an object of class "lm_b", which behaves as a list with 
 #' the following elements:
 #' \itemize{
 #'  \item summary - tibble giving results for regression coefficients

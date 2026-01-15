@@ -73,8 +73,8 @@ heteroscedasticity_test = function(hetero_model,
                                    homo_model){
   
   # Checks
-  if( (class(hetero_model) != "aov_b") |
-      (class(homo_model) != "aov_b") ) stop("Models must be of class aov_b.")
+  if( !inherits(hetero_model,"aov_b") |
+      !inherits(homo_model,"aov_b") ) stop("Models must be of class aov_b.")
   if(homo_model$summary$Variable[nrow(homo_model$summary)] != "Var") 
     stop("homo_model must be homoscedastic.")
   if(sum(grepl("Var : ",

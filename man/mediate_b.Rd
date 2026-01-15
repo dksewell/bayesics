@@ -42,6 +42,8 @@ TRUE, as this can be a computationally intensive procedure.}
 
 \item{CI_level}{numeric. Credible interval level.}
 
+\item{seed}{integer.  Always set your seed!!!}
+
 \item{mc_error}{positive scalar.  The number of posterior samples will,
 with high probability, estimate the CI bounds up to
 \eqn{\pm}\code{mc_error}\eqn{\times}\code{sd(y)}.}

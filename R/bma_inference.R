@@ -22,7 +22,7 @@
 #' @param seed Integer. Always set your seed!!!
 #' @param ... Other arguments for \code{\link[BMS]{bms}}.
 #' 
-#' @return A list with the following elements:
+#' @returns A list with the following elements:
 #' \itemize{
 #'  \item summary Tibble with point and interval estimates
 #'  \item lm_b_fits A list of lm_b fits using zellner's g prior for

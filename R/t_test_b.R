@@ -88,14 +88,14 @@ t_test_b = function(x,
                     mc_error = 0.002){
   
   outcome_name = NULL
-  if((class(x) == "formula")){
+  if(rlang::is_formula(x)){
     outcome_name = all.vars(x)[1]
     if(length(all.vars(x)) == 1){#Intercept only model, i.e., one population
       x = data[[outcome_name]]
     }
   }
   
-  if((class(x) == "formula") & missing(data)) stop("If formula is given, data must also be given.")
+  if(rlang::is_formula(x) & missing(data)) stop("If formula is given, data must also be given.")
   if(missing(y) & paired) stop("Cannot have paired data without y.")
   
   if(is.numeric(x)){

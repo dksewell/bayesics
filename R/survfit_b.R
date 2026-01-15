@@ -411,8 +411,4 @@ survfit_b = function(formula,
 }
 
 
-#' @export
-Surv = function(...){
-  survival::Surv(...)
-}
 

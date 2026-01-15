@@ -20,6 +20,12 @@
 #' rather than a single plot produced by the patchwork package.
 #' @param CI_level Posterior probability covered by credible interval
 #' @param PI_level Posterior probability covered by prediction interval
+#' @param backtransformation function.  If a transformation of 
+#' the response variable was used, \code{backtransformation} 
+#' should be the inverse of this transformation function.  E.g., 
+#' if you fit lm_b(log(y) ~ x), then set \code{backtransformation=exp}. 
+#' @param n_draws integer.  Number of posterior draws used for visualization 
+#' of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.
 #' @param ... optional arguments.
 #' 
 #' @rdname plot

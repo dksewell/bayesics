@@ -116,11 +116,19 @@ rather than a single plot produced by the patchwork package.}
 
 \item{PI_level}{Posterior probability covered by prediction interval}
 
+\item{backtransformation}{function.  If a transformation of
+the response variable was used, \code{backtransformation}
+should be the inverse of this transformation function.  E.g.,
+if you fit lm_b(log(y) ~ x), then set \code{backtransformation=exp}.}
+
 \item{...}{optional arguments.}
 
 \item{bayes_pvalues_quantiles}{ADD description!}
 
 \item{seed}{ADD description!}
+
+\item{n_draws}{integer.  Number of posterior draws used for visualization
+of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.}
 }
 \description{
 Plots linreg objects.

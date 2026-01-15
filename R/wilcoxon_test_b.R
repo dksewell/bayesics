@@ -24,7 +24,7 @@
 #' @param y an optional numeric vector of data values: as with x non-finite values will be omitted.
 #' @param paired if \code{TRUE} and \code{y} is supplied, x-y will be the input of the Bayesian 
 #' Wilcoxon signed rank test.
-#' @param p 
+#' @param p numeric.
 #' \itemize{
 #'  \item Signed rank: \code{wilcox_test_b} will return the 
 #' posterior probability that the population proportion of positive values 

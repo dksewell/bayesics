@@ -1,7 +1,7 @@
-#' Predict method for lm_b model fits
+#' Predict method for glm_b model fits
 #' 
 #' 
-#' @param object Object of class lm_b
+#' @param object Object of class glm_b
 #' @param newdata An optional data.frame in which to look for variables with which 
 #' to predict. 
 #' @param trials Integer vector giving the number of trials for each 
@@ -9,9 +9,10 @@
 #' @param CI_level Posterior probability covered by credible interval
 #' @param PI_level Posterior probability covered by prediction interval
 #' @param seed integer.  Always set your seed!!!
+#' @param n_draws integer.  Number of posterior draws used for prediction
 #' @param ... optional arguments.
 #' 
-#' @return tibble with estimate (posterior mean), prediction intervals, and credible intervals 
+#' @returns tibble with estimate (posterior mean), prediction intervals, and credible intervals 
 #' for the mean.
 #' 
 #' @exportS3Method predict glm_b
@@ -61,7 +62,7 @@ predict.glm_b = function(object,
       message("Assuming all observations correspond to Bernoulli, i.e., Binomial with one trial.")
       trials = rep(1.0,N)
     }else{
-      if(class(trials) == "character") trials = newdata[[trials]]
+      if(is.character(trials)) trials = newdata[[trials]]
       trials = as.numeric(trials)
     }
   }else{
