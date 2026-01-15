@@ -1020,6 +1020,18 @@ plot.glm_b = function(x,
     }
   }
   
+  
+  to01 = function(x) {
+    if(is.factor(x)){
+      as.numeric(x) - 1.0  # maps level 1 -> 0, level 2 -> 1
+    }else{
+      x                   # leave numeric (or logical) as-is
+    }
+  }
+  x$data[[all.vars(x$formula)[1]]] = 
+    to01(x$data[[all.vars(x$formula)[1]]])
+  
+  
   if(missing(variable)){
     variable = 
       terms(x) |> 
@@ -1043,7 +1055,8 @@ plot.glm_b = function(x,
     
     # Extract 
     mframe = model.frame(x$formula, x$data)
-    y = model.response(mframe)
+    y = 
+      model.response(mframe)
     X = model.matrix(x$formula,x$data)
     os = model.offset(mframe)
     N = nrow(X)
@@ -1336,7 +1349,7 @@ plot.glm_b = function(x,
         plot_list[[paste0("pdp_",variable[v])]] = 
           x$data |>
           ggplot(aes(x = .data[[variable[v]]],
-                     y = .data[[all.vars(x$formula)[1]]])) + 
+                     y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
           geom_point(alpha = 0.2) +
           geom_line(data = newdata,
                     aes(x = .data$var_of_interest,
@@ -1346,7 +1359,7 @@ plot.glm_b = function(x,
           plot_list[[paste0("pdp_",variable[v])]] = 
             x$data |>
             ggplot(aes(x = .data[[variable[v]]],
-                       y = .data[[all.vars(x$formula)[1]]])) + 
+                       y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
             geom_violin(alpha = 0.2)
         }
         if(x$family$family == "binomial"){
@@ -1431,7 +1444,7 @@ plot.glm_b = function(x,
             plot_list[[plot_name_v2]] =
             x$data |>
             ggplot(aes(x = .data[[v]],
-                       y = .data[[all.vars(x$formula)[1]]])) + 
+                       y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
             geom_point(alpha = 0.2)
         }else{
           if(x$family$family %in% c("poisson","negbinom")){
@@ -1439,7 +1452,7 @@ plot.glm_b = function(x,
               plot_list[[plot_name_v2]] =
               x$data |>
               ggplot(aes(x = .data[[v]],
-                         y = .data[[all.vars(x$formula)[1]]])) + 
+                         y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
               geom_violin(alpha = 0.2)
           }
           if(x$family$family == "binomial"){
@@ -1470,14 +1483,14 @@ plot.glm_b = function(x,
             plot_list[[plot_name_v]] =
               x$data |>
               ggplot(aes(x = .data[[v]],
-                         y = .data[[all.vars(x$formula)[1]]])) + 
+                         y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
               geom_point(alpha = 0.2)
           }else{
             if(x$family$family%in% c("poisson","negbinom")){
               plot_list[[plot_name_v]] =
                 x$data |>
                 ggplot(aes(x = .data[[v]],
-                           y = .data[[all.vars(x$formula)[1]]])) + 
+                           y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
                 geom_violin(alpha = 0.2)
             }
             if(x$family$family == "binomial"){
@@ -1555,7 +1568,8 @@ plot.glm_b = function(x,
         plot_list[[plot_name_v]] =
           plot_list[[plot_name_v]] +
           geom_ribbon(data = newdata[[v]],
-                      aes(ymin = .data$CI_lower,
+                      aes(x = .data[[v]],
+                          ymin = .data$CI_lower,
                           ymax = .data$CI_upper),
                       fill = "steelblue4",
                       alpha = 0.5) +
@@ -1648,6 +1662,16 @@ plot.np_glm_b = function(x,
                              c("pdp",
                                "cred band"))]
   
+  to01 = function(x) {
+    if(is.factor(x)){
+      as.numeric(x) - 1  # maps level 1 -> 0, level 2 -> 1
+    }else{
+      x                   # leave numeric (or logical) as-is
+    }
+  }
+  x$data[[all.vars(x$formula)[1]]] = 
+    to01(x$data[[all.vars(x$formula)[1]]])
+  
   
   if(missing(variable)){
     variable = 
@@ -1721,7 +1745,7 @@ plot.np_glm_b = function(x,
         plot_list[[paste0("pdp_",variable[v])]] = 
           x$data |>
           ggplot(aes(x = .data[[variable[v]]],
-                     y = .data[[all.vars(x$formula)[1]]])) + 
+                     y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
           geom_point(alpha = 0.2) +
           geom_line(data = newdata,
                     aes(x = .data$var_of_interest,
@@ -1740,7 +1764,7 @@ plot.np_glm_b = function(x,
           plot_list[[paste0("pdp_",variable[v])]] = 
             x$data |>
             ggplot(aes(x = .data[[variable[v]]],
-                       y = .data[[all.vars(x$formula)[1]]])) + 
+                       y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
             geom_violin(alpha = 0.2)
         }
         
@@ -1810,7 +1834,7 @@ plot.np_glm_b = function(x,
         plot_list[[plot_name_v]] =
           x$data |>
           ggplot(aes(x = .data[[v]],
-                     y = .data[[all.vars(x$formula)[1]]])) + 
+                     y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
           geom_point(alpha = 0.2) +
           geom_ribbon(data = newdata[[v]],
                       aes(ymin = .data$CI_lower,
@@ -1836,7 +1860,7 @@ plot.np_glm_b = function(x,
           plot_list[[plot_name_v]] =
             x$data |>
             ggplot(aes(x = .data[[v]],
-                       y = .data[[all.vars(x$formula)[1]]])) + 
+                       y = as.numeric(.data[[all.vars(x$formula)[1]]]))) + 
             geom_violin(alpha = 0.2)
         }
         

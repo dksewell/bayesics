@@ -185,6 +185,10 @@ np_glm_b = function(formula,
       model.frame(formula,data)
   }
   y = model.response(mframe)
+  if(is.factor(y)){
+    y = as.integer(y)
+    if(length(unique(y)) == 2) y = y - 1
+  }
   X = model.matrix(formula,mframe)
   if(ncol(X) > 1)
     s_j = apply(X[,-1,drop = FALSE],2,sd)
