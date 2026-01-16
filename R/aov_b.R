@@ -271,15 +271,24 @@ aov_b = function(formula,
                        data = data)
       ret$BF_for_different_vs_same_means = 
         exp(
-          mvtnorm::dmvt(as.vector(data$y),
-                        df = prior_var_shape,
-                        delta = rep(prior_mean_mu,nrow(data)),
-                        sigma = 
-                          prior_var_rate /
-                          prior_var_shape * 
-                          (diag(nrow(data)) + 
-                             1.0 / prior_mean_nu * tcrossprod(X)),
-                        log = TRUE) - 
+          sum(
+            sapply(1:G,
+                   function(g){
+                     mvtnorm::dmvt(as.vector(data$y[which(data$group ==
+                                                            data_quants$group[g])]),
+                                   df = prior_var_shape,
+                                   delta = rep(prior_mean_mu,
+                                               data_quants$n[g]),
+                                   sigma = 
+                                     prior_var_rate /
+                                     prior_var_shape * 
+                                     (diag(data_quants$n[g]) + 
+                                        matrix(1.0 / prior_mean_nu,
+                                               data_quants$n[g],
+                                               data_quants$n[g])),
+                                   log = TRUE)
+                   })
+          ) - 
             mvtnorm::dmvt(as.vector(data$y),
                           df = prior_var_shape,
                           delta = rep(prior_mean_mu,nrow(data)),
@@ -288,13 +297,11 @@ aov_b = function(formula,
                             prior_var_shape * 
                             (diag(nrow(data)) + 
                                matrix(1.0 / prior_mean_nu,
-                                      nrow(data),nrow(data))),
+                                      nrow(data),
+                                      nrow(data))),
                           log = TRUE)
         )
     }
-    
-    
-    
     
     # Get posterior samples 
     ## Get preliminary draws
@@ -564,13 +571,15 @@ aov_b = function(formula,
                         log = TRUE) - 
             mvtnorm::dmvt(as.vector(data$y),
                           df = prior_var_shape,
-                          delta = rep(prior_mean_mu,nrow(data)),
+                          delta = rep(prior_mean_mu,
+                                      nrow(data)),
                           sigma = 
                             prior_var_rate /
                             prior_var_shape * 
                             (diag(nrow(data)) + 
                                matrix(1.0 / prior_mean_nu,
-                                      nrow(data),nrow(data))),
+                                      nrow(data),
+                                      nrow(data))),
                           log = TRUE)
         )
     }

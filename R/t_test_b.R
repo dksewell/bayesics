@@ -76,7 +76,7 @@ t_test_b = function(x,
                     paired = FALSE,
                     data,
                     heteroscedastic = TRUE,
-                    prior_mean_mu = 0,
+                    prior_mean_mu,
                     prior_mean_nu = 0.001,
                     prior_var_shape = 0.001,
                     prior_var_rate = 0.001,
@@ -112,6 +112,9 @@ t_test_b = function(x,
       
       # Set alpha lv
       a = 1 - CI_level
+      
+      # Set prior_mean_mu if missing
+      if(missing(prior_mean_mu)) prior_mean_mu = 0.0
       
       # Check if improper prior \propto 1/\sigma^2 is requested
       if(improper){
@@ -282,6 +285,10 @@ t_test_b = function(x,
       return(summary(ret))
     }
   }else{
+    
+    if(missing(prior_mean_mu))
+      prior_mean_mu = mean(data[[outcome_name]])
+    
     # If formula (which implies it must be two sample inference):
     ret = 
       aov_b(x,
@@ -297,6 +304,7 @@ t_test_b = function(x,
             seed = seed,
             mc_error = mc_error)
     
+    if(plot) print(plot(ret))
     
     return(summary(ret))
   }
