@@ -15,4 +15,3 @@ README.md
 ^_pkgdown\.yml$
 ^docs$
 ^vignettes/
-^tests/(?!testthat(/|$)|testthat\\.R$)
