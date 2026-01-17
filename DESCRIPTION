@@ -17,13 +17,10 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests:
     datasets,
-    quarto,
     rstanarm,
     knitr,
     splines,
     testthat (>= 3.0.0)
-VignetteBuilder: 
-    quarto
 Imports: 
     tidyr,
     dplyr,

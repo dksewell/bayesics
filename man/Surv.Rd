@@ -11,8 +11,12 @@ Surv(...)
 the input must be of the form \code{Surv(time,event)} for right censored
 data.}
 }
+\value{
+An object of class "\code{Surv}".
+}
 \description{
 Create a survival object, usually used as a response variable in a
 model formula. Argument matching is special for this function, see
-Details under \code{survival::Surv}, as this is purely a wrapper for it.
+Details under \code{\link[survival]{Surv}}. This is a restricted wrapper around
+\code{\link[survival]{Surv}} and currently supports only right-censored data.
 }

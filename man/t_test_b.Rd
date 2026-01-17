@@ -11,7 +11,7 @@ t_test_b(
   paired = FALSE,
   data,
   heteroscedastic = TRUE,
-  prior_mean_mu = 0,
+  prior_mean_mu,
   prior_mean_nu = 0.001,
   prior_var_shape = 0.001,
   prior_var_rate = 0.001,
