@@ -170,12 +170,12 @@ mediate_b = function(model_m,
   mediator = as.character(model_m$formula)[[2]]
   
   if(missing(control_value)){
-    warning(paste0("control_value missing; set to be the 1st quintile of ",
+    message(paste0("control_value missing; set to be the 1st quintile of ",
                    treat))
     control_value = quantile(model_m$data[[treat]],probs = 0.2)
   }
   if(missing(treat_value)){
-    warning(paste0("treat_value missing; set to be the 4th quintile of ",
+    message(paste0("treat_value missing; set to be the 4th quintile of ",
                    treat))
     treat_value = quantile(model_m$data[[treat]],probs = 0.8)
   }
@@ -278,7 +278,7 @@ mediate_b = function(model_m,
       results$message = 
         paste0(n_draws + n_more_draws,
                " total draws are required for accurate CI bounds.")
-      if(give_warning) warning(results$message)
+      if(give_warning) message(results$message)
     }
     
     results$summary = 
