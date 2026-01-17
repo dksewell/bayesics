@@ -61,7 +61,7 @@
 #' \itemize{
 #'  \item For Zellner's g prior, \eqn{\frac{1}{g}X'X}.
 #'  \item The default for the conjugate prior is based on arguments from 
-#'  standardized regression.  The default \eqn{V} is dicated by saying, "a priori, 
+#'  standardized regression.  The default \eqn{V} is set according to the following: "a priori, 
 #'  we are 95% certain that a standard deviation increase in \eqn{X} will not lead 
 #'  to more than a 5 standard deviation in the mean of \eqn{y}."  If we then 
 #'  set the prior on the intercept to be flat, this leads to

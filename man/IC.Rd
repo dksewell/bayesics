@@ -63,3 +63,23 @@ Numeric (or in the case of DIC, a numeric vector)
 \description{
 Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.  (Lower is better.)
 }
+\examples{
+set.seed(2025)
+N = 500
+test_data <-
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome <-
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e")) )
+fit1 <-
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data)
+AIC(fit1)
+BIC(fit1)
+DIC(fit1)
+WAIC(fit1)
+
+
+
+}

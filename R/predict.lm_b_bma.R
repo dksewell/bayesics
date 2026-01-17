@@ -20,7 +20,8 @@
 #'    }
 #'  }
 #'  
-#'  @examples
+#' @examples
+#'  
 #' # Create data
 #' set.seed(2025)
 #' N = 500
@@ -54,6 +55,7 @@ predict.lm_b_bma = function(object,
                             PI_level = 0.95,
                             seed = 1,
                             ...){
+  
   
   alpha_ci = 1.0 - CI_level
   alpha_pi = 1.0 - PI_level

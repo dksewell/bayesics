@@ -1,11 +1,11 @@
 #' @name print
 #' 
-#' @title Print linreg objects.
+#' @title Print bayesics objects.
 #' 
 #' @param x an object used to select a method.
 #' @param ... optional arguments.
 #' 
-#' @returns \value{None}
+#' @returns None
 #' 
 #' @examples
 #' set.seed(2025)

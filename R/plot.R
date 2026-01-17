@@ -1,8 +1,8 @@
 #' @name plot
 #' 
-#' @title Plots linreg objects.
+#' @title Plots bayesics objects.
 #' 
-#' @param x A linreg object
+#' @param x A bayesics object
 #' @param type character. Select any of "diagnostics" ("dx" is also allowed),
 #'  "pdp" (partial dependence plot), "cred band", and/or "pred band".  
 #'  NOTE: the credible and prediction bands only work for numeric 

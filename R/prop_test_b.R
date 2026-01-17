@@ -54,7 +54,7 @@
 #' @returns (returned invisible) A list with the following:
 #' \itemize{
 #'  \item Number of successes and failures
-#'  \item posterior means for the population proporion(s)
+#'  \item posterior means for the population proportion(s)
 #'  \item Credible interval(s)
 #'  \item Prediction interval(s)
 #'  \item Probability of falling the ROPE

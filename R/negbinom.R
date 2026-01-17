@@ -3,7 +3,7 @@
 #' The \code{negbinom()} is an additional family to be considered 
 #' alongside others documented under \code{stats::family}.
 #' 
-#' @returns an boject of class "family".  See \code{stats::family}.
+#' @returns an object of class "family".  See \code{stats::family}.
 #' 
 #' @examples 
 #' negbinom()

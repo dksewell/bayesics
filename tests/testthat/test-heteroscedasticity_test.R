@@ -1,5 +1,3 @@
-devtools::load_all()
-
 
 test_that("Testing ANOVA heteroscedastity BF",{
   

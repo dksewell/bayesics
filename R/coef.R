@@ -1,8 +1,8 @@
 #' @name coef
 #' 
-#' @title Coefficient extraction for linreg objects
+#' @title Coefficient extraction for bayesics objects
 #' 
-#' @param object linreg object
+#' @param object bayesics object
 #' @param ... optional arguments.
 #' 
 #' 

@@ -1,4 +1,3 @@
-devtools::load_all()
 
 test_that("Simple case-control analysis", {
   
