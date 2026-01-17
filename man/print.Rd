@@ -30,6 +30,9 @@
 
 \item{...}{optional arguments.}
 }
+\value{
+\value{None}
+}
 \description{
 Print linreg objects.
 }

@@ -24,6 +24,9 @@ being less than or equal to quantile}
 
 \item{search_bounds}{bounds with which to search.  Sometimes you need to adjust this to get a good solution.}
 }
+\value{
+Vector of beta shape parameters
+}
 \description{
 Find parameters for Beta prior based on prior mean and one quantile
 }

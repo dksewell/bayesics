@@ -44,6 +44,17 @@ cor_test_b = function(x, ...){
 #' @param plot logical. Should a plot be shown?
 #' @param ... optional arguments.
 #' 
+#' @returns (returned invisible) A list with the following:
+#' \itemize{
+#'  \item posterior mean
+#'  \item lower and upper credible interval bounds
+#'  \item Posterior probability that Kendall's tau is less than provided reference tau
+#'  \item Posterior probability that Kendall's tau is in the ROPE
+#'  \item The underlying object from the DFBA package
+#'  \item Posterior and prior plot
+#'  \item posterior parameters for Kendall's tau correlations
+#' }
+#' 
 #' @references 
 #' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction Using Distribution_Free Statistics. Cambridge: MIT Press.
 #' 

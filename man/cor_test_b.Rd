@@ -60,6 +60,18 @@ interval.}
 
 \item{data}{ADD description!}
 }
+\value{
+(returned invisible) A list with the following:
+\itemize{
+\item posterior mean
+\item lower and upper credible interval bounds
+\item Posterior probability that Kendall's tau is less than provided reference tau
+\item Posterior probability that Kendall's tau is in the ROPE
+\item The underlying object from the DFBA package
+\item Posterior and prior plot
+\item posterior parameters for Kendall's tau correlations
+}
+}
 \description{
 Test for Association/Correlation Between Paired Samples
 }

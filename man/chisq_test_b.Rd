@@ -40,6 +40,18 @@ evaluated at the ROPE bounds. Note that if it is estimated that these
 probabilities are between 0.11 and 0.89, the more relaxed value of 0.01 is
 used.}
 }
+\value{
+(returned invisible) A list with the following elements:
+\itemize{
+\item posterior shape parameters
+\item posterior mean
+\item lower and upper credible interval bounds
+\item Probability that joint probabilities are in the ROPE around independent probabilities
+\item Overall probability of falling in the ROPE
+\item PDir for each probability
+\item Bayes factor and interpretation
+}
+}
 \description{
 Test of independence for 2-way contingency tables
 }

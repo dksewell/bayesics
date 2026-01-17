@@ -1,11 +1,26 @@
 #' @name summary
 #' 
-#' @title Summary functions for linreg objects
+#' @title Summary functions for bayesics objects
 #' 
-#' @param object linreg object
+#' @param object bayesics object
 #' @param CI_level Posterior probability covered by credible interval
 #' @param ... optional arguments.
 #' 
+#' @returns tibble with summary values
+#' 
+#' @examples
+#' set.seed(2025)
+#' N = 500
+#' test_data <-
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome <-
+#'   rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+#' fit1 <-
+#'   lm_b(outcome ~ x1 + x2 + x3,
+#'        data = test_data)
+#' summary(fit1)
 #' 
 #' @export
 

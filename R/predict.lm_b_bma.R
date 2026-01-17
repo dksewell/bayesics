@@ -19,6 +19,31 @@
 #'      \item posterior draws of ynew
 #'    }
 #'  }
+#'  
+#'  @examples
+#' # Create data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5],
+#'              x4 = rnorm(N),
+#'              x5 = rnorm(N),
+#'              x6 = rnorm(N),
+#'              x7 = rnorm(N),
+#'              x8 = rnorm(N),
+#'              x9 = rnorm(N),
+#'              x10 = rnorm(N))
+#' test_data$outcome = 
+#'   rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+#' 
+#' # Fit linear model using Bayesian model averaging
+#' fit <-
+#'   bma_inference(outcome ~ .,
+#'                 test_data,
+#'                 user.int = FALSE)
+#' predict(fit)
 #' 
 #' 
 #' @exportS3Method predict lm_b_bma

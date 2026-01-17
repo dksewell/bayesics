@@ -46,6 +46,15 @@
 #' @param mc_error The relative monte carlo error of the quantiles of the CIs. 
 #' (ignored if \code{large_sample_approx = TRUE}.)
 #' 
+#' @returns (returned invisible) list including the following:
+#' \itemize{
+#'  \item data
+#'  \item posterior mean
+#'  \item CI
+#'  \item Probability the odds ratio is in the ROPE
+#'  \item posterior draws
+#'  \item odds ratio plot
+#' }
 #' 
 #' @examples
 #' case_control_b(matrix(c(8,47,1,26),2,2))

@@ -4,6 +4,23 @@
 #' @param n_draws integer.  Number of posterior draws to obtain.
 #' @param seed integer.  Always set your seed!!!
 #' 
+#' @returns matrix of posterior draws
+#' 
+#' @examples
+#' set.seed(2025)
+#' N = 500
+#' test_data <-
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome <-
+#'   rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+#' fit1 <-
+#'   lm_b(outcome ~ x1 + x2 + x3,
+#'        data = test_data)
+#' pdraws <-
+#'   get_posterior_draws(fit1)
+#' 
 #' 
 #' @export
 

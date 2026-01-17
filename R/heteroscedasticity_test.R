@@ -13,6 +13,12 @@
 #' @param homo_model aov_b object where the heteroscedastic argument 
 #' has been set to FALSE
 #' 
+#' @returns (returned invisible) A list with the following:
+#' \itemize{
+#'  \item log of the Bayes factor
+#'  \item Bayes factor
+#'  \item Interpretation
+#' }
 #' 
 #' @examples
 #' # Test homoscedastic case

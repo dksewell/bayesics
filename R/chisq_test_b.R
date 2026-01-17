@@ -30,6 +30,17 @@
 #' \code{"fixed columns"}
 #' }
 #' 
+#' @returns (returned invisible) A list with the following elements:
+#' \itemize{
+#'  \item posterior shape parameters
+#'  \item posterior mean
+#'  \item lower and upper credible interval bounds
+#'  \item Probability that joint probabilities are in the ROPE around independent probabilities
+#'  \item Overall probability of falling in the ROPE
+#'  \item PDir for each probability 
+#'  \item Bayes factor and interpretation
+#' }
+#' 
 #' @references 
 #' 
 #' Gunel, Erdogan &  Dickey, James (1974). Bayes factors for independence in contingency tables, Biometrika, 61(3), Pages 545–557, https://doi.org/10.1093/biomet/61.3.545

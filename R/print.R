@@ -4,6 +4,23 @@
 #' 
 #' @param x an object used to select a method.
 #' @param ... optional arguments.
+#' 
+#' @returns \value{None}
+#' 
+#' @examples
+#' set.seed(2025)
+#' N = 500
+#' test_data <-
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome <-
+#'   rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+#' fit1 <-
+#'   lm_b(outcome ~ x1 + x2 + x3,
+#'        data = test_data)
+#' print(fit1)
+#' 
 
 #' @rdname print
 #' @method print aov_b 

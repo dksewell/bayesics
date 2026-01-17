@@ -26,6 +26,8 @@
 #' If the latter, Bayes factors will be computed for each covariate separately.
 #' @param ... Passed to methods.
 #' 
+#' @returns tibble with Bayes factors and interpretations
+#' 
 #' @references 
 #' 
 #' James M. Dickey. "The Weighted Likelihood Ratio, Linear Hypotheses on Normal Location Parameters." Ann. Math. Statist. 42 (1) 204 - 223, February, 1971. https://doi.org/10.1214/aoms/1177693507

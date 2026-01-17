@@ -45,6 +45,29 @@
 #' @param plot logical.  Should a plot be shown?
 #' @param seed Always set your seed! (Unused for \eqn{\geq} 20 observations.)
 #' 
+#' @returns (returned invisible) If signed rank analysis is implemented, a list with the following:
+#' \itemize{
+#'  \item Posterior mean
+#'  \item Credible interval
+#'  \item Probability proportion of values that are positive is less than the reference p
+#'  \item Probability proportion of values that are positive is in the ROPE
+#'  \item Underlying DFBA object
+#'  \item Prior and posterior plot
+#'  \item Posterior parameters
+#'  \item Bayes factor
+#' }
+#' If rank sum analysis is implemented, a list with the following:
+#' \itemize{
+#'  \item Posterior mean
+#'  \item Credible interval
+#'  \item Probability \eqn{\Omega_x} is less than the reference p
+#'  \item Probability \eqn{\Omega_x} is in the ROPE
+#'  \item Underlying DFBA object
+#'  \item Prior and posterior plot
+#'  \item Posterior parameters
+#'  \item Bayes factor
+##' }
+#' 
 #' @references 
 #' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction to Distribution-Free Methods. Cambridge: MIT Press.
 #' 

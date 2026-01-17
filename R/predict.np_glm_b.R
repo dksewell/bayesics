@@ -12,6 +12,23 @@
 #' @returns tibble with estimate, prediction intervals, and credible intervals 
 #' for the mean.
 #' 
+#' @rexamples
+#' # Generate some data
+#' set.seed(2025)
+#' N = 500
+#' test_data = 
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome = 
+#'   rbinom(N,1,1.0 / (1.0 + exp(-(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) ))))
+#' 
+#' # Fit the GLM via the (non-parametric) loss-likelihood bootstrap.
+#' fit1 <-
+#'   np_glm_b(outcome ~ x1 + x2 + x3,
+#'            data = test_data,
+#'            family = binomial())
+#' predict(fit1)
 #' 
 #' @exportS3Method predict np_glm_b
 

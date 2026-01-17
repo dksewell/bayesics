@@ -40,6 +40,17 @@ credible interval for \eqn{p}.}
 
 \item{plot}{logical.  Should a plot be shown?}
 }
+\value{
+(returned invisible) A list with the following:
+\itemize{
+\item posterior mean of the median difference
+\item Credible interval for the median difference
+\item ROPE bounds
+\item Probability of falling in the ROPE
+\item Prior and posterior plot
+\item posterior parameters
+}
+}
 \description{
 Sign test for paired data.
 }

@@ -6,6 +6,9 @@
 \usage{
 negbinom()
 }
+\value{
+an boject of class "family".  See \code{stats::family}.
+}
 \description{
 The \code{negbinom()} is an additional family to be considered
 alongside others documented under \code{stats::family}.

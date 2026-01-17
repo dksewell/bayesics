@@ -8,7 +8,20 @@
 #' @param ... arguments to be passed into \code{survival::Surv}.  Currently, 
 #' the input must be of the form \code{Surv(time,event)} for right censored 
 #' data.
-#' @return An object of class "\code{Surv}".
+#' 
+#' @returns An object of class "\code{Surv}".
+#' set.seed(2025)
+#' N = 300
+#' test_data = 
+#'   data.frame(outcome = 
+#'                rweibull(N,2,5))
+#' test_data$observed = 
+#'   ifelse(test_data$outcome >= 7, 0, 1)
+#' test_data$outcome =
+#'   ifelse(dplyr::near(test_data$observed,1), test_data$outcome, 7)
+#' Surv(test_data$outcome,
+#'      test_data$observed)
+#' 
 #' @export
 Surv = function(...){
   s <- survival::Surv(...)

@@ -28,6 +28,23 @@
 #' of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.
 #' @param ... optional arguments.
 #' 
+#' @returns If \code{return_as_list=TRUE}, a list of requested ggplots.
+#' 
+#' @examples
+#' set.seed(2025)
+#' N = 500
+#' test_data <-
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5])
+#' test_data$outcome <-
+#'   rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e")) )
+#' fit1 <-
+#'   lm_b(outcome ~ x1 + x2 + x3,
+#'        data = test_data)
+#' plot(fit1)
+#' 
+#' 
 #' @rdname plot
 #' @method plot lm_b
 #' @export

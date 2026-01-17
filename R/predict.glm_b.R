@@ -15,6 +15,30 @@
 #' @returns tibble with estimate (posterior mean), prediction intervals, and credible intervals 
 #' for the mean.
 #' 
+#' @examples
+#' set.seed(2025)
+#' N = 500
+#' test_data =
+#'   data.frame(x1 = rnorm(N),
+#'              x2 = rnorm(N),
+#'              x3 = letters[1:5],
+#'              time = rexp(N))
+#' test_data$outcome =
+#'   rnbinom(N,
+#'           mu = exp(-2 + test_data$x1 + 2 * (test_data$x3 %in% c("d","e"))) * test_data$time,
+#'           size = 0.7)
+#' 
+#' # Fit using variational Bayes (default)
+#' fit_vb1 <-
+#'   glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+#'         data = test_data,
+#'         family = negbinom(),
+#'         seed = 2025)
+#' # Predict
+#' predict(fit_vb1)
+#' 
+#' 
+#' 
 #' @exportS3Method predict glm_b
 
 

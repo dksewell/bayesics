@@ -53,6 +53,30 @@ beta distribution that will act as the prior on the population proportions.}
 
 \item{seed}{Always set your seed! (Unused for \eqn{\geq} 20 observations.)}
 }
+\value{
+(returned invisible) If signed rank analysis is implemented, a list with the following:
+\itemize{
+\item Posterior mean
+\item Credible interval
+\item Probability proportion of values that are positive is less than the reference p
+\item Probability proportion of values that are positive is in the ROPE
+\item Underlying DFBA object
+\item Prior and posterior plot
+\item Posterior parameters
+\item Bayes factor
+}
+If rank sum analysis is implemented, a list with the following:
+\itemize{
+\item Posterior mean
+\item Credible interval
+\item Probability \eqn{\Omega_x} is less than the reference p
+\item Probability \eqn{\Omega_x} is in the ROPE
+\item Underlying DFBA object
+\item Prior and posterior plot
+\item Posterior parameters
+\item Bayes factor
+}
+}
 \description{
 Bayesian Wilcoxon Rank Sum (aka Mann-Whitney U) and Signed Rank Analyses
 }

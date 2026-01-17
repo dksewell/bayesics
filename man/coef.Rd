@@ -24,6 +24,9 @@
 
 \item{...}{optional arguments.}
 }
+\value{
+vector of coefficients
+}
 \description{
 Coefficient extraction for linreg objects
 }

@@ -14,6 +14,14 @@ has been set to TRUE (the default)}
 \item{homo_model}{aov_b object where the heteroscedastic argument
 has been set to FALSE}
 }
+\value{
+(returned invisible) A list with the following:
+\itemize{
+\item log of the Bayes factor
+\item Bayes factor
+\item Interpretation
+}
+}
 \description{
 Use Chib's method to compute the Bayes factor to test for
 heteroscedasticity in analysis of variance models.

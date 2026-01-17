@@ -51,6 +51,16 @@
 #' probability the bounds of the credible intervals of \eqn{p_1 - p_2} will be 
 #' within \eqn{\pm} \code{mc_error}. (Ignored for a single population proportion.)
 #' 
+#' @returns (returned invisible) A list with the following:
+#' \itemize{
+#'  \item Number of successes and failures
+#'  \item posterior means for the population proporion(s)
+#'  \item Credible interval(s)
+#'  \item Prediction interval(s)
+#'  \item Probability of falling the ROPE
+#'  \item Prior and posterior plot
+#'  \item posterior parameters
+#' }
 #' 
 #' @examples
 #' # Single population

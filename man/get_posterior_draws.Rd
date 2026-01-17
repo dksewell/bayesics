@@ -13,6 +13,9 @@ get_posterior_draws(object, n_draws = 10000, seed = 1)
 
 \item{seed}{integer.  Always set your seed!!!}
 }
+\value{
+matrix of posterior draws
+}
 \description{
 Get posterior samples from lm_b object
 }

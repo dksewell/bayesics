@@ -31,6 +31,9 @@ credint(object, ...)
 \item{which}{character.  For \code{aov_b} only. Either "means" (for the
 group means) or "pairwise" (for pairwise difference in means).}
 }
+\value{
+Matrix of credible intervals
+}
 \description{
 Computes credible intervals for one or more parameters in a
 fitted model.

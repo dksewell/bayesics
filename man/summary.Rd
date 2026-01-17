@@ -8,7 +8,7 @@
 \alias{summary.lm_b_bma}
 \alias{summary.glm_b}
 \alias{summary.mediate_b}
-\title{Summary functions for linreg objects}
+\title{Summary functions for bayesics objects}
 \usage{
 \method{summary}{lm_b}(object, CI_level = 0.95, ...)
 
@@ -23,7 +23,7 @@
 \method{summary}{mediate_b}(object, CI_level = 0.95, ...)
 }
 \arguments{
-\item{object}{linreg object}
+\item{object}{bayesics object}
 
 \item{CI_level}{Posterior probability covered by credible interval}
 
@@ -31,6 +31,9 @@
 
 \item{interpretable_scale}{ADD description!}
 }
+\value{
+tibble with summary values
+}
 \description{
-Summary functions for linreg objects
+Summary functions for bayesics objects
 }

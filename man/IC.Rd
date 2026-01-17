@@ -57,6 +57,9 @@ DIC(object, ...)
 with 99\% probability the posterior mean of the deviance for DIC will be
 within \eqn{\pm}\code{mc_error}E(deviance).}
 }
+\value{
+Numeric (or in the case of DIC, a numeric vector)
+}
 \description{
 Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.  (Lower is better.)
 }

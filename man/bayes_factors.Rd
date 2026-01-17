@@ -27,6 +27,9 @@ If the latter, Bayes factors will be computed for each covariate separately.}
 \item{object2}{a second survfit_b object.  Not used for
 other classes.}
 }
+\value{
+tibble with Bayes factors and interpretations
+}
 \description{
 Bayes factors for Bayesian regression objects using the Savage-Dickey ratio
 }

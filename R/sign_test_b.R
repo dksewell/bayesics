@@ -34,6 +34,15 @@
 #' credible interval for \eqn{p}.
 #' @param plot logical.  Should a plot be shown?
 #' 
+#' @returns (returned invisible) A list with the following:
+#' \itemize{
+#'  \item posterior mean of the median difference
+#'  \item Credible interval for the median difference
+#'  \item ROPE bounds
+#'  \item Probability of falling in the ROPE
+#'  \item Prior and posterior plot
+#'  \item posterior parameters
+#' }
 #' 
 #' @examples
 #' # Single population

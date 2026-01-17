@@ -130,6 +130,9 @@ if you fit lm_b(log(y) ~ x), then set \code{backtransformation=exp}.}
 \item{n_draws}{integer.  Number of posterior draws used for visualization
 of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.}
 }
+\value{
+If \code{return_as_list=TRUE}, a list of requested ggplots.
+}
 \description{
 Plots linreg objects.
 }
