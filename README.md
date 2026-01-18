@@ -7,7 +7,7 @@ Bayesian statistics is an integral part of contemporary applied science.  **baye
 ``` r
 # Development version from GitHub
 # install.packages("devtools")
-devtools::install_github("a1arakkal/bayesics")
+devtools::install_github("dksewell/bayesics")
 ```
 
 # Basic usage
