@@ -7,7 +7,7 @@
 \alias{coef.np_glm_b}
 \alias{coef.glm_b}
 \alias{coef.lm_b_bma}
-\title{Coefficient extraction for linreg objects}
+\title{Coefficient extraction for bayesics objects}
 \usage{
 \method{coef}{lm_b}(object, ...)
 
@@ -20,7 +20,7 @@
 \method{coef}{lm_b_bma}(object, ...)
 }
 \arguments{
-\item{object}{linreg object}
+\item{object}{bayesics object}
 
 \item{...}{optional arguments.}
 }
@@ -28,7 +28,7 @@
 vector of coefficients
 }
 \description{
-Coefficient extraction for linreg objects
+Coefficient extraction for bayesics objects
 }
 \examples{
 set.seed(2025)

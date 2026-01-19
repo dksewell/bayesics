@@ -9,7 +9,7 @@
 \alias{print.glm_b}
 \alias{print.mediate_b}
 \alias{print.survfit_b}
-\title{Print linreg objects.}
+\title{Print bayesics objects.}
 \usage{
 \method{print}{aov_b}(x, ...)
 
@@ -34,7 +34,7 @@
 None
 }
 \description{
-Print linreg objects.
+Print bayesics objects.
 }
 \examples{
 set.seed(2025)

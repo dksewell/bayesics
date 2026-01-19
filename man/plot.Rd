@@ -9,7 +9,7 @@
 \alias{plot.np_glm_b}
 \alias{plot.mediate_b}
 \alias{plot.survfit_b}
-\title{Plots linreg objects.}
+\title{Plots bayesics objects.}
 \usage{
 \method{plot}{lm_b}(
   x,
@@ -89,7 +89,7 @@
 \method{plot}{survfit_b}(x, n_draws = 10000, seed = 1, CI_level = 0.95, ...)
 }
 \arguments{
-\item{x}{A linreg object}
+\item{x}{A bayesics object}
 
 \item{type}{character. Select any of "diagnostics" ("dx" is also allowed),
 "pdp" (partial dependence plot), "cred band", and/or "pred band".
@@ -134,7 +134,7 @@ of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.}
 If \code{return_as_list=TRUE}, a list of requested ggplots.
 }
 \description{
-Plots linreg objects.
+Plots bayesics objects.
 }
 \examples{
 set.seed(2025)

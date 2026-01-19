@@ -7,7 +7,7 @@
 negbinom()
 }
 \value{
-an boject of class "family".  See \code{stats::family}.
+an object of class "family".  See \code{stats::family}.
 }
 \description{
 The \code{negbinom()} is an additional family to be considered
