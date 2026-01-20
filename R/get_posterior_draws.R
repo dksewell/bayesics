@@ -37,7 +37,9 @@ get_posterior_draws = function(object,
   p = nrow(object$summary)
   
   V_tilde_eig = eigen(object$posterior_parameters$V_tilde)
-  Vinv_sqrt = tcrossprod(diag(1 / sqrt(V_tilde_eig$values)),
+  Vinv_sqrt = tcrossprod(diag(x = 1 / sqrt(V_tilde_eig$values),
+                              nrow = length(V_tilde_eig$values),
+                              ncol = length(V_tilde_eig$values)),
                          V_tilde_eig$vectors)
   
   post_draws = 

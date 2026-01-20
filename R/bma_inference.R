@@ -15,6 +15,8 @@
 #' coefficient.  Optionally, you can not include a ROPE boundary for the intercept. 
 #' If missing, defaults go to those suggested by Kruchke (2018).
 #' @param mcmc_draws Integer. Number of draws passed into \code{\link[BMS]{bms}}
+#' @param n_models Integer. The number of best models for which information is stored.  
+#' See \code{\link[BMS]{bms}} for more details.
 #' @param mc_error The number of posterior draws will ensure that with 99% 
 #' probability the bounds of the credible intervals will be within \eqn{\pm} 
 #' \code{mc_error}\eqn{\times 4s_y}, that is, within 100\code{mc_error}% of the 
@@ -70,6 +72,7 @@ bma_inference = function(formula,
                          CI_level = 0.95,
                          ROPE,
                          mcmc_draws = 1e4,
+                         n_models = 500,
                          mc_error = 0.001,
                          seed = 1,
                          ...){
@@ -94,10 +97,13 @@ bma_inference = function(formula,
     )
   colnames(X.data)[1] = all.vars(formula)[1]
   
+  
+  n_models = min(n_models,mcmc_draws)
   bms_fit = 
     BMS::bms(X.data,
              g = zellner_g,
              iter = mcmc_draws,
+             nmodel = n_models,
              ...)
   
   
@@ -127,11 +133,19 @@ bma_inference = function(formula,
     future.apply::future_lapply(1:ncol(var_inclusion),
                                 function(i){
                                   suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
+                                  if(sum(var_inclusion[,i]) == 0){
+                                    lm_formula = 
+                                      paste0(colnames(X.data)[1], " ~ 1") |> 
+                                      as.formula()
+                                  }else{
+                                    lm_formula = 
+                                      paste0(colnames(X.data)[1], " ~ ", 
+                                             paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
+                                                   collapse = " + ")) |> 
+                                      as.formula()
+                                  }
                                   suppressMessages(
-                                    lm_b(paste0(colnames(X.data)[1], " ~ ", 
-                                                paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
-                                                      collapse = " + ")) |> 
-                                           as.formula(),
+                                    lm_b(lm_formula,
                                          data = X.data,
                                          prior = "zellner",
                                          zellner_g = zellner_g)
@@ -181,7 +195,7 @@ bma_inference = function(formula,
                                   stats::density(unlist(post_samples[,i]))
                                 })
   mc_draws = 
-    future.apply::future_sapply(vars_to_consider,
+    future.apply::future_sapply(1:length(vars_to_consider),
                                 function(i){
                                   0.5 * alpha * (1.0 - 0.5 * alpha) *
                                     (
@@ -215,11 +229,19 @@ bma_inference = function(formula,
     future.apply::future_lapply(1:ncol(var_inclusion),
                   function(i){
                     suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
+                    if(sum(var_inclusion[,i]) == 0){
+                      lm_formula = 
+                        paste0(colnames(X.data)[1], " ~ 1") |> 
+                        as.formula()
+                    }else{
+                      lm_formula = 
+                        paste0(colnames(X.data)[1], " ~ ", 
+                               paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
+                                     collapse = " + ")) |> 
+                        as.formula()
+                    }
                     suppressMessages(
-                      lm_b(paste0(colnames(X.data)[1], " ~ ", 
-                                  paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
-                                        collapse = " + ")) |> 
-                             as.formula(),
+                      lm_b(lm_formula,
                            data = X.data,
                            prior = "zellner",
                            zellner_g = zellner_g)

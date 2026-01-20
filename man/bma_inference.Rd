@@ -11,6 +11,7 @@ bma_inference(
   CI_level = 0.95,
   ROPE,
   mcmc_draws = 10000,
+  n_models = 500,
   mc_error = 0.001,
   seed = 1,
   ...
@@ -31,6 +32,9 @@ coefficient.  Optionally, you can not include a ROPE boundary for the intercept.
 If missing, defaults go to those suggested by Kruchke (2018).}
 
 \item{mcmc_draws}{Integer. Number of draws passed into \code{\link[BMS]{bms}}}
+
+\item{n_models}{Integer. The number of best models for which information is stored.
+See \code{\link[BMS]{bms}} for more details.}
 
 \item{mc_error}{The number of posterior draws will ensure that with 99\%
 probability the bounds of the credible intervals will be within \eqn{\pm}
