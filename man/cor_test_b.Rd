@@ -96,6 +96,7 @@ For more information, see \link[DFBA]{dfba_bivariate_concordance}
 and vignette("dfba_bivariate_concordance",package = "DFBA").
 }
 \examples{
+\donttest{
 # Generate data
 set.seed(2025)
 N = 50
@@ -119,7 +120,7 @@ cor_test_b(x,y,
            prior = "positive")
 cor_test_b(x,y,
            prior_shapes = c(10,10))
-
+}
 
 
 }

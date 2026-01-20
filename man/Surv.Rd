@@ -13,21 +13,26 @@ data.}
 }
 \value{
 An object of class "\code{Surv}".
-set.seed(2025)
-N = 300
-test_data =
-data.frame(outcome =
-rweibull(N,2,5))
-test_data$observed =
-ifelse(test_data$outcome >= 7, 0, 1)
-test_data$outcome =
-ifelse(dplyr::near(test_data$observed,1), test_data$outcome, 7)
-Surv(test_data$outcome,
-test_data$observed)
 }
 \description{
 Create a survival object, usually used as a response variable in a
 model formula. Argument matching is special for this function, see
 Details under \code{\link[survival]{Surv}}. This is a restricted wrapper around
 \code{\link[survival]{Surv}} and currently supports only right-censored data.
+}
+\examples{
+\donttest{
+set.seed(2025)
+N = 300
+test_data = 
+  data.frame(outcome = 
+               rweibull(N,2,5))
+test_data$observed = 
+  ifelse(test_data$outcome >= 7, 0, 1)
+test_data$outcome =
+  ifelse(dplyr::near(test_data$observed,1), test_data$outcome, 7)
+Surv(test_data$outcome,
+     test_data$observed)
+}
+
 }

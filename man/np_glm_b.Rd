@@ -100,6 +100,7 @@ log likelihood.  This then resembles a typical \code{glm_b} implementation,
 but is more robust to model misspecification.
 }
 \examples{
+\donttest{
 # Generate some data
 set.seed(2025)
 N = 500
@@ -124,6 +125,7 @@ credint(fit1)
 predict(fit1,
         newdata = fit1$data[1,])
 vcov(fit1)
+}
 
 
 }

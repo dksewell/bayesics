@@ -49,6 +49,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Generate data
 #' set.seed(2025)
 #' N = 500
@@ -75,6 +76,7 @@
 #'                sampling_design = "rows")
 #' independence_b(round(N * dep_probs),
 #'                sampling_design = "cols")
+#' }
 #' 
 #' 
 #' @export

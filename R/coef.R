@@ -9,6 +9,7 @@
 #' @returns vector of coefficients
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data = 
@@ -25,6 +26,7 @@
 #'         prior_var_shape = 0.01,
 #'         prior_var_rate = 0.01)
 #' coef(fit1)
+#' }
 #' 
 
 #' @rdname coef

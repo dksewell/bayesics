@@ -27,6 +27,7 @@ for the mean.
 Predict method for lm_b model fits
 }
 \examples{
+\donttest{
 # Generate some data
 set.seed(2025)
 N = 500
@@ -43,5 +44,6 @@ fit1 <-
            data = test_data,
            family = binomial())
 predict(fit1)
+}
 
 }

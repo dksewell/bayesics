@@ -7,6 +7,7 @@
 #' @returns matrix of posterior draws
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data <-
@@ -20,6 +21,7 @@
 #'        data = test_data)
 #' pdraws <-
 #'   get_posterior_draws(fit1)
+#'   }
 #' 
 #' 
 #' @export

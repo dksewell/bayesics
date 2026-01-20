@@ -73,6 +73,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Generate some data
 #' set.seed(2025)
 #' N = 500
@@ -97,6 +98,7 @@
 #' predict(fit1,
 #'         newdata = fit1$data[1,])
 #' vcov(fit1)
+#' }
 #' 
 #' 
 #' @export 

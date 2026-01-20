@@ -68,6 +68,7 @@ hypothesis that each group has a separate survival function vs. the
 null hypothesis that all groups share the same survival function.
 }
 \examples{
+\donttest{
 # Single population
 set.seed(2025)
 N = 300
@@ -102,6 +103,7 @@ fit2 =
             data = test_data)
 fit2
 plot(fit2)
+}
 
 
 }

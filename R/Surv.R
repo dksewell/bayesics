@@ -10,6 +10,9 @@
 #' data.
 #' 
 #' @returns An object of class "\code{Surv}".
+#' 
+#' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 300
 #' test_data = 
@@ -21,6 +24,7 @@
 #'   ifelse(dplyr::near(test_data$observed,1), test_data$outcome, 7)
 #' Surv(test_data$outcome,
 #'      test_data$observed)
+#' }
 #' 
 #' @export
 Surv = function(...){

@@ -32,6 +32,7 @@ uncertainty around the residual variance.
 Returns the posterior covariance matrix of the main parameters of a fitted \code{bayesics} object
 }
 \examples{
+\donttest{
 set.seed(2025)
 N = 500
 test_data <-
@@ -44,5 +45,6 @@ fit1 <-
   lm_b(outcome ~ x1 + x2 + x3,
        data = test_data)
 vcov(fit1)
+}
 
 }

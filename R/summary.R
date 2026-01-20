@@ -9,6 +9,7 @@
 #' @returns tibble with summary values
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data <-
@@ -21,6 +22,7 @@
 #'   lm_b(outcome ~ x1 + x2 + x3,
 #'        data = test_data)
 #' summary(fit1)
+#' }
 #' 
 #' @export
 

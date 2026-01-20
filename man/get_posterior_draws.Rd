@@ -20,6 +20,7 @@ matrix of posterior draws
 Get posterior samples from lm_b object
 }
 \examples{
+\donttest{
 set.seed(2025)
 N = 500
 test_data <-
@@ -33,6 +34,7 @@ fit1 <-
        data = test_data)
 pdraws <-
   get_posterior_draws(fit1)
+  }
 
 
 }

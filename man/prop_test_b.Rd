@@ -93,6 +93,7 @@ Jeffreys prior will be used (\eqn{Beta(1/2,1/2)}), and if
 \code{prior = "uniform"}, then a uniform prior will be used (\eqn{Beta(1,1)}).
 }
 \examples{
+\donttest{
 # Single population
 prop_test_b(14,
             19)
@@ -111,5 +112,6 @@ prop_test_b(c(14,22),
 # or equivalently
 prop_test_b(c(14,22),
             n_total = c(14,22) + c(19,45))
+}
 
 }

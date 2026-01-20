@@ -95,6 +95,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Generate some data
 #' set.seed(2025)
 #' N = 500
@@ -151,6 +152,7 @@
 #'   lm_b(outcome ~ x1 + x2 + x3,
 #'        data = test_data,
 #'        prior = "improper")
+#' }
 #' 
 #' 
 #' 

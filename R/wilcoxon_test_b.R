@@ -78,6 +78,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Signed rank analysis
 #' ## Generate data
 #' N = 150
@@ -112,7 +113,7 @@
 #' 
 #' ## Perform analysis
 #' wilcoxon_test_b(x,y)
-#' 
+#' }
 #' 
 #' 
 #' @export

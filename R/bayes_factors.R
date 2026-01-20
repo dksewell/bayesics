@@ -36,6 +36,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Generate some binomial data
 #' set.seed(2025)
 #' N = 500
@@ -60,7 +61,7 @@
 #' # Compute the BF for each variable
 #' bayes_factors(fit,
 #'               by = "variable")
-#' 
+#' }
 #' 
 #' @export
 

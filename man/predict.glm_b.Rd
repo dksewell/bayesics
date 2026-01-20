@@ -42,6 +42,7 @@ for the mean.
 Predict method for glm_b model fits
 }
 \examples{
+\donttest{
 set.seed(2025)
 N = 500
 test_data =
@@ -62,7 +63,7 @@ fit_vb1 <-
         seed = 2025)
 # Predict
 predict(fit_vb1)
-
+}
 
 
 }

@@ -47,6 +47,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # One sample
 #' poisson_test_b(x = 12)
 #' ## You can compute the posterior probability that the rate is less than r
@@ -65,7 +66,7 @@
 #'                prior = "flat")
 #' poisson_test_b(x = c(12,20),
 #'                prior_shape_rate = c(20,1.5))
-#' 
+#' }
 #' 
 #' 
 #' @export

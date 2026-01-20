@@ -63,6 +63,7 @@
 #' }
 #' 
 #' @examples
+#' \donttest{
 #' # Single population
 #' prop_test_b(14,
 #'             19)
@@ -81,6 +82,7 @@
 #' # or equivalently
 #' prop_test_b(c(14,22),
 #'             n_total = c(14,22) + c(19,45))
+#' }
 #' 
 #' @export
 

@@ -16,6 +16,7 @@
 #' @returns Numeric (or in the case of DIC, a numeric vector)
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data <-
@@ -31,7 +32,7 @@
 #' BIC(fit1)
 #' DIC(fit1)
 #' WAIC(fit1)
-#' 
+#' }
 #' 
 #' 
 #' @export

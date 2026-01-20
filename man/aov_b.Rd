@@ -132,6 +132,7 @@ small effect size."  Using Cohen's D of 0.2 as a small effect size, the ROPE
 is defined in terms of \eqn{-0.1 <} Cohen's D \eqn{ < 0.1}.
 }
 \examples{
+\donttest{
 # Create data
 set.seed(2025)
 N = 500
@@ -183,7 +184,7 @@ fit3 <-
                           c(-1/3,-1/3,-1/3,1,0)))
 fit3$contrasts
 summary(fit3)
-
+}
 
 }
 \references{

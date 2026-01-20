@@ -64,6 +64,7 @@ Numeric (or in the case of DIC, a numeric vector)
 Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.  (Lower is better.)
 }
 \examples{
+\donttest{
 set.seed(2025)
 N = 500
 test_data <-
@@ -79,7 +80,7 @@ AIC(fit1)
 BIC(fit1)
 DIC(fit1)
 WAIC(fit1)
-
+}
 
 
 }

@@ -59,6 +59,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Single population
 #' set.seed(2025)
 #' N = 300
@@ -93,6 +94,7 @@
 #'             data = test_data)
 #' fit2
 #' plot(fit2)
+#' }
 #' 
 #' 
 #' @export

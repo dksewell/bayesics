@@ -64,6 +64,7 @@ cor_test_b = function(x, ...){
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Generate data
 #' set.seed(2025)
 #' N = 50
@@ -87,7 +88,7 @@ cor_test_b = function(x, ...){
 #'            prior = "positive")
 #' cor_test_b(x,y,
 #'            prior_shapes = c(10,10))
-#' 
+#' }
 #' 
 #' 
 #' @export

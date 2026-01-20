@@ -67,6 +67,7 @@ within the ROPE of \eqn{p_{\cdot j}} if \code{sampling_design = "fixed rows"} or
 }
 }
 \examples{
+\donttest{
 # Generate data
 set.seed(2025)
 N = 500
@@ -93,6 +94,7 @@ independence_b(round(N * dep_probs),
                sampling_design = "rows")
 independence_b(round(N * dep_probs),
                sampling_design = "cols")
+}
 
 
 }

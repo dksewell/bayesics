@@ -70,6 +70,7 @@ Jeffreys prior will be used (\eqn{Beta(1/2,1/2)}), and if
 \code{prior = "uniform"}, then a uniform prior will be used (\eqn{Beta(1,1)}).
 }
 \examples{
+\donttest{
 # Single population
 sign_test_b(x = rnorm(50))
 
@@ -91,5 +92,6 @@ sign_test_b(x = rnorm(50,1),
 sign_test_b(x = rnorm(50,1),
             y = rnorm(50,0),
             p0 = 0.7)
+}
 
 }

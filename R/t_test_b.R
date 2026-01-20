@@ -48,6 +48,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Single population
 #' t_test_b(rnorm(50))
 #' # or an alternative input format
@@ -65,6 +66,7 @@
 #'                                   rnorm(15,1)),
 #'                       group_variable = rep(c("a","b"),
 #'                                            c(50,15))))
+#' }
 #' 
 #' 
 #' @export

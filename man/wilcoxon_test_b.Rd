@@ -97,6 +97,7 @@ stochastically larger than \eqn{y}. For more information, see \link[DFBA]{dfba_m
 and vignette("dfba_mann_whitney",package = "DFBA").
 }
 \examples{
+\donttest{
 # Signed rank analysis
 ## Generate data
 N = 150
@@ -131,7 +132,7 @@ y = rbeta(N + 1,5,10)
 
 ## Perform analysis
 wilcoxon_test_b(x,y)
-
+}
 
 
 }

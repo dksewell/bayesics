@@ -14,6 +14,7 @@
 #' uncertainty around the residual variance.
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data <-
@@ -26,6 +27,7 @@
 #'   lm_b(outcome ~ x1 + x2 + x3,
 #'        data = test_data)
 #' vcov(fit1)
+#' }
 #' 
 #' @rdname vcov
 #' @method vcov aov_b

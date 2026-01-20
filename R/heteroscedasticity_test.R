@@ -21,6 +21,7 @@
 #' }
 #' 
 #' @examples
+#' \donttest{
 #' # Test homoscedastic case
 #' ## Generate some data
 #' set.seed(2025)
@@ -66,6 +67,7 @@
 #' ## Perform test for heteroscedasticity using Bayes factors
 #' heteroscedasticity_test(hetero_model,
 #'                         homo_model)
+#' }
 #' 
 #' 
 #' @references 

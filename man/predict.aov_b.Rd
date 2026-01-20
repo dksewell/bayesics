@@ -23,6 +23,7 @@ for the mean.
 Predict method for aov_b model fits
 }
 \examples{
+\donttest{
 set.seed(2025)
 N = 500
 test_data = 
@@ -39,7 +40,7 @@ fit1 <-
         prior_var_shape = 0.01,
         prior_var_rate = 0.01)
 predict(fit1)
-
+}
 
 
 

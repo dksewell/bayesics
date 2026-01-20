@@ -16,6 +16,7 @@
 #' for the mean.
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data =
@@ -36,7 +37,7 @@
 #'         seed = 2025)
 #' # Predict
 #' predict(fit_vb1)
-#' 
+#' }
 #' 
 #' 
 #' @exportS3Method predict glm_b

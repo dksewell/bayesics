@@ -72,6 +72,7 @@ then a Jeffrey's prior will be used, i.e., \eqn{\Gamma(0.5,0)} (improper),
 while if \code{prior = "flat"}, \eqn{\Gamma(0.001,0.001)} will be used.
 }
 \examples{
+\donttest{
 # One sample
 poisson_test_b(x = 12)
 ## You can compute the posterior probability that the rate is less than r
@@ -90,7 +91,7 @@ poisson_test_b(x = c(12,20),
                prior = "flat")
 poisson_test_b(x = c(12,20),
                prior_shape_rate = c(20,1.5))
-
+}
 
 
 }

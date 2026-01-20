@@ -27,6 +27,7 @@ Use Chib's method to compute the Bayes factor to test for
 heteroscedasticity in analysis of variance models.
 }
 \examples{
+\donttest{
 # Test homoscedastic case
 ## Generate some data
 set.seed(2025)
@@ -72,6 +73,7 @@ homo_model =
 ## Perform test for heteroscedasticity using Bayes factors
 heteroscedasticity_test(hetero_model,
                         homo_model)
+}
 
 
 }

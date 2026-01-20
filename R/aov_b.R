@@ -99,6 +99,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Create data
 #' set.seed(2025)
 #' N = 500
@@ -150,7 +151,7 @@
 #'                           c(-1/3,-1/3,-1/3,1,0)))
 #' fit3$contrasts
 #' summary(fit3)
-#' 
+#' }
 #' 
 #' @export
 

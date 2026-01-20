@@ -44,6 +44,7 @@ the multivariate posterior density.
 Interpretation is taken from Kass and Raftery.
 }
 \examples{
+\donttest{
 # Generate some binomial data
 set.seed(2025)
 N = 500
@@ -68,7 +69,7 @@ bayes_factors(fit)
 # Compute the BF for each variable
 bayes_factors(fit,
               by = "variable")
-
+}
 
 }
 \references{

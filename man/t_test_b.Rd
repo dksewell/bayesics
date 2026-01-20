@@ -87,6 +87,7 @@ A one and two sample t-test is nothing more than a special case of
 one-way anova.  See \code{\link{aov_b}} for details.
 }
 \examples{
+\donttest{
 # Single population
 t_test_b(rnorm(50))
 # or an alternative input format
@@ -104,6 +105,7 @@ t_test_b(outcome ~ group_variable,
                                   rnorm(15,1)),
                       group_variable = rep(c("a","b"),
                                            c(50,15))))
+}
 
 
 }

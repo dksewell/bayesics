@@ -137,6 +137,7 @@ If \code{return_as_list=TRUE}, a list of requested ggplots.
 Plots bayesics objects.
 }
 \examples{
+\donttest{
 set.seed(2025)
 N = 500
 test_data <-
@@ -149,6 +150,7 @@ fit1 <-
   lm_b(outcome ~ x1 + x2 + x3,
        data = test_data)
 plot(fit1)
+}
 
 
 }

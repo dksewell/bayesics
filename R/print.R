@@ -8,6 +8,7 @@
 #' @returns None
 #' 
 #' @examples
+#' \donttest{
 #' set.seed(2025)
 #' N = 500
 #' test_data <-
@@ -20,6 +21,7 @@
 #'   lm_b(outcome ~ x1 + x2 + x3,
 #'        data = test_data)
 #' print(fit1)
+#' }
 #' 
 
 #' @rdname print

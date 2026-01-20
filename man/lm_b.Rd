@@ -121,6 +121,7 @@ The result is a ROPE equal to \eqn{|\beta_j| < 0.05s_y/s_j}.  If the covariate i
 binary, then this is simply \eqn{|\beta_j| < 0.2s_y}.
 }
 \examples{
+\donttest{
 # Generate some data
 set.seed(2025)
 N = 500
@@ -177,6 +178,7 @@ fit3 <-
   lm_b(outcome ~ x1 + x2 + x3,
        data = test_data,
        prior = "improper")
+}
 
 
 

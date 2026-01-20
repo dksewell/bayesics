@@ -13,6 +13,7 @@
 #' for the mean.
 #' 
 #' @examples
+#' \donttest{
 #' # Generate some data
 #' set.seed(2025)
 #' N = 500
@@ -29,6 +30,7 @@
 #'            data = test_data,
 #'            family = binomial())
 #' predict(fit1)
+#' }
 #' 
 #' @exportS3Method predict np_glm_b
 
