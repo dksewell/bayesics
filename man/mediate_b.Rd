@@ -82,6 +82,7 @@ Unlike the \code{mediation} R package, the estimation in \code{mediate_b}
 is fully Bayesian (as opposed to "quasi-Bayesian").
 }
 \examples{
+\donttest{
 # Simplest case
 ## Generate some data
 set.seed(2025)
@@ -145,7 +146,7 @@ m3 <-
             mc_error = 0.05,
             ask_before_full_sampling = FALSE)
 summary(m3)
-
+}
 
 
 

@@ -36,7 +36,7 @@ for the mean.
 Predict method for bma model fits
 }
 \examples{
- 
+\donttest{
 # Create data
 set.seed(2025)
 N = 500
@@ -60,6 +60,6 @@ fit <-
                 test_data,
                 user.int = FALSE)
 predict(fit)
-
+}
 
 }

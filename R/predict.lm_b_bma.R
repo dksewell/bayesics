@@ -21,7 +21,7 @@
 #'  }
 #'  
 #' @examples
-#'  
+#' \donttest{
 #' # Create data
 #' set.seed(2025)
 #' N = 500
@@ -45,7 +45,7 @@
 #'                 test_data,
 #'                 user.int = FALSE)
 #' predict(fit)
-#' 
+#' }
 #' 
 #' @exportS3Method predict lm_b_bma
 

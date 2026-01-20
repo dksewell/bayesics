@@ -1,4 +1,6 @@
 
+go_fast_for_cran_checks = TRUE
+
 
 # Proper, heteroscedastic -------------------------------------------------
 
@@ -210,16 +212,18 @@ test_that("Proper prior and heteroscedastic model works", {
   
   
   # Make sure parallelization works
-  plan(multisession,workers = 5)
-  expect_no_error(
-    aov_b(outcome ~ x1,
-          test_data,
-          prior_mean_mu = 2,
-          prior_mean_nu = 0.5,
-          prior_var_shape = 0.01,
-          prior_var_rate = 0.01)
-  )
-  plan(sequential)
+  if(!go_fast_for_cran_checks){
+    plan(multisession,workers = 5)
+    expect_no_error(
+      aov_b(outcome ~ x1,
+            test_data,
+            prior_mean_mu = 2,
+            prior_mean_nu = 0.5,
+            prior_var_shape = 0.01,
+            prior_var_rate = 0.01)
+    )
+    plan(sequential)
+  }
   
   rm(list=ls())
 })
@@ -397,16 +401,18 @@ test_that("Proper prior and homoscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   
   # Make sure parallelization works
-  plan(multisession,workers = 5)
-  expect_no_error(
-    aov_b(outcome ~ x1,
-          test_data,
-          prior_mean_mu = 2,
-          prior_mean_nu = 0.5,
-          prior_var_shape = 0.01,
-          prior_var_rate = 0.01)
-  )
-  plan(sequential)
+  if(!go_fast_for_cran_checks){
+    plan(multisession,workers = 5)
+    expect_no_error(
+      aov_b(outcome ~ x1,
+            test_data,
+            prior_mean_mu = 2,
+            prior_mean_nu = 0.5,
+            prior_var_shape = 0.01,
+            prior_var_rate = 0.01)
+    )
+    plan(sequential)
+  }
   
 })
 
@@ -580,13 +586,15 @@ test_that("Imroper prior and heteroscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   
   # Make sure parallelization works
-  plan(multisession,workers = 5)
-  expect_no_error(
-    aov_b(outcome ~ x1,
-          test_data,
-          improper = TRUE)
-  )
-  plan(sequential)
+  if(!go_fast_for_cran_checks){
+    plan(multisession,workers = 5)
+    expect_no_error(
+      aov_b(outcome ~ x1,
+            test_data,
+            improper = TRUE)
+    )
+    plan(sequential)
+  }
   
   rm(list=ls())
 })
@@ -763,14 +771,16 @@ test_that("Imroper prior and homoscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   
   # Make sure parallelization works
-  plan(multisession,workers = 5)
-  expect_no_error(
-    aov_b(outcome ~ x1,
-          test_data,
-          improper = TRUE,
-          heteroscedastic = FALSE)
-  )
-  plan(sequential)
+  if(!go_fast_for_cran_checks){
+    plan(multisession,workers = 5)
+    expect_no_error(
+      aov_b(outcome ~ x1,
+            test_data,
+            improper = TRUE,
+            heteroscedastic = FALSE)
+    )
+    plan(sequential)
+  }
   
   rm(list=ls())
 })

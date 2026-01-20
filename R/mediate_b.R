@@ -61,6 +61,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Simplest case
 #' ## Generate some data
 #' set.seed(2025)
@@ -124,7 +125,7 @@
 #'             mc_error = 0.05,
 #'             ask_before_full_sampling = FALSE)
 #' summary(m3)
-#' 
+#' }
 #' 
 #' 
 #' 

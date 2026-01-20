@@ -35,6 +35,7 @@
 #' }
 #' 
 #' @examples
+#' \donttest{
 #' # Create data
 #' set.seed(2025)
 #' N = 500
@@ -61,7 +62,7 @@
 #' coef(fit)
 #' credint(fit)
 #' plot(fit)
-#' 
+#' }
 #' 
 #' @export
 

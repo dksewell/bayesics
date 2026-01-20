@@ -126,6 +126,7 @@
 #' 
 #' 
 #' @examples
+#' \donttest{
 #' # Generate some negative-binomial data
 #' set.seed(2025)
 #' N = 500
@@ -190,7 +191,7 @@
 #'         algorithm = "LSA",
 #'         seed = 2025)
 #' summary(fit_lsa)
-#' 
+#' }
 #' 
 #' @references 
 #' 

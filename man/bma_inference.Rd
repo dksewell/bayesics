@@ -65,6 +65,7 @@ eponymous R package, and then uses \code{lm_b} to obtain inference
 on the regression coefficients for Bayesian model averaging.
 }
 \examples{
+\donttest{
 # Create data
 set.seed(2025)
 N = 500
@@ -91,6 +92,6 @@ summary(fit)
 coef(fit)
 credint(fit)
 plot(fit)
-
+}
 
 }

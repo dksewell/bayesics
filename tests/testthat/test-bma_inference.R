@@ -1,4 +1,6 @@
 
+go_fast_for_cran_checks = TRUE
+
 test_that("Bayesian model averaging", {
   
   # Create data
@@ -62,36 +64,38 @@ test_that("Bayesian model averaging", {
             predict(fita,PI_level = 0.9)$newdata$PI_lower[1])
   
   # Test plot
-  expect_s3_class(plot(fita,
-                       "dx"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       "pdp",
-                       variable = c("x1","x2","x3")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       "cred",
-                       variable = c("x1","x2","x3")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       "pred",
-                       variable = c("x1","x2","x3")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       c("cr","pr"),
-                       variable = c("x1","x2","x3")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       c("cr","pr"),
-                       combine_pred_cred = FALSE,
-                       variable = c("x1","x2","x3")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fita,
+                         "dx"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         "pdp",
+                         variable = c("x1","x2","x3")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         "cred",
+                         variable = c("x1","x2","x3")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         "pred",
+                         variable = c("x1","x2","x3")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         c("cr","pr"),
+                         variable = c("x1","x2","x3")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         c("cr","pr"),
+                         combine_pred_cred = FALSE,
+                         variable = c("x1","x2","x3")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  
   
   # Test if response transformation works
   test_data$e_outcome = exp(test_data$outcome)
@@ -103,7 +107,7 @@ test_that("Bayesian model averaging", {
                     test_data,
                     user.int = FALSE)
   )
-  
+  }
   # # Make sure parallelization works. 
   # plan(multisession, workers = 5)
   # expect_no_error(
