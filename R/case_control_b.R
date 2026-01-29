@@ -48,12 +48,12 @@
 #' 
 #' @returns (returned invisible) list including the following:
 #' \itemize{
-#'  \item data
-#'  \item posterior mean
-#'  \item CI
-#'  \item Probability the odds ratio is in the ROPE
-#'  \item posterior draws
-#'  \item odds ratio plot
+#'  \item \code{data}: data
+#'  \item \code{posterior_mean}: posterior mean of the odds ratio (cases vs. controls)
+#'  \item \code{CI}: Credible interval
+#'  \item \code{Pr_oddsratio_in_ROPE}: Probability the odds ratio (cases vs. controls) is in the ROPE
+#'  \item \code{posterior_draws}: posterior draws of the odds ratio (cases vs. controls)
+#'  \item \code{or_plot}: odds ratio (cases vs. controls) posterior plot
 #' }
 #' 
 #' @examples
@@ -303,13 +303,14 @@ case_control_b = function(cases,
   
   
   # Print results
-  cat("\n----------\n\nCase-control analysis using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  cat("Data: \n")
-  print(x)
-  cat("\n\n")
+  message("\n----------\n\nCase-control analysis using Bayesian techniques\n")
+  message("\n----------\n\n")
+  message("Data: \n")
+  message(paste(capture.output(print(x)),
+                collapse = "\n"))
+  message("\n\n")
   if(large_sample_approx){
-    cat(paste0("Prior used on log odds ratio: N(", 
+    message(paste0("Prior used on log odds ratio: N(", 
                format(signif(prior_mean, 3), 
                       scientific = FALSE),
                ",",
@@ -317,19 +318,19 @@ case_control_b = function(cases,
                       scientific = FALSE),
                ")\n\n"))
   }
-  cat(paste0("Posterior mean of the odds ratio: ", 
+  message(paste0("Posterior mean of the odds ratio: ", 
              format(signif(results$posterior_mean, 3), 
                     scientific = FALSE),
              "; Population 2 = ",
              "\n\n"))
   if(large_sample_approx){
-    cat(paste0("Posterior median of the odds ratio: ", 
+    message(paste0("Posterior median of the odds ratio: ", 
                format(signif(results$posterior_median, 3), 
                       scientific = FALSE),
                "; Population 2 = ",
                "\n\n"))
   }
-  cat(paste0(100 * CI_level,
+  message(paste0(100 * CI_level,
              "% credible interval: (", 
              format(signif(results$CI[1], 3), 
                     scientific = FALSE),
@@ -337,7 +338,7 @@ case_control_b = function(cases,
              format(signif(results$CI[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Probability that the odds ratio is in the ROPE, defined to be (",
+  message(paste0("Probability that the odds ratio is in the ROPE, defined to be (",
              format(signif(ROPE[1], 3), 
                     scientific = FALSE),
              ",",
@@ -347,7 +348,7 @@ case_control_b = function(cases,
              format(signif(results$Pr_oddsratio_in_ROPE, 3), 
                     scientific = FALSE),
              "\n\n")) 
-  cat("\n----------\n\n")
+  message("\n----------\n\n")
   
   
   invisible(results)

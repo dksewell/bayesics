@@ -13,12 +13,7 @@
 #' @param homo_model aov_b object where the heteroscedastic argument 
 #' has been set to FALSE
 #' 
-#' @returns (returned invisible) A list with the following:
-#' \itemize{
-#'  \item log of the Bayes factor
-#'  \item Bayes factor
-#'  \item Interpretation
-#' }
+#' @returns (returned invisible) A tibble with Bayes factors and interpretations.
 #' 
 #' @examples
 #' \donttest{
@@ -204,16 +199,15 @@ heteroscedasticity_test = function(hetero_model,
     )
   
   
-  cat("\n----------\n\nTest for heteroscedasticity in 1-way ANOVA models.\n")
-  cat("\n\n")
-  cat(paste0("Bayes factor in favor of homoscedasticity = ",
+  message("\n----------\n\nTest for heteroscedasticity in 1-way ANOVA models.\n")
+  message("\n\n")
+  message(paste0("Bayes factor in favor of homoscedasticity = ",
              BF,
              "\nLevel of evidence: ",
              Interpretation))
-  cat("\n\n----------\n\n")
+  message("\n\n----------\n\n")
   
   
-  invisible(list(log_BF = log_BF,
-                 BF = BF,
-                 Interpretation = Interpretation)) 
+  invisible(tibble::tibble(BF = BF,
+                           Interpretation = Interpretation))
 }

@@ -1,4 +1,4 @@
-#' Test for Association/Correlation Between Paired Samples
+#' Test for Association/Correlation Between Paired Samples via Kendall's tau
 #' @name cor_test_b
 #' @rdname cor_test_b
 #' @export
@@ -46,13 +46,15 @@ cor_test_b = function(x, ...){
 #' 
 #' @returns (returned invisible) A list with the following:
 #' \itemize{
-#'  \item posterior mean
-#'  \item lower and upper credible interval bounds
-#'  \item Posterior probability that Kendall's tau is less than provided reference tau
-#'  \item Posterior probability that Kendall's tau is in the ROPE
-#'  \item The underlying object from the DFBA package
-#'  \item Posterior and prior plot
-#'  \item posterior parameters for Kendall's tau correlations
+#'  \item \code{posterior_mean}: posterior mean of Kendall's tau
+#'  \item \code{CI}: Credible interval bounds
+#'  \item \code{Pr_less_than_tau}: Posterior probability that Kendall's tau is less than provided reference \code{tau}
+#'  \item \code{Pr_in_ROPE}: Posterior probability that Kendall's tau is in the ROPE
+#'  \item \code{prob_plot}: Posterior and prior plot
+#'  \item \code{posterior_parameters}: The posterior for Kendall's tau is a location shift and scaled 
+#'  beta distribution to fall over the range -1 to 1, i.e., \eqn{0.5 * (\tau + 1.0)} follows a 
+#'  beta with shape parameters given by \code{posterior_parameters}.
+#'  \item \code{dfba_bivariate_concordance_object}: The underlying object from the DFBA package
 #' }
 #' 
 #' @references 
@@ -253,20 +255,20 @@ cor_test_b.default = function(x,
   
   
   # Print results
-  cat("\n----------\n\nAnalysis of Kendall's tau using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  cat(paste0("Prior used (phi): Beta(", 
+  message("\n----------\n\nAnalysis of Kendall's tau using Bayesian techniques\n")
+  message("\n----------\n\n")
+  message(paste0("Prior used (phi): Beta(", 
              format(signif(prior_shapes[1], 3), 
                     scientific = FALSE),
              ",",
              format(signif(prior_shapes[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Posterior mean (tau): ", 
+  message(paste0("Posterior mean (tau): ", 
              format(signif(results$posterior_mean, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat(paste0(100 * CI_level,
+  message(paste0(100 * CI_level,
              "% credible interval (tau): (", 
              format(signif(results$CI[1], 3), 
                     scientific = FALSE),
@@ -274,14 +276,14 @@ cor_test_b.default = function(x,
              format(signif(results$CI[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Probability that tau < ",
+  message(paste0("Probability that tau < ",
              format(signif(tau, 3), 
                     scientific = FALSE),
              " = ",
              format(signif(results$Pr_less_than_tau, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat(paste0("Probability that tau is in the ROPE, defined to be (",
+  message(paste0("Probability that tau is in the ROPE, defined to be (",
              format(signif(ROPE_bounds[1], 3), 
                     scientific = FALSE),
              ",",
@@ -291,7 +293,7 @@ cor_test_b.default = function(x,
              format(signif(results$Pr_in_ROPE, 3), 
                     scientific = FALSE),
              "\n\n")) 
-  cat("\n----------\n\n")
+  message("\n----------\n\n")
   
   
   
@@ -469,20 +471,20 @@ cor_test_b.formula = function(formula,
   
   
   # Print results
-  cat("\n----------\n\nAnalysis of Kendall's tau using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  cat(paste0("Prior used (phi): Beta(", 
+  message("\n----------\n\nAnalysis of Kendall's tau using Bayesian techniques\n")
+  message("\n----------\n\n")
+  message(paste0("Prior used (phi): Beta(", 
              format(signif(prior_shapes[1], 3), 
                     scientific = FALSE),
              ",",
              format(signif(prior_shapes[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Posterior mean (tau): ", 
+  message(paste0("Posterior mean (tau): ", 
              format(signif(results$posterior_mean, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat(paste0(100 * CI_level,
+  message(paste0(100 * CI_level,
              "% credible interval (tau): (", 
              format(signif(results$CI[1], 3), 
                     scientific = FALSE),
@@ -490,14 +492,14 @@ cor_test_b.formula = function(formula,
              format(signif(results$CI[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Probability that tau < ",
+  message(paste0("Probability that tau < ",
              format(signif(tau, 3), 
                     scientific = FALSE),
              " = ",
              format(signif(results$Pr_less_than_tau, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat(paste0("Probability that tau is in the ROPE, defined to be (",
+  message(paste0("Probability that tau is in the ROPE, defined to be (",
              format(signif(ROPE_bounds[1], 3), 
                     scientific = FALSE),
              ",",
@@ -507,7 +509,7 @@ cor_test_b.formula = function(formula,
              format(signif(results$Pr_in_ROPE, 3), 
                     scientific = FALSE),
              "\n\n")) 
-  cat("\n----------\n\n")
+  message("\n----------\n\n")
   
   
   

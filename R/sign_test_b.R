@@ -36,12 +36,17 @@
 #' 
 #' @returns (returned invisible) A list with the following:
 #' \itemize{
-#'  \item posterior mean of the median difference
-#'  \item Credible interval for the median difference
-#'  \item ROPE bounds
-#'  \item Probability of falling in the ROPE
-#'  \item Prior and posterior plot
-#'  \item posterior parameters
+#'  \item \code{posterior_mean}: Posterior mean of the median difference
+#'  \item \code{CI}: Credible interval for the median difference
+#'  \item \code{Pr_less_than_p}: Posterior probability that the proportion of 
+#'  differences that are positive is less than the argument \code{p0}.
+#'  \item \code{ROPE_bounds}: ROPE bounds for the proportion of differences 
+#'  that are positive
+#'  \item \code{ROPE}: Posterior probability that the proportion of differences 
+#'  which are positive falls in the ROPE
+#'  \item \code{prop_plot}: Prior and posterior plot
+#'  \item \code{posterior_parameters}: Posterior beta shape parameters for the 
+#'  proportion of differences which are positive
 #' }
 #' 
 #' @examples
@@ -182,20 +187,20 @@ sign_test_b = function(x,
   
   
   # Print results
-  cat("\n----------\n\n Non-parametric sign test using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  cat(paste0("Prior used: Beta(", 
+  message("\n----------\n\n Non-parametric sign test using Bayesian techniques\n")
+  message("\n----------\n\n")
+  message(paste0("Prior used: Beta(", 
              format(signif(prior_shapes[1], 3), 
                     scientific = FALSE),
              ",",
              format(signif(prior_shapes[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Posterior mean: ", 
+  message(paste0("Posterior mean: ", 
              format(signif(results$posterior_mean, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat(paste0(100 * CI_level,
+  message(paste0(100 * CI_level,
              "% credible interval: (", 
              format(signif(results$CI[1], 3), 
                     scientific = FALSE),
@@ -203,14 +208,14 @@ sign_test_b = function(x,
              format(signif(results$CI[2], 3), 
                     scientific = FALSE),
              ")\n\n"))
-  cat(paste0("Probability that p < ",
+  message(paste0("Probability that p < ",
              format(signif(p0, 3), 
                     scientific = FALSE),
              ": ",
              format(signif(results$Pr_less_than_p, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat(paste0("Probability that ",
+  message(paste0("Probability that ",
              format(signif(ROPE_bounds[1], 3), 
                     scientific = FALSE),
              " < p < ",
@@ -220,7 +225,7 @@ sign_test_b = function(x,
              format(signif(results$ROPE, 3), 
                     scientific = FALSE),
              "\n\n"))
-  cat("\n----------\n\n")
+  message("\n----------\n\n")
   
   
   # Plot (if requested)

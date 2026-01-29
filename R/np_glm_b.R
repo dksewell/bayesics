@@ -730,9 +730,9 @@ np_glm_b = function(formula,
                                   }) |> 
       max() |> 
       round() - n_draws
-    cat(paste0("\nFinished with ",
-               n_draws,
-               " preliminary Bayesian bootstraps.\n"))
+    message(paste0("\nFinished with ",
+                   n_draws,
+                   " preliminary Bayesian bootstraps.\n"))
     
     if(n_more_draws <= 0){
       n_more_draws = 1
@@ -750,9 +750,9 @@ np_glm_b = function(formula,
     }
     
     if(user_response){
-      cat("Continuing on with ",
-          n_more_draws,
-          " more Bayesian bootstraps.\n")
+      message("Continuing on with ",
+              n_more_draws,
+              " more Bayesian bootstraps.\n")
       
       ## Finish sampling
       if("sequential" %in% class(plan())){

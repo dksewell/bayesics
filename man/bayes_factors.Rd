@@ -28,7 +28,7 @@ If the latter, Bayes factors will be computed for each covariate separately.}
 other classes.}
 }
 \value{
-tibble with Bayes factors and interpretations
+A tibble with Bayes factors and interpretations.
 }
 \description{
 Bayes factors for Bayesian regression objects using the Savage-Dickey ratio

@@ -64,13 +64,21 @@ within \eqn{\pm} \code{mc_error}. (Ignored for a single population proportion.)}
 \value{
 (returned invisible) A list with the following:
 \itemize{
-\item Number of successes and failures
-\item posterior means for the population proportion(s)
-\item Credible interval(s)
-\item Prediction interval(s)
-\item Probability of falling the ROPE
-\item Prior and posterior plot
-\item posterior parameters
+\item \code{successes}, \code{failures}: Number of successes and failures
+\item \code{posterior_mean}, \code{posterior_mean_pop1}, \code{posterior_mean_pop2}:
+posterior means for the population proportion
+\item \code{CI}, \code{CI_pop1}, \code{CI_pop2}: Credible interval for the
+population proportion
+\item \code{Pr_oddsratio_in_ROPE}: (2 sample analysis only) Posterior
+probability that the odds ratio is in the ROPE
+\item \code{PI}, \code{PI_pop1}, \code{PI_pop2}: Prediction interval for the
+number of trials given in \code{predict_for_n}
+\item \code{Pr_less_than_p}: (1 sample analysis only) If \code{p} was
+supplied, the posterior probability that the population proportion is less
+than \code{p}
+\item \code{prop_plot}: Prior and posterior plot of population proportion(s)
+\item \code{posterior_parameters}: Posterior beta shape parameters for the
+population proportion(s)
 }
 }
 \description{

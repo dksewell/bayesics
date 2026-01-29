@@ -90,4 +90,26 @@ test_that("Test multiple populations via semi-parametric survival curve fitting"
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(survplot$data,c("tbl_df", "tbl", "data.frame"))
   
+  
+  # Check Bayes factors
+  expect_no_error(
+    fitc <-
+      survfit_b(Surv(outcome,
+                     observed) ~ 1,
+                data = test_data)
+  )
+  expect_no_error(
+    surv_bf <-
+      bayes_factors(fita,
+                    fitc)
+  )
+  expect_no_error(
+    surv_bf <-
+      bayes_factors(fitc,
+                    fita)
+  )
+  
+  
+  
+  
 })

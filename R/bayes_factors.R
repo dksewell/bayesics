@@ -26,7 +26,7 @@
 #' If the latter, Bayes factors will be computed for each covariate separately.
 #' @param ... Passed to methods.
 #' 
-#' @returns tibble with Bayes factors and interpretations
+#' @returns A tibble with Bayes factors and interpretations.
 #' 
 #' @references 
 #' 
@@ -413,15 +413,16 @@ bayes_factors.survfit_b = function(object,
                                  paste0(favor_or_against,"the second model)"),
                           ))))
   
-  cat("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  cat(paste0("The Bayes factor equaled ",
+  message("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques")
+  message("\n----------\n")
+  message(paste0("The Bayes factor equaled ",
              format(signif(BF, 3)),
              ".\nInterpretation: ",
              Interpretation))
-  cat("\n----------\n\n")
+  message("\n----------\n\n")
   
-  invisible(BF)
+  invisible(tibble::tibble(BF = BF,
+                           Interpretation = Interpretation))
 }
 
 

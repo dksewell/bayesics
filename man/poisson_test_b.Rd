@@ -51,6 +51,27 @@ probability the bounds of the credible intervals of \eqn{\lambda_1/\lambda_2}
 will be within \eqn{\pm} \code{mc_error}. (Ignored for a single population
 rate.)}
 }
+\value{
+(returned invisible) A list with the following:
+\itemize{
+\item \code{x}, \code{offset}: data and offset(s)
+\item \code{posterior_mean}, \code{posterior_mean_pop1}, \code{posterior_mean_pop2}:
+posterior means of the Poisson rates
+\item \code{CI}, \code{CI_pop1}, \code{CI_pop2}: Credible interval bounds for the rates
+\item \code{CI_lambda1_over_lambda2}: Credible interval bounds for the rate
+ratio (rate of population 1 over the rate of population 2)
+\item \code{Pr_less_than_r}: (1 sample analysis only) If \code{r} was
+supplied, the posterior probability that the rate is less than \code{r}.
+\item \code{Pr_rate_ratio_lt_one}: (2 sample analysis only) Posterior
+probability that the rate ratio is less than 1
+\item \code{Pr_rateratio_in_ROPE}: (2 sample analysis only) Posterior
+probability that the rate ratio is in the ROPE (based on
+\code{Pr_rate_ratio_lt_one})
+\item \code{rate_plot}: Posterior and prior plots for the rates
+\item \code{posterior_parameters}: Posterior parameters for rates for the
+gamma posterior distribution
+}
+}
 \description{
 Make inference on one or two populations using Poisson distributed count data
 }

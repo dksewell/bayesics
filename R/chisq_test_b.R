@@ -32,13 +32,28 @@
 #' 
 #' @returns (returned invisible) A list with the following elements:
 #' \itemize{
-#'  \item posterior shape parameters
-#'  \item posterior mean
-#'  \item lower and upper credible interval bounds
-#'  \item Probability that joint probabilities are in the ROPE around independent probabilities
-#'  \item Overall probability of falling in the ROPE
-#'  \item PDir for each probability 
-#'  \item Bayes factor and interpretation
+#'  \item \code{posterior_shapes}: posterior Dirichlet shape parameters
+#'  \item \code{posterior_mean}: posterior mean
+#'  \item \code{lower_bound}: lower credible interval bounds
+#'  \item \code{upper_bound}: upper credible interval bounds
+#'  \item \code{individual_ROPE}: Probability that joint probabilities are 
+#'  in the ROPE around independent probabilities
+#'  \item \code{overall_ROPE}: Overall probability of falling in the ROPE 
+#'  (i.e., all probabilities are near the product of the marginal probabilities)
+#'  \item \code{prob_pij_less_than_p_i_times_p_j}: (If multinomial sampling design) 
+#'  Probabilities that each joint probability is less than the product of 
+#'  the marginal probabilities
+#'  \item \code{prob_p_j_given_i_less_than_p_j}: (If fixed rows or columns sampling design) 
+#'  Probabilities that each conditional probability is less than the 
+#'  marginal probabilities
+#'  \item \code{prob_direction}: Probability of direction for the joint or 
+#'  conditional (depending on sampling scheme) probabilities (based on 
+#'  \code{prob_pij_less_than_p_i_times_p_j} or \code{prob_p_j_given_i_less_than_p_j})
+#'  \item \code{BF_for_dependence_vs_independence}: Bayes factor testing 
+#'  dependence vs. independence (higher values favor dependence, lower values 
+#'  favor independence)
+#'  \item \code{BF_evidence}: Kass and Raftery's interpretation of the 
+#'  level of evidence of the Bayes factor
 #' }
 #' 
 #' @references 
@@ -365,10 +380,10 @@ independence_b = function(x,
                            "Decisive")))
     
     # Print results
-    cat("\n----------\n\n2-way table test for independence using Bayesian techniques\n")
-    cat("\n----------\n\n")
+    message("\n----------\n\n2-way table test for independence using Bayesian techniques\n")
+    message("\n----------\n\n")
     
-    cat("Prior used: Dirichlet with shape parameters = \n")
+    message("Prior used: Dirichlet with shape parameters = \n")
     prior_shapes = 
       matrix(prior_shapes,
              nR,nC,
@@ -376,17 +391,23 @@ independence_b = function(x,
     format(signif(prior_shapes, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat("Posterior mean:\n")
+    message("Posterior mean:\n")
     format(signif(results$posterior_mean, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% (marginal) credible intervals: \n"))
     credints = 
       matrix("",nR,nC,dimnames = dimnames(x))
@@ -404,24 +425,33 @@ independence_b = function(x,
     }
     credints |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat("Probability that p_ij < p_(i.) x p_(.j):\n")
+    message("Probability that p_ij < p_(i.) x p_(.j):\n")
     format(signif(results$prob_pij_less_than_p_i_times_p_j, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat("Probability of direction:\n")
+    message("Probability of direction:\n")
     format(signif(results$prob_direction, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat(paste0("Probability that all odds ratios (unrestricted vs. independence) are in the ROPE, defined to be (",
+    message(paste0("Probability that all odds ratios (unrestricted vs. independence) are in the ROPE, defined to be (",
                format(signif(ROPE[1], 3), 
                       scientific = FALSE),
                ",",
@@ -432,21 +462,24 @@ independence_b = function(x,
                       scientific = FALSE),
                "\n\n")) 
     
-    cat("The marginal probabilities that each odds ratio is in the ROPE:\n")
+    message("The marginal probabilities that each odds ratio is in the ROPE:\n")
     format(signif(results$individual_ROPE, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat(paste0("Bayes factor in favor of dependence: ",
+    message(paste0("Bayes factor in favor of dependence: ",
                format(signif(BF10, 3), 
                       scientific = FALSE),
                ";\n      =>Level of evidence: ", 
                results$BF_evidence,
                "\n\n")) 
     
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
   }
   if(grepl("fixed",sampling_design)){
@@ -690,10 +723,10 @@ independence_b = function(x,
     
     
     ## Print results
-    cat("\n----------\n\n2-way table test for independence using Bayesian techniques\n")
-    cat("\n----------\n\n")
+    message("\n----------\n\n2-way table test for independence using Bayesian techniques\n")
+    message("\n----------\n\n")
     
-    cat("Prior used: Dirichlet with shape parameters = \n")
+    message("Prior used: Dirichlet with shape parameters = \n")
     prior_shapes = 
       matrix(prior_shapes,
              nR,nC,
@@ -701,17 +734,23 @@ independence_b = function(x,
     format(signif(prior_shapes, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat("Posterior mean:\n")
+    message("Posterior mean:\n")
     format(signif(results$posterior_mean, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% (marginal) credible intervals: \n"))
     credints = 
       matrix("",nR,nC,dimnames = dimnames(x))
@@ -729,24 +768,33 @@ independence_b = function(x,
     }
     credints |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat("Probability that p_ij < p_(i.) x p_(.j):\n")
+    message("Probability that p_ij < p_(i.) x p_(.j):\n")
     format(signif(results$prob_p_j_given_i_less_than_p_j, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat("Probability of direction:\n")
+    message("Probability of direction:\n")
     format(signif(results$prob_direction, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat(paste0("Probability that all odds ratios (unrestricted vs. independence) are in the ROPE, defined to be (",
+    message(paste0("Probability that all odds ratios (unrestricted vs. independence) are in the ROPE, defined to be (",
                format(signif(ROPE[1], 3), 
                       scientific = FALSE),
                ",",
@@ -757,14 +805,17 @@ independence_b = function(x,
                       scientific = FALSE),
                "\n\n")) 
     
-    cat("The marginal probabilities that each odds ratio is in the ROPE:\n")
+    message("The marginal probabilities that each odds ratio is in the ROPE:\n")
     format(signif(results$individual_ROPE, 3), 
            scientific = FALSE) |> 
       noquote() |> 
-      print()
-    cat("\n\n")
+      print() |> 
+      capture.output() |> 
+      paste(collapse = "\n") |> 
+      message()
+    message("\n\n")
     
-    cat(paste0("Bayes factor in favor of dependence: ",
+    message(paste0("Bayes factor in favor of dependence: ",
                format(signif(BF10, 3), 
                       scientific = FALSE),
                ";\n      =>Level of evidence: ", 
@@ -772,7 +823,7 @@ independence_b = function(x,
                "\n\n")) 
     
     
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
   }

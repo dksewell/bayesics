@@ -47,26 +47,37 @@
 #' 
 #' @returns (returned invisible) If signed rank analysis is implemented, a list with the following:
 #' \itemize{
-#'  \item Posterior mean
-#'  \item Credible interval
-#'  \item Probability proportion of values that are positive is less than the reference p
-#'  \item Probability proportion of values that are positive is in the ROPE
-#'  \item Underlying DFBA object
-#'  \item Prior and posterior plot
-#'  \item Posterior parameters
-#'  \item Bayes factor
+#'  \item \code{posterior_mean}: Posterior mean of the proportion of differences that are positive
+#'  \item \code{CI}: Credible interval of the proportion of differences that 
+#'  are positive
+#'  \item \code{Pr_less_than_p}: Probability proportion of differences that are 
+#'  positive is less than the argument \code{p}
+#'  \item \code{Pr_in_ROPE}: Probability proportion of differences that are 
+#'  positive is in the ROPE
+#'  \item \code{prob_plot}: Prior and posterior plot of differences that are 
+#'  positive
+#'  \item \code{posterior_parameters}: Posterior beta shape parameters for the 
+#'  proportion of differences that are positive
+#'  \item \code{BF_for_phi_gr_onehalf_vs_phi_less_onehalf}: Bayes factor giving 
+#'  evidence in favor of the proportion of differences that are positive being 
+#'  greater than one half vs. less than one half
+#'  \item \code{dfba_wilcoxon_object}: Underlying DFBA object
 #' }
 #' If rank sum analysis is implemented, a list with the following:
 #' \itemize{
-#'  \item Posterior mean
-#'  \item Credible interval
-#'  \item Probability \eqn{\Omega_x} is less than the reference p
-#'  \item Probability \eqn{\Omega_x} is in the ROPE
-#'  \item Underlying DFBA object
-#'  \item Prior and posterior plot
-#'  \item Posterior parameters
-#'  \item Bayes factor
-##' }
+#'  \item \code{posterior_mean}: Posterior mean of \eqn{\Omega_x} (see details)
+#'  \item \code{CI}: Credible interval for \eqn{\Omega_x}
+#'  \item \code{Pr_less_than_p}: Posterior probability \eqn{\Omega_x} is less 
+#'  than the argument \code{p}
+#'  \item \code{Pr_in_ROPE}: Probability \eqn{\Omega_x} is in the ROPE
+#'  \item \code{prob_plot}: Prior and posterior plot of \eqn{\Omega_x}
+#'  \item \code{posterior_parameters}: Posterior beta shape parameters for 
+#'  \eqn{\Omega_x}
+#'  \item \code{BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf}: Bayes factor 
+#'  in favor of \eqn{\Omega_x} being greater than one half vs. less than one 
+#'  half
+#'  \item \code{dfba_wilcoxon_object}: Underlying DFBA object
+#' }
 #' 
 #' @references 
 #' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction to Distribution-Free Methods. Cambridge: MIT Press.
@@ -355,20 +366,20 @@ wilcoxon_test_b = function(x,
     
     
     # Print results
-    cat("\n----------\n\nWilcoxon signed-rank analysis using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Prior used: Beta(", 
+    message("\n----------\n\nWilcoxon signed-rank analysis using Bayesian techniques\n")
+    message("\n----------\n\n")
+    message(paste0("Prior used: Beta(", 
                format(signif(prior_shapes[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shapes[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: ", 
+    message(paste0("Posterior mean: ", 
                format(signif(results$posterior_mean, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (", 
                format(signif(results$CI[1], 3), 
                       scientific = FALSE),
@@ -376,14 +387,14 @@ wilcoxon_test_b = function(x,
                format(signif(results$CI[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Probability that Pr(x > y) > ",
+    message(paste0("Probability that Pr(x > y) > ",
                format(signif(p, 3), 
                       scientific = FALSE),
                " = ",
                format(signif(1.0 - results$Pr_less_than_p, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0("Probability that Pr(x > y) is in the ROPE, defined to be (",
+    message(paste0("Probability that Pr(x > y) is in the ROPE, defined to be (",
                format(signif(ROPE_bounds[1], 3), 
                       scientific = FALSE),
                ",",
@@ -394,7 +405,7 @@ wilcoxon_test_b = function(x,
                       scientific = FALSE),
                "\n\n")) 
     if(p == 0.5){
-      cat(paste0("Bayes factor in favor of phi>0.5 vs. phi<=0.5: ",
+      message(paste0("Bayes factor in favor of phi>0.5 vs. phi<=0.5: ",
                  format(signif(results$BF_for_phi_gr_onehalf_vs_phi_less_onehalf, 3), 
                         scientific = FALSE),
                  ";\n      =>Level of evidence: ", 
@@ -402,7 +413,7 @@ wilcoxon_test_b = function(x,
                  "\n\n")) 
       
     }
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     
@@ -570,24 +581,24 @@ wilcoxon_test_b = function(x,
                            "Decisive")))
     
     # Print results
-    cat("\n----------\n\nWilcoxon rank sum analysis using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(
+    message("\n----------\n\nWilcoxon rank sum analysis using Bayesian techniques\n")
+    message("\n----------\n\n")
+    message(
       "NOTE: Estimand is Omega_x := Proportion of (non-tied) pairs where x is bigger than y"
     )
-    cat("\n\n----------\n\n")
-    cat(paste0("Prior used: Beta(", 
+    message("\n\n----------\n\n")
+    message(paste0("Prior used: Beta(", 
                format(signif(prior_shapes[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shapes[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: ", 
+    message(paste0("Posterior mean: ", 
                format(signif(results$posterior_mean, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (", 
                format(signif(results$CI[1], 3), 
                       scientific = FALSE),
@@ -595,14 +606,14 @@ wilcoxon_test_b = function(x,
                format(signif(results$CI[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Probability that Omega_x > ",
+    message(paste0("Probability that Omega_x > ",
                format(signif(p, 3), 
                       scientific = FALSE),
                " = ",
                format(signif(1.0 - results$Pr_less_than_p, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0("Probability that Omega_x is in the ROPE, defined to be (",
+    message(paste0("Probability that Omega_x is in the ROPE, defined to be (",
                format(signif(ROPE_bounds[1], 3), 
                       scientific = FALSE),
                ",",
@@ -613,7 +624,7 @@ wilcoxon_test_b = function(x,
                       scientific = FALSE),
                "\n\n"))
     if(p == 0.5){
-      cat(paste0("Bayes factor in favor of phi>0.5 vs. phi<=0.5: ",
+      message(paste0("Bayes factor in favor of phi>0.5 vs. phi<=0.5: ",
                  format(signif(results$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf, 3), 
                         scientific = FALSE),
                  ";\n      =>Level of evidence: ", 
@@ -621,7 +632,7 @@ wilcoxon_test_b = function(x,
                  "\n\n")) 
       
     }
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     

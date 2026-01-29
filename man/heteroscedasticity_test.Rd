@@ -15,12 +15,7 @@ has been set to TRUE (the default)}
 has been set to FALSE}
 }
 \value{
-(returned invisible) A list with the following:
-\itemize{
-\item log of the Bayes factor
-\item Bayes factor
-\item Interpretation
-}
+(returned invisible) A tibble with Bayes factors and interpretations.
 }
 \description{
 Use Chib's method to compute the Bayes factor to test for

@@ -43,12 +43,17 @@ credible interval for \eqn{p}.}
 \value{
 (returned invisible) A list with the following:
 \itemize{
-\item posterior mean of the median difference
-\item Credible interval for the median difference
-\item ROPE bounds
-\item Probability of falling in the ROPE
-\item Prior and posterior plot
-\item posterior parameters
+\item \code{posterior_mean}: Posterior mean of the median difference
+\item \code{CI}: Credible interval for the median difference
+\item \code{Pr_less_than_p}: Posterior probability that the proportion of
+differences that are positive is less than the argument \code{p0}.
+\item \code{ROPE_bounds}: ROPE bounds for the proportion of differences
+that are positive
+\item \code{ROPE}: Posterior probability that the proportion of differences
+which are positive falls in the ROPE
+\item \code{prop_plot}: Prior and posterior plot
+\item \code{posterior_parameters}: Posterior beta shape parameters for the
+proportion of differences which are positive
 }
 }
 \description{

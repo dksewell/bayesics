@@ -4,7 +4,7 @@
 \alias{cor_test_b}
 \alias{cor_test_b.default}
 \alias{cor_test_b.formula}
-\title{Test for Association/Correlation Between Paired Samples}
+\title{Test for Association/Correlation Between Paired Samples via Kendall's tau}
 \usage{
 cor_test_b(x, ...)
 
@@ -63,17 +63,19 @@ interval.}
 \value{
 (returned invisible) A list with the following:
 \itemize{
-\item posterior mean
-\item lower and upper credible interval bounds
-\item Posterior probability that Kendall's tau is less than provided reference tau
-\item Posterior probability that Kendall's tau is in the ROPE
-\item The underlying object from the DFBA package
-\item Posterior and prior plot
-\item posterior parameters for Kendall's tau correlations
+\item \code{posterior_mean}: posterior mean of Kendall's tau
+\item \code{CI}: Credible interval bounds
+\item \code{Pr_less_than_tau}: Posterior probability that Kendall's tau is less than provided reference \code{tau}
+\item \code{Pr_in_ROPE}: Posterior probability that Kendall's tau is in the ROPE
+\item \code{prob_plot}: Posterior and prior plot
+\item \code{posterior_parameters}: The posterior for Kendall's tau is a location shift and scaled
+beta distribution to fall over the range -1 to 1, i.e., \eqn{0.5 * (\tau + 1.0)} follows a
+beta with shape parameters given by \code{posterior_parameters}.
+\item \code{dfba_bivariate_concordance_object}: The underlying object from the DFBA package
 }
 }
 \description{
-Test for Association/Correlation Between Paired Samples
+Test for Association/Correlation Between Paired Samples via Kendall's tau
 }
 \details{
 cor_test_b relies on the robust Kendall's tau, defined to be

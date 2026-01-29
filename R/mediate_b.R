@@ -249,9 +249,9 @@ mediate_b = function(model_m,
     }
     
     if(user_response){
-      cat("Continuing on with ",
-          n_more_draws,
-          " more posterior samples.\n")
+      message("Continuing on with ",
+              n_more_draws,
+              " more posterior samples.\n")
       
       mediator_draws = 
         get_posterior_draws(model_m,
@@ -467,7 +467,7 @@ mediate_b = function(model_m,
     prelim_draws = 
       draw_y_x_mx(n_draws) |> 
       na.omit()
-    cat(paste0("\nFinished with ",
+    message(paste0("\nFinished with ",
                n_draws,
                " preliminary posterior draws.\n"))
     
@@ -510,7 +510,7 @@ mediate_b = function(model_m,
     }
     
     if(user_response){
-      cat("Continuing on with ",
+      message("Continuing on with ",
           n_more_draws,
           " more posterior samples.\n")
       

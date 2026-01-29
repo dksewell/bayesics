@@ -45,6 +45,25 @@
 #' then a Jeffrey's prior will be used, i.e., \eqn{\Gamma(0.5,0)} (improper), 
 #' while if \code{prior = "flat"}, \eqn{\Gamma(0.001,0.001)} will be used.  
 #' 
+#' @returns (returned invisible) A list with the following:
+#' \itemize{
+#'  \item \code{x}, \code{offset}: data and offset(s)
+#'  \item \code{posterior_mean}, \code{posterior_mean_pop1}, \code{posterior_mean_pop2}: 
+#'  posterior means of the Poisson rates
+#'  \item \code{CI}, \code{CI_pop1}, \code{CI_pop2}: Credible interval bounds for the rates
+#'  \item \code{CI_lambda1_over_lambda2}: Credible interval bounds for the rate 
+#'  ratio (rate of population 1 over the rate of population 2)
+#'  \item \code{Pr_less_than_r}: (1 sample analysis only) If \code{r} was 
+#'  supplied, the posterior probability that the rate is less than \code{r}.
+#'  \item \code{Pr_rate_ratio_lt_one}: (2 sample analysis only) Posterior 
+#'  probability that the rate ratio is less than 1
+#'  \item \code{Pr_rateratio_in_ROPE}: (2 sample analysis only) Posterior 
+#'  probability that the rate ratio is in the ROPE (based on 
+#'  \code{Pr_rate_ratio_lt_one})
+#'  \item \code{rate_plot}: Posterior and prior plots for the rates
+#'  \item \code{posterior_parameters}: Posterior parameters for rates for the 
+#'  gamma posterior distribution
+#' }
 #' 
 #' @examples
 #' \donttest{
@@ -148,22 +167,22 @@ poisson_test_b = function(x,
       )
     
     # Print results
-    cat("\n----------\n\nAnalysis of a single population rate using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Number of events: ", x,"\n\n"))
-    cat(paste0("Time/area base for event counts: ", offset,"\n\n"))
-    cat(paste0("Prior used: Gamma(", 
+    message("\n----------\n\nAnalysis of a single population rate using Bayesian techniques\n")
+    message("\n----------\n\n")
+    message(paste0("Number of events: ", x,"\n\n"))
+    message(paste0("Time/area base for event counts: ", offset,"\n\n"))
+    message(paste0("Prior used: Gamma(", 
                format(signif(prior_shape_rate[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shape_rate[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean of the rate: ", 
+    message(paste0("Posterior mean of the rate: ", 
                format(signif(results$posterior_mean, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (", 
                format(signif(results$CI[1], 3), 
                       scientific = FALSE),
@@ -176,7 +195,7 @@ poisson_test_b = function(x,
         pgamma(r,
                shape = post_shape_rate[1],
                rate = post_shape_rate[2])
-      cat(paste0("Probability that rate < ",
+      message(paste0("Probability that rate < ",
                  format(signif(r, 3), 
                         scientific = FALSE),
                  ": ",
@@ -184,7 +203,7 @@ poisson_test_b = function(x,
                         scientific = FALSE),
                  "\n\n"))
     }
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     # Plot (if requested)
@@ -333,37 +352,39 @@ poisson_test_b = function(x,
              c(CI_bounds[1],CI_bounds[2]),
            Pr_rateratio_in_ROPE = 
              mean( (rate_ratios > ROPE[1]) & 
-                     (rate_ratios < ROPE[2]) )
+                     (rate_ratios < ROPE[2]) ),
+           Pr_rate_ratio_lt_one = 
+             mean( rate_ratios < 1.0 )
       )
     
     # Print results
-    cat("\n----------\n\nAnalysis of two population rates using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Number of events: Population 1 = ", 
+    message("\n----------\n\nAnalysis of two population rates using Bayesian techniques\n")
+    message("\n----------\n\n")
+    message(paste0("Number of events: Population 1 = ", 
                x[1],
                "; Population 2 = ",
                x[2],
                "\n\n"))
-    cat(paste0("Time/area base for event counts: Population 1 = ",
+    message(paste0("Time/area base for event counts: Population 1 = ",
                offset[1],
                "; Population 2 = ",
                offset[2],
                "\n\n"))
-    cat(paste0("Prior used: Gamma(", 
+    message(paste0("Prior used: Gamma(", 
                format(signif(prior_shape_rate[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shape_rate[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: Population 1 = ", 
+    message(paste0("Posterior mean: Population 1 = ", 
                format(signif(results$posterior_mean_pop1, 3), 
                       scientific = FALSE),
                "; Population 2 = ",
                format(signif(results$posterior_mean_pop2, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: Population 1 = (", 
                format(signif(results$CI_pop1[1], 3), 
                       scientific = FALSE),
@@ -377,7 +398,7 @@ poisson_test_b = function(x,
                format(signif(results$CI_pop2[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (Population 1) / (Population 2) = (", 
                format(signif(results$CI_lambda1_over_lambda2[1], 3), 
                       scientific = FALSE),
@@ -385,7 +406,11 @@ poisson_test_b = function(x,
                format(signif(results$CI_lambda1_over_lambda2[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Probability that the rate ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
+    message(paste0("Probability that the rate ratio is < 1 = ", 
+               format(signif(results$Pr_rate_ratio_lt_one, 3), 
+                      scientific = FALSE),
+               "\n\n"))
+    message(paste0("Probability that the rate ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
                format(signif(ROPE[1], 3), 
                       scientific = FALSE),
                ",",
@@ -395,7 +420,7 @@ poisson_test_b = function(x,
                format(signif(results$Pr_rateratio_in_ROPE, 3), 
                       scientific = FALSE),
                "\n\n")) 
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     # Plot (if requested)

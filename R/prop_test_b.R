@@ -53,13 +53,21 @@
 #' 
 #' @returns (returned invisible) A list with the following:
 #' \itemize{
-#'  \item Number of successes and failures
-#'  \item posterior means for the population proportion(s)
-#'  \item Credible interval(s)
-#'  \item Prediction interval(s)
-#'  \item Probability of falling the ROPE
-#'  \item Prior and posterior plot
-#'  \item posterior parameters
+#'  \item \code{successes}, \code{failures}: Number of successes and failures
+#'  \item \code{posterior_mean}, \code{posterior_mean_pop1}, \code{posterior_mean_pop2}: 
+#'  posterior means for the population proportion
+#'  \item \code{CI}, \code{CI_pop1}, \code{CI_pop2}: Credible interval for the 
+#'  population proportion
+#'  \item \code{Pr_oddsratio_in_ROPE}: (2 sample analysis only) Posterior 
+#'  probability that the odds ratio is in the ROPE
+#'  \item \code{PI}, \code{PI_pop1}, \code{PI_pop2}: Prediction interval for the 
+#'  number of trials given in \code{predict_for_n}
+#'  \item \code{Pr_less_than_p}: (1 sample analysis only) If \code{p} was 
+#'  supplied, the posterior probability that the population proportion is less 
+#'  than \code{p}
+#'  \item \code{prop_plot}: Prior and posterior plot of population proportion(s)
+#'  \item \code{posterior_parameters}: Posterior beta shape parameters for the 
+#'  population proportion(s)
 #' }
 #' 
 #' @examples
@@ -190,22 +198,22 @@ prop_test_b = function(n_successes,
       )
     
     # Print results
-    cat("\n----------\n\nAnalysis of a single population proportion using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Number of successes: ", n_successes,"\n\n"))
-    cat(paste0("Number of failures: ", n_failures,"\n\n"))
-    cat(paste0("Prior used: Beta(", 
+    message("\n----------\n\nAnalysis of a single population proportion using Bayesian techniques")
+    message("\n----------\n\n")
+    message(paste0("Number of successes: ", n_successes,"\n\n"))
+    message(paste0("Number of failures: ", n_failures,"\n\n"))
+    message(paste0("Prior used: Beta(", 
                format(signif(prior_shapes[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shapes[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: ", 
+    message(paste0("Posterior mean: ", 
                format(signif(results$posterior_mean, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (", 
                format(signif(results$CI[1], 3), 
                       scientific = FALSE),
@@ -216,7 +224,7 @@ prop_test_b = function(n_successes,
     if(!missing(p)){
       results$Pr_less_than_p = 
         pbeta(p,post_shapes[1],post_shapes[2])
-      cat(paste0("Probability that p < ",
+      message(paste0("Probability that p < ",
                  format(signif(p, 3), 
                         scientific = FALSE),
                  ": ",
@@ -224,7 +232,7 @@ prop_test_b = function(n_successes,
                         scientific = FALSE),
                  "\n\n"))
     }
-    cat(paste0(100 * PI_level,
+    message(paste0(100 * PI_level,
                "% prediction interval for ",
                ifelse(predict_for_n == n_total,
                       "another ",
@@ -235,7 +243,7 @@ prop_test_b = function(n_successes,
                ", ",
                results$PI[2],
                ")\n\n"))
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     # Plot (if requested)
@@ -413,33 +421,33 @@ prop_test_b = function(n_successes,
       )
     
     # Print results
-    cat("\n----------\n\nAnalysis of two population proportions using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Number of successes: Population 1 = ", 
+    message("\n----------\n\nAnalysis of two population proportions using Bayesian techniques")
+    message("\n----------\n\n")
+    message(paste0("Number of successes: Population 1 = ", 
                n_successes[1],
                "; Population 2 = ",
                n_successes[2],
                "\n\n"))
-    cat(paste0("Number of failures: Population 1 = ",
+    message(paste0("Number of failures: Population 1 = ",
                n_failures[1],
                "; Population 2 = ",
                n_failures[2],
                "\n\n"))
-    cat(paste0("Prior used: Beta(", 
+    message(paste0("Prior used: Beta(", 
                format(signif(prior_shapes[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shapes[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: Population 1 = ", 
+    message(paste0("Posterior mean: Population 1 = ", 
                format(signif(results$posterior_mean_pop1, 3), 
                       scientific = FALSE),
                "; Population 2 = ",
                format(signif(results$posterior_mean_pop2, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: Population 1 = (", 
                format(signif(results$CI_pop1[1], 3), 
                       scientific = FALSE),
@@ -453,7 +461,7 @@ prop_test_b = function(n_successes,
                format(signif(results$CI_pop2[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (Population 1) - (Population 2) = (", 
                format(signif(results$CI_p1_minus_p2[1], 3), 
                       scientific = FALSE),
@@ -461,7 +469,7 @@ prop_test_b = function(n_successes,
                format(signif(results$CI_p1_minus_p2[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Probability that the odds ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
+    message(paste0("Probability that the odds ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
                format(signif(ROPE[1], 3), 
                       scientific = FALSE),
                ",",
@@ -471,7 +479,7 @@ prop_test_b = function(n_successes,
                format(signif(results$Pr_oddsratio_in_ROPE, 3), 
                       scientific = FALSE),
                "\n\n")) 
-    cat(paste0(100 * PI_level,
+    message(paste0(100 * PI_level,
                "% prediction interval for ",
                ifelse(predict_for_n[1] == n_total[1],
                       "another ",
@@ -482,7 +490,7 @@ prop_test_b = function(n_successes,
                ", ",
                results$PI_pop1[2],
                ")\n\n"))
-    cat(paste0(100 * PI_level,
+    message(paste0(100 * PI_level,
                "% prediction interval for ",
                ifelse(predict_for_n[length(predict_for_n)] == n_total[2],
                       "another ",
@@ -493,7 +501,7 @@ prop_test_b = function(n_successes,
                ", ",
                results$PI_pop2[2],
                ")\n\n"))
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     # Plot (if requested)
@@ -542,11 +550,17 @@ prop_test_b = function(n_successes,
     # Add posterior parameters to returned object
     results$posterior_parameters = list()
     results$posterior_parameters$population_1 = 
-      c(shape_1 = post_shapes[1,1],
+      c(post_shapes[1,1],
         shape_2 = post_shapes[1,2])
     results$posterior_parameters$population_2 = 
-      c(shape_1 = post_shapes[2,1],
+      c(post_shapes[2,1],
         shape_2 = post_shapes[2,2])
+    names(results$posterior_parameters$population_1)[1] = 
+      names(results$posterior_parameters$population_2)[1] =
+      "shape_1"
+    names(results$posterior_parameters$population_1)[2] = 
+      names(results$posterior_parameters$population_2)[2] =
+      "shape_2"
     
     
     invisible(results)
@@ -658,22 +672,22 @@ binom_test_b = function(n_successes,
       )
     
     # Print results
-    cat("\n----------\n\nAnalysis of a single population proportion using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Number of successes: ", n_successes,"\n\n"))
-    cat(paste0("Number of failures: ", n_failures,"\n\n"))
-    cat(paste0("Prior used: Beta(", 
+    message("\n----------\n\nAnalysis of a single population proportion using Bayesian techniques\n")
+    message("\n----------\n\n")
+    message(paste0("Number of successes: ", n_successes,"\n\n"))
+    message(paste0("Number of failures: ", n_failures,"\n\n"))
+    message(paste0("Prior used: Beta(", 
                format(signif(prior_shapes[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shapes[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: ", 
+    message(paste0("Posterior mean: ", 
                format(signif(results$posterior_mean, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (", 
                format(signif(results$CI[1], 3), 
                       scientific = FALSE),
@@ -684,7 +698,7 @@ binom_test_b = function(n_successes,
     if(!missing(p)){
       results$Pr_less_than_p = 
         pbeta(p,post_shapes[1],post_shapes[2])
-      cat(paste0("Probability that p < ",
+      message(paste0("Probability that p < ",
                  format(signif(p, 3), 
                         scientific = FALSE),
                  ": ",
@@ -692,7 +706,7 @@ binom_test_b = function(n_successes,
                         scientific = FALSE),
                  "\n\n"))
     }
-    cat(paste0(100 * PI_level,
+    message(paste0(100 * PI_level,
                "% prediction interval for ",
                ifelse(predict_for_n == n_total,
                       "another ",
@@ -703,7 +717,7 @@ binom_test_b = function(n_successes,
                ", ",
                results$PI[2],
                ")\n\n"))
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     # Plot (if requested)
@@ -881,33 +895,33 @@ binom_test_b = function(n_successes,
       )
     
     # Print results
-    cat("\n----------\n\nAnalysis of two population proportions using Bayesian techniques\n")
-    cat("\n----------\n\n")
-    cat(paste0("Number of successes: Population 1 = ", 
+    message("\n----------\n\nAnalysis of two population proportions using Bayesian techniques\n")
+    message("\n----------\n\n")
+    message(paste0("Number of successes: Population 1 = ", 
                n_successes[1],
                "; Population 2 = ",
                n_successes[2],
                "\n\n"))
-    cat(paste0("Number of failures: Population 1 = ",
+    message(paste0("Number of failures: Population 1 = ",
                n_failures[1],
                "; Population 2 = ",
                n_failures[2],
                "\n\n"))
-    cat(paste0("Prior used: Beta(", 
+    message(paste0("Prior used: Beta(", 
                format(signif(prior_shapes[1], 3), 
                       scientific = FALSE),
                ",",
                format(signif(prior_shapes[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Posterior mean: Population 1 = ", 
+    message(paste0("Posterior mean: Population 1 = ", 
                format(signif(results$posterior_mean_pop1, 3), 
                       scientific = FALSE),
                "; Population 2 = ",
                format(signif(results$posterior_mean_pop2, 3), 
                       scientific = FALSE),
                "\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: Population 1 = (", 
                format(signif(results$CI_pop1[1], 3), 
                       scientific = FALSE),
@@ -921,7 +935,7 @@ binom_test_b = function(n_successes,
                format(signif(results$CI_pop2[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0(100 * CI_level,
+    message(paste0(100 * CI_level,
                "% credible interval: (Population 1) - (Population 2) = (", 
                format(signif(results$CI_p1_minus_p2[1], 3), 
                       scientific = FALSE),
@@ -929,7 +943,7 @@ binom_test_b = function(n_successes,
                format(signif(results$CI_p1_minus_p2[2], 3), 
                       scientific = FALSE),
                ")\n\n"))
-    cat(paste0("Probability that the odds ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
+    message(paste0("Probability that the odds ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
                format(signif(ROPE[1], 3), 
                       scientific = FALSE),
                ",",
@@ -939,7 +953,7 @@ binom_test_b = function(n_successes,
                format(signif(results$Pr_oddsratio_in_ROPE, 3), 
                       scientific = FALSE),
                "\n\n")) 
-    cat(paste0(100 * PI_level,
+    message(paste0(100 * PI_level,
                "% prediction interval for ",
                ifelse(predict_for_n[1] == n_total[1],
                       "another ",
@@ -950,7 +964,7 @@ binom_test_b = function(n_successes,
                ", ",
                results$PI_pop1[2],
                ")\n\n"))
-    cat(paste0(100 * PI_level,
+    message(paste0(100 * PI_level,
                "% prediction interval for ",
                ifelse(predict_for_n[length(predict_for_n)] == n_total[2],
                       "another ",
@@ -961,7 +975,7 @@ binom_test_b = function(n_successes,
                ", ",
                results$PI_pop2[2],
                ")\n\n"))
-    cat("\n----------\n\n")
+    message("\n----------\n\n")
     
     
     # Plot (if requested)
@@ -1008,13 +1022,18 @@ binom_test_b = function(n_successes,
     }
     
     # Add posterior parameters to returned object
-    results$posterior_parameters = list()
     results$posterior_parameters$population_1 = 
-      c(shape_1 = post_shapes[1,1],
+      c(post_shapes[1,1],
         shape_2 = post_shapes[1,2])
     results$posterior_parameters$population_2 = 
-      c(shape_1 = post_shapes[2,1],
+      c(post_shapes[2,1],
         shape_2 = post_shapes[2,2])
+    names(results$posterior_parameters$population_1)[1] = 
+      names(results$posterior_parameters$population_2)[1] =
+      "shape_1"
+    names(results$posterior_parameters$population_1)[2] = 
+      names(results$posterior_parameters$population_2)[2] =
+      "shape_2"
     
     
     invisible(results)

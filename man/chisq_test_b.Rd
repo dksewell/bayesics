@@ -43,13 +43,28 @@ used.}
 \value{
 (returned invisible) A list with the following elements:
 \itemize{
-\item posterior shape parameters
-\item posterior mean
-\item lower and upper credible interval bounds
-\item Probability that joint probabilities are in the ROPE around independent probabilities
-\item Overall probability of falling in the ROPE
-\item PDir for each probability
-\item Bayes factor and interpretation
+\item \code{posterior_shapes}: posterior Dirichlet shape parameters
+\item \code{posterior_mean}: posterior mean
+\item \code{lower_bound}: lower credible interval bounds
+\item \code{upper_bound}: upper credible interval bounds
+\item \code{individual_ROPE}: Probability that joint probabilities are
+in the ROPE around independent probabilities
+\item \code{overall_ROPE}: Overall probability of falling in the ROPE
+(i.e., all probabilities are near the product of the marginal probabilities)
+\item \code{prob_pij_less_than_p_i_times_p_j}: (If multinomial sampling design)
+Probabilities that each joint probability is less than the product of
+the marginal probabilities
+\item \code{prob_p_j_given_i_less_than_p_j}: (If fixed rows or columns sampling design)
+Probabilities that each conditional probability is less than the
+marginal probabilities
+\item \code{prob_direction}: Probability of direction for the joint or
+conditional (depending on sampling scheme) probabilities (based on
+\code{prob_pij_less_than_p_i_times_p_j} or \code{prob_p_j_given_i_less_than_p_j})
+\item \code{BF_for_dependence_vs_independence}: Bayes factor testing
+dependence vs. independence (higher values favor dependence, lower values
+favor independence)
+\item \code{BF_evidence}: Kass and Raftery's interpretation of the
+level of evidence of the Bayes factor
 }
 }
 \description{

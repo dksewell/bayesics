@@ -56,12 +56,12 @@ credible interval.}
 \value{
 (returned invisible) list including the following:
 \itemize{
-\item data
-\item posterior mean
-\item CI
-\item Probability the odds ratio is in the ROPE
-\item posterior draws
-\item odds ratio plot
+\item \code{data}: data
+\item \code{posterior_mean}: posterior mean of the odds ratio (cases vs. controls)
+\item \code{CI}: Credible interval
+\item \code{Pr_oddsratio_in_ROPE}: Probability the odds ratio (cases vs. controls) is in the ROPE
+\item \code{posterior_draws}: posterior draws of the odds ratio (cases vs. controls)
+\item \code{or_plot}: odds ratio (cases vs. controls) posterior plot
 }
 }
 \description{
