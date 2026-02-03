@@ -107,8 +107,8 @@ test_that("Test poisson_test_b for two populations",{
                      offset = c(10,9),
                      r = 10)
   )
-  expect_equal(fitb[c(1:8,10)],
-               fitc[c(1:8,10)])
+  expect_equal(fitb[c(1:9,11)],
+               fitc[c(1:9,11)])
   
   # With different prior
   expect_no_error(

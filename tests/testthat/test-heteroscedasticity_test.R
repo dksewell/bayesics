@@ -30,9 +30,7 @@ test_that("Testing ANOVA heteroscedastity BF",{
       heteroscedasticity_test(hetero_model,
                               homo_model)
   )
-  expect_named(htest1,
-               c("log_BF","BF","Interpretation"))
-  expect_type(htest1$log_BF,"double")
+  expect_s3_class(htest1,c("tbl_df", "tbl", "data.frame"))
   expect_type(htest1$BF,"double")
   expect_type(htest1$Interpretation,"character")
   
@@ -69,7 +67,7 @@ test_that("Testing ANOVA heteroscedastity BF",{
   )
   
   # Make sure homoscedastic data gives larger BF than heteroscedastic data
-  expect_gte(htest1$log_BF,
-             htest2$log_BF)
+  expect_gte(htest1$BF,
+             htest2$BF)
   
 })
