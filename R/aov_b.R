@@ -90,7 +90,7 @@
 #'    \item a - (twice) the prior shape of the inv. gamma for the group variances
 #'    \item b - (twice) the prior rate of the inv. gamma for the group variances.
 #'  }
-#'  \item \code{fitted} - Posterior mean of $\mathbb{E}(y_{gi}) =\mu_g$
+#'  \item \code{fitted} - Posterior mean of \eqn{\mu_g := \mathbb{E}(y_{gi})}
 #'  \item \code{residuals} - Posterior mean of the residuals
 #'  \item \code{standardized_residuals} - Estimated residuals divided by the 
 #'  group standard deviation

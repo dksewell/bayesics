@@ -92,6 +92,10 @@ by the user) and summary.
 \item a - (twice) the prior shape of the inv. gamma for the group variances
 \item b - (twice) the prior rate of the inv. gamma for the group variances.
 }
+\item \code{fitted} - Posterior mean of \eqn{\mu_g := \mathbb{E}(y_{gi})}
+\item \code{residuals} - Posterior mean of the residuals
+\item \code{standardized_residuals} - Estimated residuals divided by the
+group standard deviation
 \item \code{mc_error} - absolute errors used to determine number of
 posterior draws for accurate interval estimation
 }
