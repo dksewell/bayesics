@@ -11,6 +11,9 @@
 #' 
 #' @returns An object of class "\code{Surv}".
 #' 
+#' @references 
+#' Therneau T (2024). _A Package for Survival Analysis in R_. R package version 3.8-3, <https://CRAN.R-project.org/package=survival>.
+#' 
 #' @examples
 #' \donttest{
 #' set.seed(2025)
