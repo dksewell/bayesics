@@ -64,6 +64,8 @@ cor_test_b = function(x, ...){
 #' 
 #' Lindley, D. V., & Phillips, L. D. (1976). Inference for a Bernoulli process (a Bayesian view). The American Statistician, 30, 112-119.
 #' 
+#' Barch DH, Chechile RA (2023). DFBA: Distribution-Free Bayesian Analysis. doi:10.32614/CRAN.package.DFBA
+#' 
 #' 
 #' @examples
 #' \donttest{
