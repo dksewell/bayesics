@@ -96,7 +96,10 @@ find_invgamma_parms = function(lower_quantile,
       graphics::abline(v = response_variance)
   }
   
-  
-  return(c(shape = a, rate = b) * 2)
+  if(dplyr::near(opt$convergence,0.0)){
+    return(c(shape = a, rate = b) * 2)
+  }else{
+    return(c(NA,NA))
+  }
 }
 

@@ -258,6 +258,13 @@ lm_b = function(formula,
                             plot_results = FALSE)
       a = temp_parms[1]
       b = temp_parms[2]
+      
+      if(is.na(a) | 
+         (dplyr::near(a,2) & dplyr::near(b,2)) ){
+        warning("Default prior on sigma^2 could not be found via optim.  Using a = b = 0.001 instead.")
+        a = b = 0.001
+      }
+      
     }else{
       a = prior_var_shape
       b = prior_var_rate
@@ -336,6 +343,13 @@ lm_b = function(formula,
                             plot_results = FALSE)
       a = temp_parms[1]
       b = temp_parms[2]
+      
+      if(is.na(a) | 
+         (dplyr::near(a,2) & dplyr::near(b,2)) ){
+        warning("Default prior on sigma^2 could not be found via optim.  Using a = b = 0.001 instead.")
+        a = b = 0.001
+      }
+      
     }else{
       a = prior_var_shape
       b = prior_var_rate

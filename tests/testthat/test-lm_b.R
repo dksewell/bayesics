@@ -50,7 +50,6 @@ test_that("Test lm_b with conjugate prior",{
   )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
-  
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
                      "ROPE","ROPE bounds","BF favoring alternative",
@@ -64,6 +63,23 @@ test_that("Test lm_b with conjugate prior",{
   expect_type(s$`ROPE bounds`,"character")
   expect_type(s$`BF favoring alternative`,"double")
   expect_type(s$Interpretation,"character")
+  
+  # Check fractional Bayes factors
+  expect_no_error(
+    fita_no_x1 <-
+      lm_b(outcome ~ x2 + x3,
+           data = test_data,
+           prior = "conj")
+  )
+  expect_no_error(
+    fbf <-
+      frac_bayes_factors(fita,
+                         fita_no_x1)
+  )
+  ## Check output format
+  expect_s3_class(fbf,c("tbl_df", "tbl", "data.frame"))
+  ## Check result is reasonable
+  expect_true(fbf$`fractional BF` > 0)
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -347,6 +363,25 @@ test_that("Test lm_b with zellner's g prior",{
   expect_type(s$`BF favoring alternative`,"double")
   expect_type(s$Interpretation,"character")
   
+  
+  # Check fractional Bayes factors
+  expect_no_error(
+    fita_no_x1 <-
+      lm_b(outcome ~ x2 + x3,
+           data = test_data,
+           prior = "z")
+  )
+  expect_no_error(
+    fbf <-
+      frac_bayes_factors(fita,
+                         fita_no_x1)
+  )
+  ## Check output format
+  expect_s3_class(fbf,c("tbl_df", "tbl", "data.frame"))
+  ## Check result is reasonable
+  expect_true(fbf$`fractional BF` > 0)
+  
+  
   # Make sure prediction function works
   expect_no_error(predict(fita))
   expect_no_error(predict(fita,
@@ -554,6 +589,24 @@ test_that("Test lm_b with improper prior",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
+  
+  # Check fractional Bayes factors
+  expect_no_error(
+    fita_no_x1 <-
+      lm_b(outcome ~ x2 + x3,
+           data = test_data,
+           prior = "i")
+  )
+  expect_no_error(
+    fbf <-
+      frac_bayes_factors(fita,
+                         fita_no_x1)
+  )
+  ## Check output format
+  expect_s3_class(fbf,c("tbl_df", "tbl", "data.frame"))
+  ## Check result is reasonable
+  expect_true(fbf$`fractional BF` > 0)
+  
   
   # Make sure prediction function works
   expect_no_error(predict(fita))

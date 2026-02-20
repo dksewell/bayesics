@@ -37,5 +37,5 @@ Surv(test_data$outcome,
 
 }
 \references{
-Therneau T (2024). \emph{A Package for Survival Analysis in R}. R package version 3.8-3, \url{https://CRAN.R-project.org/package=survival}.
+Therneau T (2024). A Package for Survival Analysis in R. R package version 3.8-3, \url{https://CRAN.R-project.org/package=survival}.
 }

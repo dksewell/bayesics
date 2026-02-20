@@ -1,3 +1,8 @@
+# bayesics 2.1.0
+
+* Added fractional Bayes factors for lm_b objects
+* Added check in lm_b when finding default hyperparameters for sigma^2 in case optim fails
+
 # bayesics 2.0.2
 
 * Updated licence
