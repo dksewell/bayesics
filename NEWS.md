@@ -1,3 +1,5 @@
+# bayesics 2.1.1
+
 # bayesics 2.1.0
 
 * Added fractional Bayes factors for lm_b objects

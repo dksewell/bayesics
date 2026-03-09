@@ -738,6 +738,79 @@ test_that("Test lm_b with improper prior",{
                     "ggplot2::gg","S7_object","gg"))
   
   
+  # Test if response transformation works
+  test_data$e_outcome = exp(test_data$outcome)
+  
+  ## Test lm_b fit
+  expect_no_error(
+    fitc <-
+      lm_b(log(e_outcome) ~ x1 + x2 + x3,
+           data = test_data,
+           prior = "imp")
+  )
+  expect_equal(fita$summary,
+               fitc$summary)
+  
+  ## Make sure print works
+  expect_no_error(fitc)
+  
+  ## Make sure coef works
+  expect_type(coef(fitc),"double")
+  
+  ## Make sure credint works
+  expect_true(is.matrix(credint(fitc)))
+  
+  ## Make sure vcov works
+  expect_true(is.matrix(vcov(fitc)))
+  
+  ## Make sure summary works
+  expect_no_error(
+    s <- 
+      summary(fitc)
+  )
+  ### Check output format
+  expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
+  
+  expect_identical(colnames(s),
+                   c("Variable","Post Mean","Lower","Upper","Prob Dir",
+                     "ROPE","ROPE bounds"))
+  expect_type(s$Variable,"character")
+  expect_type(s$`Post Mean`,"double")
+  expect_type(s$Lower,"double")
+  expect_type(s$Upper,"double")
+  expect_type(s$`Prob Dir`,"double")
+  expect_type(s$ROPE,"double")
+  expect_type(s$`ROPE bounds`,"character")
+  
+  ## Make sure prediction function works
+  expect_no_error(
+    fitc_preds <- predict(fitc)
+  )
+  expect_no_error(predict(fitc,
+                          newdata = fitc$data[1,]))
+  expect_gt(predict(fitc,
+                    newdata = fitc$data[1,],
+                    CI_level = 0.8)$CI_lower[1],
+            predict(fitc,
+                    newdata = fitc$data[1,],
+                    CI_level = 0.9)$CI_lower[1])
+  expect_gt(predict(fitc,
+                    newdata = fitc$data[1,],
+                    PI_level = 0.8)$PI_lower[1],
+            predict(fitc,
+                    newdata = fitc$data[1,],
+                    PI_level = 0.9)$PI_lower[1])
+  
+  ## Check plot
+  expect_s3_class(plot(fitc,
+                       type = "pdp"),
+                  c("patchwork","ggplot2::ggplot","ggplot",
+                    "ggplot2::gg","S7_object","gg"))
+  expect_s3_class(plot(fitc),
+                  c("patchwork","ggplot2::ggplot","ggplot",
+                    "ggplot2::gg","S7_object","gg"))
+  
+  
 })
 
 

@@ -422,7 +422,12 @@ lm_b = function(formula,
   
   if(prior == "improper"){
     
-    mod = lm(formula,m)
+    if(missing(data)){
+      mod = lm(formula)
+    }else{
+      mod = lm(formula,data)
+    }
+    
     mu_tilde = coef(mod)
     Sigma = sigma(mod)^2 * XtX_inv
     results = 
