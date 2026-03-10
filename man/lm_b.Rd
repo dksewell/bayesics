@@ -93,10 +93,12 @@ The prior is given by
 \item The default for the conjugate prior is based on arguments from
 standardized regression.  The default \eqn{V} is set according to the following: "a priori,
 we are 95\% certain that a standard deviation increase in \eqn{X} will not lead
-to more than a 5 standard deviation in the mean of \eqn{y}."  If we then
-set the prior on the intercept to be flat, this leads to
+to more than a 5 standard deviation in the mean of \eqn{y}."  This leads to
 \deqn{
-   V^{1/2} = diag(1,s_{x_1},\ldots,s_{x_p}) / 2.5,
+   V^{1/2} = diag(v^{1/2},s_{x_1},\ldots,s_{x_p}) / 2.5,
+ }
+\deqn{
+   v^{-1} := \sum \frac{\bar x_j^2}{s_j^2}
  }
 where \eqn{s_y} is the standard deviation of \eqn{y}, and \eqn{s_{x_j}} is
 the standard deviation of the \eqn{j^{th}} covariate.
