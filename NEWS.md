@@ -2,6 +2,7 @@
 
 * Fixed bug relating to response variable transformations and improper prior
 * Greatly improved conjugate prior defaults in lm_b for the intercept
+* Fixed default `fractional_proportion` in `frac_bayes_factors()` to be symmetric and not dependent on model order.
 
 # bayesics 2.1.0
 

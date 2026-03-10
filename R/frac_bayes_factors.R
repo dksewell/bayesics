@@ -65,6 +65,7 @@ frac_bayes_factors = function(object1,
     message('By default, the fraction of data "used" is max(ncol(X) + 1,log(n)) / n.')
     fractional_proportion = 
       max(nrow(object1$posterior_parameters$V_tilde) + 1, # Minimal dataset for proper posterior
+          nrow(object2$posterior_parameters$V_tilde) + 1,
           log(nrow(object1$data))) / 
       nrow(object1$data)
   }
@@ -81,7 +82,7 @@ frac_bayes_factors = function(object1,
   X2 = model.matrix(delete.response(terms(object2)),
                     data = object2$data)
   check_y = model.response(m2)
-  if(!all.equal(y,check_y))
+  if(!isTRUE(all.equal(y,check_y)))
     stop("Response variable must be the same in both models.")
   
   N = nrow(X1)
