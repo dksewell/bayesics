@@ -1,5 +1,8 @@
 # bayesics 2.1.1
 
+* Fixed bug relating to response variable transformations and improper prior
+* Greatly improved conjugate prior defaults in lm_b for the intercept
+
 # bayesics 2.1.0
 
 * Added fractional Bayes factors for lm_b objects

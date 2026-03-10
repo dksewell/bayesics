@@ -358,7 +358,10 @@ lm_b = function(formula,
       message("\nThe V hyperparameter in the normal prior is not specified.  It will be set automatically to 4/25Diag(s^2_{X_j})")
       if(ncol(X) > 1){
         V = 
-          diag(1.0 / c(2.5,2.5 / s_j)^2)
+          diag(1.0 / 
+                 c(2.5^2 * sum( (colMeans(X[,-1]) / s_j)^2),
+                   2.5^2 / s_j^2)
+          )
       }else{
         V = 
           matrix(1.0 / (2.5)^2,1,1)
