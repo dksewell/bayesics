@@ -361,7 +361,7 @@ lm_b = function(formula,
       if(ncol(X) > 1){
         V = 
           diag(1.0 / 
-                 c(2.5^2 * sum( (colMeans(X[,-1]) / s_j)^2),
+                 c(2.5^2 * sum( (colMeans(X[,-1,drop=FALSE]) / s_j)^2),
                    2.5^2 / s_j^2)
           )
       }else{
