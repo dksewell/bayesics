@@ -62,12 +62,17 @@ If missing, defaults go to those suggested by Kruchke (2018).}
 lm_b() returns an object of class "lm_b", which behaves as a list with
 the following elements:
 \itemize{
-\item summary - tibble giving results for regression coefficients
-\item posterior_parameters - list giving the posterior parameters
-\item hyperparameters - list giving the user input (or default) hyperparameters used
-\item fitted - posterior mean of the individuals' means
-\item residuals - posterior mean of the residuals
-\item formula, data - input by user
+\item \code{summary} - tibble giving results for regression coefficients
+\item \code{posterior_parameters} - list giving the posterior parameters
+\item \code{hyperparameters} - list giving the user input (or default) hyperparameters used
+\item \code{fitted} - posterior mean of the individuals' means
+\item \code{residuals} - posterior mean of the residuals
+\item \code{sigma_sq} - Vector providing the posterior mean and credible interval for the residual variance
+\item \code{formula}, \code{data}, \code{prior} - input by user
+\item \code{family} - (only Gaussian is currently implemented)
+\item \code{ROPE} - region of practical equivalence given in terms of \eqn{\pm}\code{ROPE}
+\item \code{terms} - the terms object used
+\item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
 }
 }
 \description{

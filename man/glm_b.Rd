@@ -96,7 +96,9 @@ glm_b() returns an object of class "glm_b", which behaves as a list with
 the following elements:
 \itemize{
 \item \code{summary} - tibble giving results for regression coefficients
-\item \code{posterior_draws}
+\item \code{posterior_draws} - (if sampling algorithm is used) matrix with each row
+representing an independent posterior draw of the unknown parameters
+\item \code{posterior_covariance}
 \item \code{ROPE}
 \item \code{hyperparameters} - list giving the user input or default hyperparameters used
 \item \code{fitted} - posterior mean of the individuals' means

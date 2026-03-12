@@ -60,7 +60,9 @@
 #' the following elements:
 #' \itemize{
 #'  \item \code{summary} - tibble giving results for regression coefficients
-#'  \item \code{posterior_draws}
+#'  \item \code{posterior_draws} - (if sampling algorithm is used) matrix with each row
+#'  representing an independent posterior draw of the unknown parameters
+#'  \item \code{posterior_covariance}
 #'  \item \code{ROPE}
 #'  \item \code{hyperparameters} - list giving the user input or default hyperparameters used
 #'  \item \code{fitted} - posterior mean of the individuals' means
@@ -1055,7 +1057,7 @@ glm_b = function(formula,
     
     
     return(structure(return_object,
-                     class = "glm_b"))
+                     class = c("glm_b","lm_b")))
   }
 }
 

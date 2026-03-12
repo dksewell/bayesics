@@ -921,5 +921,5 @@ np_glm_b = function(formula,
   
   
   return(structure(results,
-                   class = "np_glm_b"))
+                   class = c("np_glm_b","lm_b")))
 }

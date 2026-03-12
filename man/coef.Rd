@@ -4,20 +4,11 @@
 \alias{coef}
 \alias{coef.lm_b}
 \alias{coef.aov_b}
-\alias{coef.np_glm_b}
-\alias{coef.glm_b}
-\alias{coef.lm_b_bma}
 \title{Coefficient extraction for bayesics objects}
 \usage{
 \method{coef}{lm_b}(object, ...)
 
 \method{coef}{aov_b}(object, ...)
-
-\method{coef}{np_glm_b}(object, ...)
-
-\method{coef}{glm_b}(object, ...)
-
-\method{coef}{lm_b_bma}(object, ...)
 }
 \arguments{
 \item{object}{bayesics object}

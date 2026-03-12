@@ -48,12 +48,19 @@ trimmed range of y.}
 \value{
 A list with the following elements:
 \itemize{
-\item summary Tibble with point and interval estimates
-\item lm_b_fits A list of lm_b fits using zellner's g prior for
+\item \code{summary} - Tibble with point and interval estimates
+\item \code{lm_b_fits} - A list of lm_b fits using zellner's g prior for
 all the top models from \code{\link[BMS]{bms}}
-\item hyperparameters A named list with the user-specified zellner's g value.
-\item posterior_draws matrix of posterior draws of the regression parameters,
+\item \code{bms_fit} - A list of class \code{\link[BMS]{`bma-class`}}
+\item \code{hyperparameters} - A named list with the user-specified zellner's g value.
+\item \code{posterior_draws} - matrix of posterior draws of the regression parameters,
 marginalizing out the model
+\item \code{fitted} - vector of estimates of the mean of y
+\item \code{sigma_sq} - Vector providing the posterior mean and credible interval for the residual variance
+\item \code{formula}, data, CI_level - as provided as inputs
+\item \code{family} - (only Gaussian is currently implemented)
+\item \code{terms} - the terms object used
+\item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
 }
 }
 \description{

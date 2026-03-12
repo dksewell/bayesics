@@ -26,12 +26,19 @@
 #' 
 #' @returns A list with the following elements:
 #' \itemize{
-#'  \item summary Tibble with point and interval estimates
-#'  \item lm_b_fits A list of lm_b fits using zellner's g prior for
+#'  \item \code{summary} - Tibble with point and interval estimates
+#'  \item \code{lm_b_fits} - A list of lm_b fits using zellner's g prior for
 #'  all the top models from \code{\link[BMS]{bms}}
-#'  \item hyperparameters A named list with the user-specified zellner's g value.
-#'  \item posterior_draws matrix of posterior draws of the regression parameters, 
+#'  \item \code{bms_fit} - A list of class \code{\link[BMS]{`bma-class`}}
+#'  \item \code{hyperparameters} - A named list with the user-specified zellner's g value.
+#'  \item \code{posterior_draws} - matrix of posterior draws of the regression parameters, 
 #'  marginalizing out the model
+#'  \item \code{fitted} - vector of estimates of the mean of y
+#'  \item \code{sigma_sq} - Vector providing the posterior mean and credible interval for the residual variance
+#'  \item \code{formula}, data, CI_level - as provided as inputs
+#'  \item \code{family} - (only Gaussian is currently implemented)
+#'  \item \code{terms} - the terms object used
+#'  \item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
 #' }
 #' 
 #' @examples
@@ -307,36 +314,37 @@ bma_inference = function(formula,
     if(length(ROPE) == ncol(X) - 1) ROPE = c(NA,ROPE)
   }
   ROPE_bounds = 
-    c(
-      paste("(",-round(ROPE,3),",",round(ROPE,3),")",sep=""),
-      "(NA,NA)")
+    paste("(",-round(ROPE,3),",",round(ROPE,3),")",sep="")
   
   
   boundaries = 
-    matrix(c(ROPE,NA),
+    matrix(ROPE,
            nrow = nrow(post_samples),
-           ncol = ncol(post_samples),
+           ncol = ncol(post_samples) - 1,
            byrow = TRUE)
   
   
   ## Compile results
   results = 
-    tibble::tibble(Variable = c(colnames(X),"s2"),
-           `Post Mean` = colMeans(post_samples),
+    tibble::tibble(Variable = colnames(X),
+           `Post Mean` = colMeans(post_samples[,-ncol(post_samples)]),
            Lower = 
-             apply(post_samples,2,quantile,probs = alpha/2),
+             apply(post_samples[,-ncol(post_samples)],2,
+                   quantile,
+                   probs = alpha/2),
            Upper =
-             apply(post_samples,2,quantile,probs = 1.0 - alpha/2),
+             apply(post_samples[,-ncol(post_samples)],2,
+                   quantile,
+                   probs = 1.0 - alpha/2),
            `Prob Dir` = 
-             c(apply(post_samples[,-ncol(post_samples)],
+             apply(post_samples[,-ncol(post_samples)],
                      2,
                      function(x) max(mean(x < 0),
                                      mean(x > 0))),
-               NA),
            ROPE = 
              colMeans(
-               (-boundaries < post_samples) & 
-                 (boundaries > post_samples)
+               (-boundaries < post_samples[,-ncol(post_samples)]) & 
+                 (boundaries > post_samples[,-ncol(post_samples)])
              ),
            `ROPE bounds` = ROPE_bounds
     )
@@ -344,7 +352,7 @@ bma_inference = function(formula,
   # Get fitted values and NOT faux residuals
   fitted = 
     drop(
-      X %*% results$`Post Mean`[-nrow(results)]
+      X %*% results$`Post Mean`
     )
   # residuals = 
   #   drop(
@@ -355,11 +363,22 @@ bma_inference = function(formula,
     list(summary = results,
          lm_b_fits = full_fits,
          bms_fit = bms_fit,
-         hyperparms = list(zellner_g = zellner_g),
+         hyperparmeters = list(zellner_g = zellner_g),
          posterior_draws = post_samples,
          fitted = fitted,
+         sigma_sq = 
+           c(Estimate = mean(unlist(post_samples[,ncol(post_samples)])),
+             Lower = 
+               quantile(unlist(post_samples[,ncol(post_samples)]),
+                        alpha/2.0) |> 
+               unname(),
+             Upper = 
+               quantile(unlist(post_samples[,ncol(post_samples)]),
+                        1.0 - alpha/2.0) |> 
+               unname()),
          formula = formula,
          data = data,
+         family = gaussian(),
          CI_level = CI_level,
          terms = terms(m))
   if(any(attr(return_object$terms,"dataClasses") %in% c("factor","character"))){
@@ -373,5 +392,5 @@ bma_inference = function(formula,
   }
   
   return(structure(return_object,
-                   class = "lm_b_bma"))
+                   class = c("lm_b_bma","lm_b")))
 }
