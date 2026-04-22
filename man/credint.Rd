@@ -4,9 +4,6 @@
 \alias{credint}
 \alias{credint.lm_b}
 \alias{credint.aov_b}
-\alias{credint.glm_b}
-\alias{credint.np_glm_b}
-\alias{credint.lm_b_bma}
 \title{Credible Intervals for Model Parameters}
 \usage{
 credint(object, ...)
@@ -14,12 +11,6 @@ credint(object, ...)
 \method{credint}{lm_b}(object, CI_level = 0.95, ...)
 
 \method{credint}{aov_b}(object, CI_level = 0.95, which = "means", ...)
-
-\method{credint}{glm_b}(object, CI_level = 0.95, ...)
-
-\method{credint}{np_glm_b}(object, CI_level = 0.95, ...)
-
-\method{credint}{lm_b_bma}(object, CI_level = 0.95, ...)
 }
 \arguments{
 \item{object}{a fitted model object from \code{bayesics}}

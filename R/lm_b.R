@@ -474,7 +474,6 @@ lm_b = function(formula,
       list(summary = results,
            posterior_parameters = list(mu_tilde = mu_tilde,
                                        V_tilde = XtX,
-                                       Sigma = Sigma,
                                        a_tilde = N - p,
                                        b_tilde = sum(resid(mod)^2)),
            hyperparameters = NA)
@@ -510,6 +509,12 @@ lm_b = function(formula,
   return_object$prior = prior
   return_object$ROPE = ROPE
   return_object$CI_level = CI_level
+  return_object$posterior_covariance = 
+    return_object$posterior_parameters$b_tilde / 
+    return_object$posterior_parameters$a_tilde *
+    qr.solve(return_object$posterior_parameters$V_tilde)
+  return_object$df = 
+    return_object$posterior_parameters$a_tilde
   
   rownames(return_object$summary) = NULL
   

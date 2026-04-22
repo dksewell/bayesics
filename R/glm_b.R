@@ -661,7 +661,7 @@ glm_b = function(formula,
       
       ## Posterior covariance matrix
       return_object$posterior_covariance = covmat
-      
+      return_object$df = Inf
       
     }#End: large sample summary
     if(algorithm == "IS"){
@@ -990,6 +990,7 @@ glm_b = function(formula,
       
       ## Posterior covariance matrix
       return_object$posterior_covariance = V
+      return_object$df = Inf
       
     }
     
