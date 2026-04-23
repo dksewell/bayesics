@@ -1,6 +1,6 @@
 #' @rawNamespace import(Matrix, except = image)
 #' @import ggplot2
-#' @importFrom dplyr rename group_by summarize mutate left_join n relocate near pull bind_rows bind_cols across filter select row_number all_of contains everything where
+#' @importFrom dplyr rename group_by summarize mutate left_join n relocate near pull bind_rows bind_cols across filter select row_number all_of contains everything where case_when
 #' @importFrom extraDistr rinvgamma pinvgamma dinvgamma qinvgamma qlst plst dlst rlst rdirichlet pbbinom
 #' @importFrom future.apply future_sapply future_lapply
 #' @importFrom future plan multisession sequential

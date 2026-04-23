@@ -53,7 +53,24 @@ print.aov_b = function(x, ...){
 #' @method print lm_b 
 #' @export
 print.lm_b = function(x, ...){
-  cat("\n----------\n\nLinear regression fit using Bayesian techniques\n")
+  
+  if("lm_b_fits" %in% names(x)){
+    header = 
+      "\n----------\n\nBayesian model averaging for linear regression models\n"
+  }else{
+    header = 
+      paste0("\n----------\n\n",
+             ifelse(x$family$family == "gaussian",
+                    "Linear ",
+                    "Generalized linear ")
+      ) |> 
+      paste0("regression fit using Bayesian techniques",
+             ifelse(x$model_type == "nonparametric",
+                    " (non-parametric)",""),
+             "\n")
+  }
+  
+  cat(header)
   cat("\n----------\n\n")
   print(x$formula)
   cat("\n----------\n\n")
@@ -64,50 +81,6 @@ print.lm_b = function(x, ...){
              "% credible interval.)"))
 }
 
-#' @rdname print
-#' @method print np_glm_b
-#' @export
-print.np_glm_b = function(x, ...){
-  cat("\n----------\n\nNon-parametric linear regression fit using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  print(x$formula)
-  cat("\n----------\n\n")
-  print(x$summary)
-  cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-             100 * x$CI_level,
-             "% credible interval.)"))
-}
-
-#' @rdname print
-#' @method print lm_b_bma
-#' @export
-print.lm_b_bma = function(x, ...){
-  cat("\n----------\n\nBayesian model averaging for linear regression models\n")
-  cat("\n----------\n\n")
-  print(x$formula)
-  cat("\n----------\n\n")
-  print(x$summary)
-  cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-             100 * x$CI_level,
-             "% credible interval.)"))
-}
-
-#' @rdname print
-#' @method print glm_b
-#' @export
-print.glm_b = function(x, ...){
-  cat("\n----------\n\nGeneralized linear regression fit using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  print(x$formula)
-  cat("\n----------\n\n")
-  print(x$summary)
-  cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-             100 * x$CI_level,
-             "% credible interval.)"))
-}
 
 #' @rdname print
 #' @method print mediate_b

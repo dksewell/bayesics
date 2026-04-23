@@ -16,7 +16,7 @@
 )
 }
 \arguments{
-\item{object}{Object of class glm_b}
+\item{object}{Object of class \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}}
 
 \item{newdata}{An optional data.frame in which to look for variables with which
 to predict.}
@@ -30,7 +30,9 @@ observation if family = binomial().}
 
 \item{seed}{integer.  Always set your seed!!!}
 
-\item{n_draws}{integer.  Number of posterior draws used for prediction}
+\item{n_draws}{integer.  Number of posterior draws used for prediction.
+Ignored if estimation method already relies on posterior sampling, in which case
+\code{n_draws} will match the number of posterior draws in the fitted object.}
 
 \item{...}{optional arguments.}
 }
