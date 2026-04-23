@@ -919,6 +919,8 @@ np_glm_b = function(formula,
     }
   }
   
+  results$model_type = "nonparametric"
+  
   
   return(structure(results,
                    class = c("np_glm_b","lm_b")))

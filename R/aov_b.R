@@ -800,6 +800,7 @@ aov_b = function(formula,
     ret$residuals = drop(data$y - ret$fitted)
     ret$standardized_residuals = 
       ret$residuals / sqrt(b_G / (a_G - 1))
+    ret$model_type = "parametric"
     
     return(structure(ret,
                      class = c("aov_b","lm_b")))

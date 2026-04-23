@@ -51,14 +51,14 @@ credint.lm_b = function(object,
                    "log(phi)"))
   summ = object$summary[1:p,c("Lower","Upper")]
   
-  if("posterior_covariance" %in% names(object)){ # Handles lm, glm\IS, np_glm\bootstrapping, bma_inference
+  if("posterior_covariance" %in% names(object)){ # Handles lm, glm\IS, np_glm\bootstrapping
     summ$Lower = 
-      qlst(alpha/2,
+      qlst(alpha / 2.0,
            object$df,
            object$summary$`Post Mean`[1:p],
            sqrt(diag(as.matrix(object$posterior_covariance))[1:p]))
     summ$Upper = 
-      qlst(1.0 - alpha/2,
+      qlst(1.0 - alpha / 2.0,
            object$df,
            object$summary$`Post Mean`[1:p],
            sqrt(diag(as.matrix(object$posterior_covariance))[1:p]))

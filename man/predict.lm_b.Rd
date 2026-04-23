@@ -2,21 +2,35 @@
 % Please edit documentation in R/predict.lm_b.R
 \name{predict.lm_b}
 \alias{predict.lm_b}
-\title{Predict method for lm_b model fits}
+\title{Predict method for glm_b model fits}
 \usage{
-\method{predict}{lm_b}(object, newdata, CI_level = 0.95, PI_level = 0.95, n_draws = 0, ...)
+\method{predict}{lm_b}(
+  object,
+  newdata,
+  trials,
+  CI_level = 0.95,
+  PI_level = 0.95,
+  seed = 1,
+  n_draws = 5000,
+  ...
+)
 }
 \arguments{
-\item{object}{Object of class lm_b}
+\item{object}{Object of class glm_b}
 
 \item{newdata}{An optional data.frame in which to look for variables with which
 to predict.}
+
+\item{trials}{Integer vector giving the number of trials for each
+observation if family = binomial().}
 
 \item{CI_level}{Posterior probability covered by credible interval}
 
 \item{PI_level}{Posterior probability covered by prediction interval}
 
-\item{n_draws}{If desired, the number of posterior samples drawn.}
+\item{seed}{integer.  Always set your seed!!!}
+
+\item{n_draws}{integer.  Number of posterior draws used for prediction}
 
 \item{...}{optional arguments.}
 }
@@ -25,11 +39,13 @@ tibble with estimate (posterior mean), prediction intervals, and credible interv
 for the mean.
 }
 \description{
-Predict method for lm_b model fits
+Predict method for glm_b model fits
 }
 \examples{
 \donttest{
-set.seed(2025)
+
+# lm_b
+## Create data
 N = 500
 test_data <-
   data.frame(x1 = rnorm(N),
@@ -37,10 +53,72 @@ test_data <-
              x3 = letters[1:5])
 test_data$outcome <-
   rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e")) )
-fit1 <-
+
+## Fit linear model
+fit <-
   lm_b(outcome ~ x1 + x2 + x3,
        data = test_data)
-predict(fit1)
+predict(fit)
+
+
+# glm_b
+## Generate some negative binomial data
+set.seed(2025)
+N = 500
+test_data =
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5],
+             time = rexp(N))
+test_data$outcome =
+  rnbinom(N,
+          mu = exp(-2 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e"))) * test_data$time,
+          size = 0.7)
+
+## Fit using variational Bayes (default)
+fit_vb1 <-
+  glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+        data = test_data,
+        family = negbinom(),
+        seed = 2025)
+# Predict
+predict(fit_vb1)
+
+## Fit the GLM via the (non-parametric) loss-likelihood bootstrap.
+fit_np <-
+  np_glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
+           data = test_data,
+           family = negbinom())
+predict(fit_np)
+
+
+# bma_inference
+## Create data
+set.seed(2025)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5],
+             x4 = rnorm(N),
+             x5 = rnorm(N),
+             x6 = rnorm(N),
+             x7 = rnorm(N),
+             x8 = rnorm(N),
+             x9 = rnorm(N),
+             x10 = rnorm(N))
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e")) )
+
+## Fit linear model using Bayesian model averaging
+fit <-
+  bma_inference(outcome ~ .,
+                test_data,
+                user.int = FALSE)
+predict(fit)
+
+
 }
+
 
 }

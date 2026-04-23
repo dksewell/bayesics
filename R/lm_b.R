@@ -529,6 +529,7 @@ lm_b = function(formula,
         unique(return_object$data[[j]])
     }
   }
+  return_object$model_type = "parametric"
   
   
   return(structure(return_object,

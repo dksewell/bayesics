@@ -390,6 +390,8 @@ bma_inference = function(formula,
         unique(return_object$data[[j]])
     }
   }
+  return_object$model_type = "parametric"
+  
   
   return(structure(return_object,
                    class = c("lm_b_bma","lm_b")))
