@@ -904,6 +904,7 @@ np_glm_b = function(formula,
     results$data = data
   }
   results$family = family
+  results$ROPE = ROPE
   results$trials = trials
   results$CI_level = CI_level
   

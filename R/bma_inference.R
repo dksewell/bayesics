@@ -379,6 +379,7 @@ bma_inference = function(formula,
          formula = formula,
          data = data,
          family = gaussian(),
+         ROPE = ROPE,
          CI_level = CI_level,
          terms = terms(m))
   if(any(attr(return_object$terms,"dataClasses") %in% c("factor","character"))){

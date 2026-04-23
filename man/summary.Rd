@@ -4,21 +4,12 @@
 \alias{summary}
 \alias{summary.lm_b}
 \alias{summary.aov_b}
-\alias{summary.np_glm_b}
-\alias{summary.lm_b_bma}
-\alias{summary.glm_b}
 \alias{summary.mediate_b}
 \title{Summary functions for bayesics objects}
 \usage{
-\method{summary}{lm_b}(object, CI_level = 0.95, ...)
+\method{summary}{lm_b}(object, CI_level = 0.95, interpretable_scale = TRUE, ...)
 
 \method{summary}{aov_b}(object, CI_level = 0.95, ...)
-
-\method{summary}{np_glm_b}(object, CI_level = 0.95, interpretable_scale = TRUE, ...)
-
-\method{summary}{lm_b_bma}(object, CI_level = 0.95, ...)
-
-\method{summary}{glm_b}(object, CI_level = 0.95, interpretable_scale = TRUE, ...)
 
 \method{summary}{mediate_b}(object, CI_level = 0.95, ...)
 }
@@ -27,9 +18,12 @@
 
 \item{CI_level}{Posterior probability covered by credible interval}
 
-\item{...}{optional arguments.}
+\item{interpretable_scale}{If a GLM is fit using
+\code{binomial(link="logit")}, \code{poisson(link="log")}, or
+\code{negbinom()}, if \code{interpretable_scale = TRUE}
+then the results will be exponentiated.}
 
-\item{interpretable_scale}{ADD description!}
+\item{...}{optional arguments.}
 }
 \value{
 tibble with summary values

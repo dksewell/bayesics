@@ -4,6 +4,10 @@
 #' 
 #' @param object bayesics object
 #' @param CI_level Posterior probability covered by credible interval
+#' @param interpretable_scale If a GLM is fit using 
+#' \code{binomial(link="logit")}, \code{poisson(link="log")}, or 
+#' \code{negbinom()}, if \code{interpretable_scale = TRUE} 
+#' then the results will be exponentiated.
 #' @param ... optional arguments.
 #' 
 #' @returns tibble with summary values
@@ -31,42 +35,142 @@
 #' @export
 summary.lm_b = function(object,
                         CI_level = 0.95,
+                        interpretable_scale = TRUE,
                         ...){
   alpha = 1 - CI_level
+  p = 
+    length(setdiff(object$summary$Variable,
+                   "log(phi)"))
   summ = object$summary
-  if(object$prior != "improper"){
+  
+  if("posterior_covariance" %in% names(object)){ # Handles lm, glm\IS, np_glm\bootstrapping
+    
     summ$Lower = 
-      qlst(alpha/2,
-           object$posterior_parameters$a_tilde,
-           object$posterior_parameters$mu_tilde,
-           sqrt(object$posterior_parameters$b_tilde/object$posterior_parameters$a_tilde * 
-                  diag(qr.solve(object$posterior_parameters$V_tilde))))
+      qlst(alpha / 2.0,
+           object$df,
+           object$summary$`Post Mean`,
+           sqrt(diag(as.matrix(object$posterior_covariance))))
     summ$Upper = 
-      qlst(1.0 - alpha/2,
-           object$posterior_parameters$a_tilde,
-           object$posterior_parameters$mu_tilde,
-           sqrt(object$posterior_parameters$b_tilde/object$posterior_parameters$a_tilde * 
-                  diag(qr.solve(object$posterior_parameters$V_tilde))))
+      qlst(1.0 - alpha / 2.0,
+           object$df,
+           object$summary$`Post Mean`,
+           sqrt(diag(as.matrix(object$posterior_covariance))))
+    
   }else{
-    summ$Lower = 
-      qlst(alpha/2,
-           nrow(object$data) - length(object$posterior_parameters$mu_tilde),
-           object$posterior_parameters$mu_tilde,
-           sqrt(diag(object$posterior_parameters$Sigma)))
-    summ$Upper = 
-      qlst(1.0 - alpha/2,
-           nrow(object$data) - length(object$posterior_parameters$mu_tilde),
-           object$posterior_parameters$mu_tilde,
-           sqrt(diag(object$posterior_parameters$Sigma)))
+    if("importance_sampling_weights" %in% names(object)){ # Handles glm IS
+      
+      CI_from_weighted_sample = function(x,w){
+        w = cumsum(w[order(x)])
+        x = x[order(x)]
+        LB = max(which(w <= 0.5 * alpha))
+        UB = min(which(w >= 1.0 - 0.5 * alpha))
+        return(c(lower = x[LB],
+                 upper = x[UB]))
+      }
+      CI_bounds = 
+        apply(object$proposal_draws,2,
+              CI_from_weighted_sample,
+              w = object$importance_sampling_weights)
+      summ$Lower = 
+        CI_bounds["lower",]
+      summ$Upper = 
+        CI_bounds["upper", ]
+      
+      
+    }else{
+      if("posterior_draws" %in% names(object)){ # Handles np_glm bootstrapping, bma_inference
+        
+        summ$Lower = 
+          object$posterior_draws[,1:p] |> 
+          as.matrix() |> 
+          apply(2,quantile,prob = alpha / 2)
+        summ$Upper = 
+          object$posterior_draws[,1:p] |> 
+          as.matrix() |> 
+          apply(2,quantile,prob = 1.0 - alpha / 2)
+        
+      }#End: posterior_draws if
+    }#End: importance_sampling_weights ifelse
+  }#End: posterior_covariance ifelse
+  
+  
+  # Make interpretable if family != "gaussian"
+  if(( (object$family$family == "binomial") & 
+       (object$family$link != "logit") ) | 
+     ( (object$family$family == "poisson") & 
+       (object$family$link != "log") ) |
+     ( object$family$family == "gaussian" )){
+    interpretable_scale = FALSE
   }
   
-  if(object$prior != "improper"){
-    BF = bayes_factors(object)
-    summ  = 
-      summ |> 
-      left_join(BF,
-                by = "Variable")
+  if(interpretable_scale){
+    paste0("\n----------\n\nValues given in terms of ",
+           ifelse(object$family$family == "binomial",
+                  "odds ratios",
+                  "rate ratios")
+    ) |> 
+      cat()
+    cat("\n\n----------\n\n")
+    summ = summ[-1,]
+    summ[,c("Post Mean","Lower","Upper")] =
+      summ[,c("Post Mean","Lower","Upper")] |> 
+      exp()
+    summ[,"ROPE bounds"] = 
+      paste("(",
+            round(exp(-object$ROPE[-1]),3),
+            ",",
+            round(exp(object$ROPE[-1]),3),
+            ")",
+            sep="")
+    if(object$family$family == "negbinom"){
+      summ$Variable[nrow(summ)] = "phi"
+    }
   }
+  
+  # Add sigma^2 if lm_b or lm_b_bma
+  if("sigma_sq" %in% names(object)){
+    if("posterior_parameters" %in% names(object)){ #Handles lm_b
+      summ = 
+        bind_rows(
+          summ,
+          tibble(Variable = "Residual variance",
+                 `Post Mean` = object$sigma_sq["Estimate"],
+                 Lower = 
+                   extraDistr::qinvgamma(alpha / 2.0,
+                                         0.5 * object$posterior_parameters$a_tilde,
+                                         0.5 * object$posterior_parameters$b_tilde),
+                 Upper = 
+                   extraDistr::qinvgamma(1.0 - alpha / 2.0,
+                                         0.5 * object$posterior_parameters$a_tilde,
+                                         0.5 * object$posterior_parameters$b_tilde),
+                 `Prob Dir` = NA,
+                 ROPE = NA,
+                 `ROPE bounds` = "(NA,NA)"
+          )
+        )
+    }
+    if("posterior_draws" %in% names(object)){ #Handles lm_b_bma
+      summ = 
+        bind_rows(
+          summ,
+          tibble(Variable = "Residual variance",
+                 `Post Mean` = object$sigma_sq["Estimate"],
+                 Lower = 
+                   quantile(unlist(object$posterior_draws[,p+1]),
+                            alpha / 2.0),
+                 Upper = 
+                   quantile(unlist(object$posterior_draws[,p+1]),
+                            1.0 - alpha / 2.0),
+                 `Prob Dir` = NA,
+                 ROPE = NA,
+                 `ROPE bounds` = "(NA,NA)"
+          )
+        )
+    }
+    
+  }#End: add in s^2
+  
+  
   
   summ
 }
@@ -167,197 +271,7 @@ summary.aov_b = function(object,
   }
 }
 
-#' @param interpretable_scale ADD description!
-#' @rdname summary
-#' @method summary np_glm_b 
-#' @export
-summary.np_glm_b = function(object,
-                            CI_level = 0.95,
-                            interpretable_scale = TRUE,
-                            ...){
-  alpha = 1 - CI_level
-  summ = object$summary
-  if("posterior_covariance" %in% names(object)){
-    summ$Lower = 
-      qnorm(alpha / 2,
-            object$summary$`Post Mean`,
-            sd = sqrt(diag(as.matrix(object$posterior_covariance))))
-    summ$Upper = 
-      qnorm(1 - alpha / 2,
-            object$summary$`Post Mean`,
-            sd = sqrt(diag(as.matrix(object$posterior_covariance))))
-  }else{
-    summ$Lower = 
-      object$posterior_draws |> 
-      apply(2,quantile,prob = alpha / 2)
-    summ$Upper = 
-      object$posterior_draws |> 
-      apply(2,quantile,prob = 1.0 - alpha / 2)
-  }
-  
-  # Exponentiate
-  if(( (object$family$family == "binomial") & 
-       (object$family$link != "logit") ) | 
-     ( (object$family$family == "poisson") & 
-       (object$family$link != "log") ) | 
-     (object$family$family == "gaussian") ){
-    interpretable_scale = FALSE
-  }
-  if(interpretable_scale){
-    if("ROPE bounds" %in% colnames(summ)){
-      rbounds = 
-        sapply(summ$`ROPE bounds`,
-               function(x){
-                 scan(text = 
-                        gsub("[()]",
-                             "",
-                             x),
-                      what = numeric(),
-                      sep = ",",
-                      quiet = TRUE)
-               }) |> 
-        t() |> 
-        exp()
-      for(i in 1:nrow(summ)){
-        summ$`ROPE bounds`[i] = 
-          paste0("(",
-                 round(rbounds[i,1],3),
-                 ",",
-                 round(rbounds[i,2],3),
-                 ")")
-      }
-    }
-    
-    if("log(phi)" %in% summ$Variable)
-      summ$Variable[which(summ$Variable == "log(phi)")] = "phi"
-    
-    paste0("\n----------\n\nValues given in terms of ",
-           ifelse(object$family$family == "binomial",
-                  "odds ratios",
-                  "rate ratios")
-    ) |> 
-      cat()
-    cat("\n\n----------\n\n")
-    summ = summ[-1,]
-    summ[,c("Post Mean","Lower","Upper")] =
-      summ[,c("Post Mean","Lower","Upper")] |> 
-      exp()
-  }
-  
-  summ
-}
 
-#' @rdname summary
-#' @method summary lm_b_bma 
-#' @export
-summary.lm_b_bma = function(object,
-                            CI_level = 0.95,
-                            ...){
-  alpha = 1 - CI_level
-  summ = object$summary
-  summ$Lower = 
-    apply(object$posterior_draws,2,quantile,probs = alpha/2)
-  summ$Upper =
-    apply(object$posterior_draws,2,quantile,probs = 1.0 - alpha/2)
-  
-  
-  
-  summ
-}
-
-
-#' @rdname summary
-#' @method summary glm_b 
-#' @export
-summary.glm_b = function(object,
-                         CI_level = 0.95,
-                         interpretable_scale = TRUE,
-                         ...){
-  alpha = 1 - CI_level
-  summ = object$summary
-  if("posterior_covariance" %in% names(object)){
-    summ$Lower = 
-      qnorm(alpha / 2,
-            object$summary$`Post Mean`,
-            sd = sqrt(diag(object$posterior_covariance)))
-    summ$Upper = 
-      qnorm(1 - alpha / 2,
-            object$summary$`Post Mean`,
-            sd = sqrt(diag(object$posterior_covariance)))
-  }else{
-    # Get CI bounds
-    CI_from_weighted_sample = function(x,w){
-      w = cumsum(w[order(x)])
-      x = x[order(x)]
-      LB = max(which(w <= 0.5 * alpha))
-      UB = min(which(w >= 1.0 - 0.5 * alpha))
-      return(c(lower = x[LB],
-               upper = x[UB]))
-    }
-    CI_bounds = 
-      apply(object$proposal_draws,2,
-            CI_from_weighted_sample,
-            w = object$importance_sampling_weights)
-    summ$Lower = 
-      CI_bounds["lower",]
-    summ$Upper = 
-      CI_bounds["upper", ]
-  }
-  
-  # Exponentiate
-  if(( (object$family$family == "binomial") & 
-       (object$family$link != "logit") ) | 
-     ( (object$family$family == "poisson") & 
-       (object$family$link != "log") )){
-    interpretable_scale = FALSE
-  }
-  
-  if(interpretable_scale){
-    paste0("\n----------\n\nValues given in terms of ",
-           ifelse(object$family$family == "binomial",
-                  "odds ratios",
-                  "rate ratios")
-    ) |> 
-      cat()
-    cat("\n\n----------\n\n")
-    summ = summ[-1,]
-    summ[,c("Post Mean","Lower","Upper")] =
-      summ[,c("Post Mean","Lower","Upper")] |> 
-      exp()
-    summ[,"ROPE bounds"] = 
-      paste("(",
-            round(exp(-object$ROPE[-1]),3),
-            ",",
-            round(exp(object$ROPE[-1]),3),
-            ")",
-            sep="")
-    if(object$family$family == "negbinom"){
-      summ$Variable[nrow(summ)] = "phi"
-    }
-  }
-  
-  
-  
-  if(object$prior != "improper"){
-    BF = bayes_factors(object)
-    if(object$family$family == "negbinom"){
-      BF = 
-        dplyr::bind_rows(BF,
-                         tibble::tibble(Variable = 
-                                          ifelse(interpretable_scale,
-                                                 "phi",
-                                                 "log(phi)"),
-                                        `BF favoring alternative` = NA,
-                                        Interpretation = NA))
-    }
-    summ  = 
-      summ |> 
-      dplyr::left_join(BF,
-                       by = "Variable")
-  }
-  
-  summ
-}
 
 #' @rdname summary
 #' @method summary mediate_b 
