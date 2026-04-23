@@ -859,7 +859,7 @@ glm_b = function(formula,
              importance_sampling_weights = is_weights,
              effective_sample_size = ESS,
              mc_error = mc_error)
-      
+     
       
     }#End: importance sampling
     if(algorithm == "VB"){

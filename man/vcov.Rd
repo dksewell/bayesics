@@ -2,19 +2,10 @@
 % Please edit documentation in R/vcov.R
 \name{vcov}
 \alias{vcov}
-\alias{vcov.aov_b}
 \alias{vcov.lm_b}
-\alias{vcov.glm_b}
-\alias{vcov.np_glm_b}
 \title{Calculate Posterior Variance-Covariance Matrix for a Bayesian Fitted Model Object}
 \usage{
-\method{vcov}{aov_b}(object, ...)
-
 \method{vcov}{lm_b}(object, ...)
-
-\method{vcov}{glm_b}(object, ...)
-
-\method{vcov}{np_glm_b}(object, ...)
 }
 \arguments{
 \item{object}{a fitted model object from \code{bayesics}.}
@@ -29,7 +20,7 @@ that for \code{lm_b} and \code{aov_b} objects, this function already takes into 
 uncertainty around the residual variance.
 }
 \description{
-Returns the posterior covariance matrix of the main parameters of a fitted \code{bayesics} object
+Calculate Posterior Variance-Covariance Matrix for a Bayesian Fitted Model Object
 }
 \examples{
 \donttest{

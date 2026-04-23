@@ -1,8 +1,6 @@
 #' @name vcov
 #' 
 #' @title Calculate Posterior Variance-Covariance Matrix for a Bayesian Fitted Model Object
-#' @description
-#' Returns the posterior covariance matrix of the main parameters of a fitted \code{bayesics} object
 #' 
 #' @param object a fitted model object from \code{bayesics}.
 #' @param ... Passed to methods.
@@ -29,72 +27,40 @@
 #' vcov(fit1)
 #' }
 #' 
-#' @rdname vcov
-#' @method vcov aov_b
 #' @export
-vcov.aov_b = function(object,...){
-  covmat = 
-    diag(object$posterior_parameters$b_g / 
-           object$posterior_parameters$a_g / 
-           object$posterior_parameters$nu_g)
-  attr(covmat,"df") = object$posterior_parameters$a_g
-  
-  return(covmat)
-}
 
 #' @rdname vcov
 #' @method vcov lm_b
 #' @export
 vcov.lm_b = function(object,...){
-  covmat = NULL
-  try({
+  
+  if("posterior_covariance" %in% names(object)){ # Handles lm, glm\IS, np_glm\bootstrapping
+    
     covmat = 
-      chol2inv(chol(object$posterior_parameters$V_tilde))
-  }, silent=TRUE)
-  if(is.null(covmat)){
-    try({
+      object$posterior_covariance
+    attr(covmat,"df") = object$df
+    
+  }else{
+    
+    if("importance_sampling_weights" %in% names(object)){ # Handles glm IS
+      
       covmat = 
-        qr.solve(object$posterior_parameters$V_tilde)
-    }, silent=TRUE)
-  }
-  if(is.null(covmat)){
-    try({
-      covmat = 
-        solve(object$posterior_parameters$V_tilde)
-    }, silent=TRUE)
-  }
-  if(is.null(covmat)) stop("Hessian is not invertible.")
-  attr(covmat,"df") = object$posterior_parameters$a_tilde
+        crossprod(object$proposal_draws,
+                  object$importance_sampling_weights * object$proposal_draws) - 
+        tcrossprod(colSums(object$importance_sampling_weights * object$proposal_draws))
+      attr(covmat,"df") = NA
+      
+    }else{
+      if("posterior_draws" %in% names(object)){ # Handles np_glm bootstrapping, bma_inference
+        
+        covmat = 
+          cov(object$posterior_draws)
+        attr(covmat,"df") = NA
+        
+      }#End: posterior_draws if
+    }#End: importance_sampling_weights ifelse
+  }#End: posterior_covariance ifelse
+  
   
   return(covmat)
-}
-
-#' @rdname vcov
-#' @method vcov glm_b
-#' @export
-vcov.glm_b = function(object,...){
-  if("posterior_covariance" %in% names(object)){
-    return(object$posterior_covariance)
-  }else{
-    first_moment =
-      object$summary$`Post Mean`
-    second_moment = 
-      crossprod(object$proposal_draws,
-                Diagonal(x = object$importance_sampling_weights) %*% object$proposal_draws)
-    
-    return(as.matrix(second_moment - tcrossprod(first_moment)))
-  }
-}
-
-
-
-#' @rdname vcov
-#' @method vcov np_glm_b
-#' @export
-vcov.np_glm_b = function(object,...){
-  if("posterior_covariance" %in% names(object)){
-    return(object$posterior_covariance)
-  }else{
-    return(cov(na.omit(object$posterior_draws)))
-  }
 }

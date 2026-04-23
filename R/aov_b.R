@@ -513,7 +513,7 @@ aov_b = function(formula,
       ret$residuals / temp$sd
     
     return(structure(ret,
-                     class = "aov_b"))
+                     class = c("aov_b","lm_b")))
     
   }else{# start homoscedastic approach
     
@@ -779,6 +779,7 @@ aov_b = function(formula,
            a_g = a_G,
            b_g = b_G)
     ret$CI_level = CI_level
+      
     if(improper){
       ret$hyperparameters = NA
     }else{
@@ -801,6 +802,8 @@ aov_b = function(formula,
     ret$standardized_residuals = 
       ret$residuals / sqrt(b_G / (a_G - 1))
     ret$model_type = "parametric"
+    
+    
     
     return(structure(ret,
                      class = c("aov_b","lm_b")))

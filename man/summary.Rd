@@ -20,7 +20,7 @@
 
 \item{interpretable_scale}{If a GLM is fit using
 \code{binomial(link="logit")}, \code{poisson(link="log")}, or
-\code{negbinom()}, if \code{interpretable_scale = TRUE}
+\code{negbinom()}, and if \code{interpretable_scale = TRUE}
 then the results will be exponentiated.}
 
 \item{...}{optional arguments.}
