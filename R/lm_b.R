@@ -479,11 +479,6 @@ lm_b = function(formula,
            hyperparameters = NA)
   }
   
-  
-  return_object$fitted = 
-    drop(X %*% return_object$summary$`Post Mean`)
-  return_object$residuals = 
-    drop(y - return_object$fitted)
   return_object$sigma_sq = 
     c(Estimate = 
         unname(
@@ -498,6 +493,13 @@ lm_b = function(formula,
         extraDistr::qinvgamma(1.0 - alpha / 2.0,
                               0.5 * return_object$posterior_parameters$a_tilde,
                               0.5 * return_object$posterior_parameters$b_tilde))
+  return_object$fitted = 
+    drop(X %*% return_object$summary$`Post Mean`)
+  return_object$residuals = 
+    drop(y - return_object$fitted)
+  return_object$standardized_residuals = 
+    drop(y - return_object$fitted) / 
+    sqrt(return_object$sigma_sq["Estimate"])
   
   return_object$formula = formula
   if(missing(data)){

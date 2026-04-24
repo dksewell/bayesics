@@ -232,6 +232,8 @@ glm_b = function(formula,
       model.frame(formula,data)
   }
   y = model.response(mframe)
+  if(is.character(y))
+    y = factor(y)
   if(is.factor(y)){
     y = as.integer(y)
     if(length(unique(y)) == 2) y = y - 1

@@ -14,6 +14,7 @@ bma_inference(
   n_models = 500,
   mc_error = 0.001,
   seed = 1,
+  compute_residuals = TRUE,
   ...
 )
 }

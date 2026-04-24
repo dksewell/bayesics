@@ -512,6 +512,10 @@ aov_b = function(formula,
     ret$standardized_residuals = 
       ret$residuals / temp$sd
     
+    # Return model info
+    ret$family = gaussian()
+    ret$model_type = "parametric"
+    
     return(structure(ret,
                      class = c("aov_b","lm_b")))
     
@@ -801,6 +805,9 @@ aov_b = function(formula,
     ret$residuals = drop(data$y - ret$fitted)
     ret$standardized_residuals = 
       ret$residuals / sqrt(b_G / (a_G - 1))
+    
+    # Return model info
+    ret$family = gaussian()
     ret$model_type = "parametric"
     
     

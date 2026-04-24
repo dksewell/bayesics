@@ -83,6 +83,7 @@ bma_inference = function(formula,
                          n_models = 500,
                          mc_error = 0.001,
                          seed = 1,
+                         compute_residuals = TRUE,
                          ...){
   
   alpha = 1.0 - CI_level
@@ -235,44 +236,44 @@ bma_inference = function(formula,
     janitor::clean_names()
   full_fits = 
     future.apply::future_lapply(1:ncol(var_inclusion),
-                  function(i){
-                    suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
-                    if(sum(var_inclusion[,i]) == 0){
-                      lm_formula = 
-                        paste0(colnames(X.data)[1], " ~ 1") |> 
-                        as.formula()
-                    }else{
-                      lm_formula = 
-                        paste0(colnames(X.data)[1], " ~ ", 
-                               paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
-                                     collapse = " + ")) |> 
-                        as.formula()
-                    }
-                    suppressMessages(
-                      lm_b(lm_formula,
-                           data = X.data,
-                           prior = "zellner",
-                           zellner_g = zellner_g)
-                    )
-                  },
-                  future.seed = seed)
+                                function(i){
+                                  suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
+                                  if(sum(var_inclusion[,i]) == 0){
+                                    lm_formula = 
+                                      paste0(colnames(X.data)[1], " ~ 1") |> 
+                                      as.formula()
+                                  }else{
+                                    lm_formula = 
+                                      paste0(colnames(X.data)[1], " ~ ", 
+                                             paste(colnames(X.data)[-1][as.logical(var_inclusion[,i])],
+                                                   collapse = " + ")) |> 
+                                      as.formula()
+                                  }
+                                  suppressMessages(
+                                    lm_b(lm_formula,
+                                         data = X.data,
+                                         prior = "zellner",
+                                         zellner_g = zellner_g)
+                                  )
+                                },
+                                future.seed = seed)
   
   ## Get posterior samples
   post_samples = 
     future.apply::future_lapply(1:length(full_fits),
-                  function(i){
-                    suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
-                    samples = 
-                      get_posterior_draws(full_fits[[i]],
-                                          n_draws = mc_draws_by_model[i]) |> 
-                      tibble::as_tibble()
-                    if(ncol(samples) < ncol(X.data)){ # Re dimension: Yes, X.data includes y, but the samples also ought to include s2
-                      for(j in setdiff(colnames(X.data)[-1],
-                                       colnames(samples))) samples[[j]] = 0.0
-                    }
-                    return(samples)
-                  },
-                  future.seed = seed)
+                                function(i){
+                                  suppressWarnings(suppressPackageStartupMessages(library(bayesics)))
+                                  samples = 
+                                    get_posterior_draws(full_fits[[i]],
+                                                        n_draws = mc_draws_by_model[i]) |> 
+                                    tibble::as_tibble()
+                                  if(ncol(samples) < ncol(X.data)){ # Re dimension: Yes, X.data includes y, but the samples also ought to include s2
+                                    for(j in setdiff(colnames(X.data)[-1],
+                                                     colnames(samples))) samples[[j]] = 0.0
+                                  }
+                                  return(samples)
+                                },
+                                future.seed = seed)
   post_samples = 
     do.call(bind_rows,post_samples)
   
@@ -283,7 +284,7 @@ bma_inference = function(formula,
   post_samples = 
     post_samples |> 
     dplyr::relocate(all_of(c(colnames(X.data)[-1],"s2")),
-             .after = "(Intercept)")
+                    .after = "(Intercept)")
   
   # Summarize results
   ## Get values for ROPE
@@ -327,37 +328,54 @@ bma_inference = function(formula,
   ## Compile results
   results = 
     tibble::tibble(Variable = colnames(X),
-           `Post Mean` = colMeans(post_samples[,-ncol(post_samples)]),
-           Lower = 
-             apply(post_samples[,-ncol(post_samples)],2,
-                   quantile,
-                   probs = alpha/2),
-           Upper =
-             apply(post_samples[,-ncol(post_samples)],2,
-                   quantile,
-                   probs = 1.0 - alpha/2),
-           `Prob Dir` = 
-             apply(post_samples[,-ncol(post_samples)],
-                     2,
-                     function(x) max(mean(x < 0),
-                                     mean(x > 0))),
-           ROPE = 
-             colMeans(
-               (-boundaries < post_samples[,-ncol(post_samples)]) & 
-                 (boundaries > post_samples[,-ncol(post_samples)])
-             ),
-           `ROPE bounds` = ROPE_bounds
+                   `Post Mean` = colMeans(post_samples[,-ncol(post_samples)]),
+                   Lower = 
+                     apply(post_samples[,-ncol(post_samples)],2,
+                           quantile,
+                           probs = alpha/2),
+                   Upper =
+                     apply(post_samples[,-ncol(post_samples)],2,
+                           quantile,
+                           probs = 1.0 - alpha/2),
+                   `Prob Dir` = 
+                     apply(post_samples[,-ncol(post_samples)],
+                           2,
+                           function(x) max(mean(x < 0),
+                                           mean(x > 0))),
+                   ROPE = 
+                     colMeans(
+                       (-boundaries < post_samples[,-ncol(post_samples)]) & 
+                         (boundaries > post_samples[,-ncol(post_samples)])
+                     ),
+                   `ROPE bounds` = ROPE_bounds
     )
   
-  # Get fitted values and NOT faux residuals
-  fitted = 
-    drop(
-      X %*% results$`Post Mean`
-    )
-  # residuals = 
-  #   drop(
-  #     X.data[,1] - fitted
-  #   ) # This might mislead folks.  The data are NOT normally distributed.
+  # Get fitted and residuals 
+  if(compute_residuals){
+    fitted = 
+      tcrossprod(X,
+                 as.matrix(post_samples[,-ncol(post_samples)]))
+    
+    residuals =
+      X.data[,1] - fitted
+    
+    standardized_residuals = 
+      residuals / sqrt(unlist(post_samples[,ncol(post_samples)]))
+    
+    fitted = rowMeans(fitted)
+    residuals = rowMeans(residuals)
+    standardized_residuals = rowMeans(standardized_residuals)
+    
+  }else{
+    fitted = 
+      drop(
+        X %*% results$`Post Mean`
+      )
+    
+    residuals =
+      standardized_residuals = "Not computed"
+  }
+  
   
   return_object = 
     list(summary = results,
@@ -366,6 +384,8 @@ bma_inference = function(formula,
          hyperparmeters = list(zellner_g = zellner_g),
          posterior_draws = post_samples,
          fitted = fitted,
+         residuals = residuals,
+         standardized_residuals = standardized_residuals,
          sigma_sq = 
            c(Estimate = mean(unlist(post_samples[,ncol(post_samples)])),
              Lower = 
