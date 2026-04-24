@@ -50,135 +50,22 @@ WAIC = function(object, ...){
 #' @rdname IC
 #' @exportS3Method BIC lm_b
 BIC.lm_b = function(object, ...){
-  y = model.frame(object$formula,
-                  object$data)[,1]
   
-  llik = 
-    dnorm(y,
-          mean = object$fitted,
-          sd = sqrt(0.5 * object$posterior_parameters$b_tilde / 
-                      (0.5 * object$posterior_parameters$a_tilde + 1.0) ),
-          log = TRUE) |> 
-    sum()
+  ll = logLik(object)
   
-  -2.0 * llik + log(nrow(object$data)) * (length(object$posterior_parameters$mu_tilde) + 1.0)
-}
-
-#' @rdname IC
-#' @exportS3Method BIC glm_b
-BIC.glm_b = function(object, ...){
-  
-  y = model.frame(object$formula,
-                  object$data)[,1]
-  if(object$family$family == "negbinom"){
-    object_dev = exp(object$summary$`Post Mean`[nrow(object$summary)])
-  }else{
-    object_dev = 1.0
-  }
-  
-  object$family$aic(y = y / object$trials,
-                    n = object$trials,
-                    mu = object$fitted,
-                    wt = rep(1.0, NROW(object$fitted)),
-                    dev = object_dev) +
-    log(nrow(object$data)) * nrow(object$summary)
-}
-
-#' @rdname IC
-#' @exportS3Method BIC aov_b
-BIC.aov_b = function(object, ...){
-  G = length(object$posterior_parameters$mu_g)
-  nparms = G + length(object$posterior_parameters$a_g)
-  
-  if(nparms == G+1){
-    llik = 
-      dnorm(object$data[[all.vars(object$formula)[1]]],
-            mean = object$posterior_parameters$mu_g[as.integer(object$data$group)],
-            sd = sqrt(0.5 * object$posterior_parameters$b_g / 
-                        (0.5 * object$posterior_parameters$a_g + 1.0)),
-            log = TRUE) |> 
-      sum()
-  }else{
-    variances = 
-      0.5 * object$posterior_parameters$b_g / 
-      (0.5 * object$posterior_parameters$a_g + 1.0)
-    llik = 
-      dnorm(object$data[[all.vars(object$formula)[1]]],
-            mean = object$posterior_parameters$mu_g[as.integer(object$data$group)],
-            sd = sqrt(variances[as.integer(object$data$group)]),
-            log = TRUE) |> 
-      sum()
-  }
-  
-  -2.0 * llik + log(nrow(object$data)) * nparms
+  -2.0 * ll + 
+    log(nrow(object$data)) * attr(ll,"df")
 }
 
 
 #' @rdname IC
 #' @exportS3Method AIC lm_b
 AIC.lm_b = function(object, ...){
-  y = model.frame(object$formula,
-                  object$data)[,1]
   
-  llik = 
-    dnorm(y,
-          mean = object$fitted,
-          sd = sqrt(0.5 * object$posterior_parameters$b_tilde / 
-                      (0.5 * object$posterior_parameters$a_tilde + 1.0) ),
-          log = TRUE) |> 
-    sum()
+  ll = logLik(object)
   
-  -2.0 * llik + 2.0 * (length(object$posterior_parameters$mu_tilde) + 1.0)
-}
-
-#' @rdname IC
-#' @exportS3Method AIC glm_b
-AIC.glm_b = function(object, ...){
-  
-  y = model.frame(object$formula,
-                  object$data)[,1]
-  
-  if(object$family$family == "negbinom"){
-    object_dev = exp(object$summary$`Post Mean`[nrow(object$summary)])
-  }else{
-    object_dev = 1.0
-  }
-  
-  object$family$aic(y = y / object$trials,
-                    n = object$trials,
-                    mu = object$fitted,
-                    wt = rep(1.0, NROW(object$fitted)),
-                    dev = object_dev) +
-    2.0 * nrow(object$summary)
-}
-
-#' @rdname IC
-#' @exportS3Method AIC aov_b
-AIC.aov_b = function(object, ...){
-  G = length(object$posterior_parameters$mu_g)
-  nparms = G + length(object$posterior_parameters$a_g)
-  
-  if(nparms == G+1){
-    llik = 
-      dnorm(object$data[[all.vars(object$formula)[1]]],
-            mean = object$posterior_parameters$mu_g[as.integer(object$data$group)],
-            sd = sqrt(0.5 * object$posterior_parameters$b_g / 
-                        (0.5 * object$posterior_parameters$a_g + 1.0)),
-            log = TRUE) |> 
-      sum()
-  }else{
-    variances = 
-      0.5 * object$posterior_parameters$b_g / 
-      (0.5 * object$posterior_parameters$a_g + 1.0)
-    llik = 
-      dnorm(object$data[[all.vars(object$formula)[1]]],
-            mean = object$posterior_parameters$mu_g[as.integer(object$data$group)],
-            sd = sqrt(variances[as.integer(object$data$group)]),
-            log = TRUE) |> 
-      sum()
-  }
-  
-  -2.0 * llik + 2 * nparms
+  -2.0 * ll + 
+    2.0 * attr(ll,"df")
 }
 
 
@@ -186,173 +73,152 @@ AIC.aov_b = function(object, ...){
 #' @exportS3Method DIC lm_b 
 DIC.lm_b = function(object,
                     seed = 1,
-                    mc_error = 0.01,
+                    mc_error = 0.5,
                     ...){
+  
+  if(object$model_type == "nonparametric")
+    stop("Cannot compute likelihood for a non-parametric fit.")
+  
   set.seed(seed)
   
-  y = model.frame(object$formula,
-                  object$data)[,1]
-  X = model.matrix(object$formula,
-                   object$data)
-  
-  p = nrow(object$summary)
-  
-  
-  V_tilde_eig = eigen(object$posterior_parameters$V_tilde)
-  if(ncol(X) > 1){
-    Vinv_sqrt = tcrossprod(diag(1 / sqrt(V_tilde_eig$values)),
-                           V_tilde_eig$vectors)
-  }else{
-    Vinv_sqrt = drop(V_tilde_eig$vectors) / sqrt(V_tilde_eig$values)
+  # Get log likelihood function
+  log_lik_function <- function(y, mu, phi = NULL) {
+    switch(object$family$family,
+           gaussian   = dnorm(y,
+                              mu,
+                              sqrt(phi),
+                              log = TRUE),
+           binomial   = dbinom(y,
+                               object$trials,
+                               mu/object$trials,
+                               log = TRUE),
+           poisson    = dpois(y,
+                              mu,
+                              log = TRUE),
+           negbinom   = dnbinom(y,
+                                mu = mu,
+                                size = phi,
+                                log = TRUE),
+           stop("Unsupported family")
+    )
   }
+  
+  # Extract 
+  mframe = model.frame(terms(object),
+                       data = object$data)
+  
+  X = model.matrix(delete.response(terms(object)),
+                   data = object$data)
+  
+  os = model.offset(mframe)
+  N = nrow(X)
+  p = ncol(X)
+  if(is.null(os)) os = numeric(N)
+  
+  y = model.response(mframe)
+  if(is.character(y)) 
+    y = factor(y)
+  if(is.factor(y)){
+    y = as.integer(y)
+    if(length(unique(y)) == 2) y = y - 1
+  }
+  
+  if("trials" %in% names(object)){
+    trials = object$trials
+  }else{
+    trials = rep(1.0,N)
+  }
+  
   
   # Get posterior samples 
   ## Get preliminary draws
-  post_draws = 
-    matrix(0.0,
-           500,
-           p + 1,
-           dimnames = list(NULL,
-                           c(object$summary$Variable,"s2")))
-  post_draws[,"s2"] = 
-    extraDistr::rinvgamma(500,
-                          0.5 * object$posterior_parameters$a_tilde,
-                          0.5 * object$posterior_parameters$b_tilde)
-  post_draws[,1:p] = 
-    matrix(1.0,
-           500,1) %*% 
-    matrix(object$summary$`Post Mean`,nrow=1) +
-    matrix(rnorm(500 * p,
-                 sd = sqrt(rep(post_draws[,"s2"],p))),
-           500,p) %*% 
-    Vinv_sqrt
   
-  
-  llik = 
-    future.apply::future_sapply(1:nrow(object$data),
-                                function(i){
-                                  dnorm(y[i],
-                                        mean = drop(tcrossprod(post_draws[,1:p],X[i,,drop=FALSE])),
-                                        sd = sqrt(post_draws[,p + 1]),
-                                        log = TRUE)
-                                })
-  E_D_draws = -2.0 * rowSums(llik)
-  n_draws = 
-    var(E_D_draws) / 
-    (mean(E_D_draws) * mc_error)^2 *
-    qnorm(0.5 * (1.0 - 0.99))^2
-  ## Get remaining draws if needed.
-  if(n_draws > 500){
-    post_draws = 
-      matrix(0.0,
-             n_draws,
-             p + 1,
-             dimnames = list(NULL,
-                             c(object$summary$Variable,"s2")))
-    post_draws[,"s2"] = 
-      extraDistr::rinvgamma(n_draws,
-                            0.5 * object$posterior_parameters$a_tilde,
-                            0.5 * object$posterior_parameters$b_tilde)
-    post_draws[,1:p] = 
-      matrix(1.0,
-             n_draws,1) %*% 
-      matrix(object$summary$`Post Mean`,nrow=1) +
-      matrix(rnorm(n_draws * p,
-                   sd = sqrt(rep(post_draws[,"s2"],p))),
-             n_draws,p) %*% 
-      Vinv_sqrt
-    
-    
-    llik = 
-      future.apply::future_sapply(1:nrow(object$data),
-                                  function(i){
-                                    dnorm(y[i],
-                                          mean = drop(tcrossprod(post_draws[,1:p],X[i,,drop=FALSE])),
-                                          sd = sqrt(post_draws[,p + 1]),
-                                          log = TRUE)
-                                  })
+  ### Get draws
+  theta_draws = 
+    get_posterior_draws(object,
+                        n_draws = 500)
+  ### Compute draws of linear predictor
+  Xbeta_draws = 
+    tcrossprod(X,as.matrix(theta_draws[,1:p]))
+  ### Compute draws of phi
+  if(ncol(theta_draws) > p){
+    phi = as.vector(unlist(theta_draws[,p]))
+    if(object$family$family == "negbinom")
+      phi = exp(phi)
+  }else{
+    phi = rep(1.0,500)
   }
+  ### Compute deviance
+  deviance_draws = 
+    -2.0 * 
+    future.apply::future_sapply(1:nrow(theta_draws),
+                                function(i){
+                                  log_lik_function(y,
+                                                   trials *
+                                                     object$family$linkinv(eta = 
+                                                                             drop(Xbeta_draws[,i]) + 
+                                                                             os),
+                                                   phi[i]) |> 
+                                    sum()
+                                }) |> 
+    na.omit()
   
-  E_D = -2 * mean(rowSums(llik))
+  E_D = mean(deviance_draws)
+  n_draws = 
+    var(deviance_draws) / 
+    (mc_error)^2 *
+    qnorm(0.5 * (1.0 - 0.99))^2
+  n_draws = round(n_draws)
+  n_prelim_draws = length(deviance_draws)
+  
+  ## Get remaining draws if needed.
+  if(n_draws > n_prelim_draws){
+    ### Get draws
+    theta_draws = 
+      rbind(theta_draws,
+            get_posterior_draws(object,
+                                n_draws = n_draws - n_prelim_draws)
+      )
+    ### Compute draws of linear predictor
+    Xbeta_draws = 
+      cbind(
+        Xbeta_draws,
+        tcrossprod(X,as.matrix(theta_draws[-c(1:n_prelim_draws),1:p]))
+      )
+    ### Compute draws of phi
+    if(ncol(theta_draws) > p){
+      phi = as.vector(unlist(theta_draws[,p]))
+      if(object$family$family == "negbinom")
+        phi = exp(phi)
+    }else{
+      phi = rep(1.0,n_draws)
+    }
+    ### Compute deviance
+    deviance_draws = 
+      c(deviance_draws,
+        -2.0 * 
+          future.apply::future_sapply((n_prelim_draws + 1):n_draws,
+                                      function(i){
+                                        log_lik_function(y,
+                                                         trials *
+                                                           object$family$linkinv(eta = 
+                                                                                   drop(Xbeta_draws[,i]) + 
+                                                                                   os),
+                                                         phi[i]) |> 
+                                          sum()
+                                      }) |> 
+          na.omit()
+      )
+    
+  }
   
   
   # Finish computing DIC
+  E_D = mean(deviance_draws)
+  
   D_E = 
     -2.0 * 
-    dnorm(y,
-          mean = object$fitted,
-          sd = sqrt(0.5 * object$posterior_parameters$b_tilde / 
-                      (0.5 * object$posterior_parameters$a_tilde + 1.0)),
-          log = TRUE) |> 
-    sum()
-  
-  p_D = E_D - D_E
-  
-  c(DIC = D_E + 2 * p_D,
-    eff_n_parms = p_D)
-}
-
-
-#' @rdname IC
-#' @exportS3Method DIC glm_b  
-DIC.glm_b = function(object,
-                     seed = 1,
-                     ...){
-  set.seed(seed)
-  
-  mframe = model.frame(object$formula, object$data)
-  y = model.response(mframe)
-  X = model.matrix(object$formula,object$data)
-  os = model.offset(mframe)
-  if(is.null(os)) os = numeric(nrow(object$data))
-  
-  n_draws = 1e4
-  if(object$family$family == "negbinom"){
-    object_dev = exp(object$summary$`Post Mean`[nrow(object$summary)])
-  }else{
-    object_dev = 1.0
-  }
-  
-  D_E = 
-    object$family$aic(y = y / object$trials,
-                      n = object$trials,
-                      mu = object$fitted,
-                      wt = rep(1.0, NROW(object$fitted)),
-                      dev = object_dev)
-  
-  if("posterior_covariance" %in% names(object)){
-    post_draws = 
-      mvtnorm::rmvnorm(n_draws,
-                       mean = object$summary$`Post Mean`,
-                       sigma = object$posterior_covariance)
-  }else{#End: large sample approx
-    # If IS was used, use SIR
-    post_draws = 
-      object$proposal_draws[sample(1:NROW(object$importance_sampling_weights),
-                                   n_draws,
-                                   TRUE,
-                                   object$importance_sampling_weights),,drop=FALSE]
-  }#End: IS approach
-  
-  if(object$family$family == "negbinom"){
-    post_draws_dev = exp(post_draws[,ncol(X) + 1])
-  }else{
-    post_draws_dev = 1.0
-  }
-  
-  mu = 
-    (os + tcrossprod(X,post_draws[,1:ncol(X)])) |> 
-    object$family$linkinv()
-  deviance_draws = 
-    future.apply::future_sapply(1:n_draws,
-                                function(i){
-                                  object$family$aic(y = y / object$trials,
-                                                    n = object$trials,
-                                                    mu = mu[,i],
-                                                    wt = rep(1.0, NROW(object$fitted)),
-                                                    dev = post_draws_dev[i])
-                                })
-  E_D = mean(deviance_draws)
+    as.numeric(logLik(object))
   
   p_D = E_D - D_E
   
@@ -363,6 +229,10 @@ DIC.glm_b = function(object,
 #' @rdname IC
 #' @exportS3Method DIC aov_b 
 DIC.aov_b = function(object, ...){
+  
+  if(object$model_type == "nonparametric")
+    stop("Cannot compute likelihood for a non-parametric fit.")
+  
   G = length(object$posterior_parameters$mu_g)
   nparms = G + length(object$posterior_parameters$a_g)
   
@@ -422,6 +292,10 @@ DIC.aov_b = function(object, ...){
 WAIC.lm_b = function(object,
                      seed = 1,
                      ...){
+  
+  if(object$model_type == "nonparametric")
+    stop("Cannot compute likelihood for a non-parametric fit.")
+  
   set.seed(seed)
   y = model.frame(object$formula,
                   object$data)[,1]
@@ -483,6 +357,10 @@ WAIC.lm_b = function(object,
 #' @exportS3Method WAIC aov_b 
 WAIC.aov_b = function(object,
                       ...){
+  
+  if(object$model_type == "nonparametric")
+    stop("Cannot compute likelihood for a non-parametric fit.")
+  
   G = length(object$posterior_parameters$mu_g)
   nparms = G + length(object$posterior_parameters$a_g)
   n_draws = nrow(object$posterior_draws)
@@ -545,6 +423,10 @@ WAIC.aov_b = function(object,
 WAIC.glm_b = function(object,
                       seed = 1,
                       ...){
+  
+  if(object$model_type == "nonparametric")
+    stop("Cannot compute likelihood for a non-parametric fit.")
+  
   set.seed(seed)
   mframe = model.frame(object$formula, object$data)
   y = model.response(mframe)

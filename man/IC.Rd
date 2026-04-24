@@ -7,13 +7,8 @@
 \alias{BIC}
 \alias{WAIC}
 \alias{BIC.lm_b}
-\alias{BIC.glm_b}
-\alias{BIC.aov_b}
 \alias{AIC.lm_b}
-\alias{AIC.glm_b}
-\alias{AIC.aov_b}
 \alias{DIC.lm_b}
-\alias{DIC.glm_b}
 \alias{DIC.aov_b}
 \alias{WAIC.lm_b}
 \alias{WAIC.aov_b}
@@ -24,19 +19,9 @@ DIC(object, ...)
 
 \method{BIC}{lm_b}(object, ...)
 
-\method{BIC}{glm_b}(object, ...)
-
-\method{BIC}{aov_b}(object, ...)
-
 \method{AIC}{lm_b}(object, ...)
 
-\method{AIC}{glm_b}(object, ...)
-
-\method{AIC}{aov_b}(object, ...)
-
-\method{DIC}{lm_b}(object, seed = 1, mc_error = 0.01, ...)
-
-\method{DIC}{glm_b}(object, seed = 1, ...)
+\method{DIC}{lm_b}(object, seed = 1, mc_error = 0.5, ...)
 
 \method{DIC}{aov_b}(object, ...)
 
