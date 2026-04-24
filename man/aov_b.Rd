@@ -92,13 +92,13 @@ by the user) and summary.
 \item \code{a} - (twice) the prior shape of the inv. gamma for the group variances
 \item \code{b} - (twice) the prior rate of the inv. gamma for the group variances.
 }
-\item \code{formula}, \code{data} - input by user
+\item \code{formula}, \code{data}, \code{CI_level}, \code{mc_error} - input by user
 \item \code{fitted} - Posterior mean of \eqn{\mu_g := \mathbb{E}(y_{gi})}
 \item \code{residuals} - Posterior mean of the residuals
 \item \code{standardized_residuals} - Estimated residuals divided by the
 group standard deviation
-\item \code{mc_error} - absolute errors used to determine number of
-posterior draws for accurate interval estimation
+\item \code{family} - (only Gaussian is currently implemented)
+\item \code{model_type} - "parametric"
 }
 }
 \description{

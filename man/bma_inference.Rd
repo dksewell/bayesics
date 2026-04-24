@@ -44,6 +44,10 @@ trimmed range of y.}
 
 \item{seed}{Integer. Always set your seed!!!}
 
+\item{compute_residuals}{logical.  Should residuals and standardized
+residuals be computed?  It may be memory intensive for large datasets
+and small \code{mc_error}.}
+
 \item{...}{Other arguments for \code{\link[BMS]{bms}}.}
 }
 \value{
@@ -56,12 +60,14 @@ all the top models from \code{\link[BMS]{bms}}
 \item \code{hyperparameters} - A named list with the user-specified zellner's g value.
 \item \code{posterior_draws} - matrix of posterior draws of the regression parameters,
 marginalizing out the model
-\item \code{fitted} - vector of estimates of the mean of y
+\item \code{residuals} - posterior mean of the residuals
+\item \code{standardized_residuals} - posterior mean of the standardized residuals
 \item \code{sigma_sq} - Vector providing the posterior mean and credible interval for the residual variance
-\item \code{formula}, data, CI_level - as provided as inputs
+\item \code{formula}, \code{data}, \code{CI_level} - as provided as inputs
 \item \code{family} - (only Gaussian is currently implemented)
 \item \code{terms} - the terms object used
 \item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
+\item \code{model_type} - "parametric"
 }
 }
 \description{
