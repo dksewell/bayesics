@@ -22,6 +22,9 @@
 #' @exportS3Method logLik lm_b
 logLik.lm_b <- function(object, ...){
   
+  if(object$model_type == "nonparametric")
+    stop("Cannot compute likelihood for a non-parametric fit.")
+  
   if(object$family$family == "gaussian"){
     
     if(!is.numeric(object$standardized_residuals))
