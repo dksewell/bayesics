@@ -1,8 +1,10 @@
-#' Get posterior samples from lm_b object
+#' @name get_posterior_draws
+#' 
+#' @title Get posterior samples from lm_b object
 #' 
 #' @param object Object of class lm_b
 #' @param n_draws integer.  Number of posterior draws to obtain.
-#' @param seed integer.  Always set your seed!!!
+#' @param seed integer.
 #' 
 #' @returns matrix of posterior draws
 #' 
@@ -25,37 +27,78 @@
 #' 
 #' 
 #' @export
+get_posterior_draws = function(object,...){
+  UseMethod("get_posterior_draws")
+}
 
-get_posterior_draws = function(object, 
-                               n_draws = 1e4,
-                               seed = 1){
+#' @rdname credint
+#' @exportS3Method get_posterior_draws lm_b 
+get_posterior_draws.lm_b = function(object, 
+                                    n_draws = 1e4,
+                                    seed = 1){
   set.seed(seed)
   
-  y = model.frame(object$formula,
-                  object$data)[,1]
-  X = model.matrix(object$formula,
-                   object$data)
-  
-  p = nrow(object$summary)
-  
-  V_tilde_eig = eigen(object$posterior_parameters$V_tilde)
-  Vinv_sqrt = tcrossprod(diag(x = 1 / sqrt(V_tilde_eig$values),
-                              nrow = length(V_tilde_eig$values),
-                              ncol = length(V_tilde_eig$values)),
-                         V_tilde_eig$vectors)
-  
-  post_draws = 
-    matrix(0.0,n_draws,p + 1,
-           dimnames = list(NULL,
-                           c(object$summary$Variable,"s2")))
-  post_draws[,"s2"] = 
-    extraDistr::rinvgamma(n_draws,
-                          0.5 * object$posterior_parameters$a_tilde,
-                          0.5 * object$posterior_parameters$b_tilde)
-  post_draws[,1:p] = 
-    matrix(1.0,n_draws,1) %*% matrix(object$summary$`Post Mean`,nrow=1) +
-    matrix(rnorm(n_draws*p,
-                 sd = sqrt(rep(post_draws[,"s2"],p))),n_draws,p) %*% Vinv_sqrt
+  if("posterior_covariance" %in% names(object)){ # Handles lm, glm\IS, np_glm\bootstrapping
+    
+    if("sigma_sq" %in% names(object)){ # Handles lm specifically
+      
+      p = nrow(object$summary)
+      
+      # Get sqrt of unscaled covariance matrix
+      V_tilde_eig = 
+        eigen(object$posterior_parameters$V_tilde)
+      Vinv_sqrt = 
+        tcrossprod(diag(x = 1 / sqrt(V_tilde_eig$values),
+                        nrow = length(V_tilde_eig$values),
+                        ncol = length(V_tilde_eig$values)),
+                   V_tilde_eig$vectors)
+      
+      post_draws = 
+        matrix(0.0,n_draws,nrow(object$summary) + 1,
+               dimnames = list(NULL,
+                               c(object$summary$Variable,
+                                 "s2")))
+      post_draws[,"s2"] = 
+        extraDistr::rinvgamma(n_draws,
+                              0.5 * object$posterior_parameters$a_tilde,
+                              0.5 * object$posterior_parameters$b_tilde)
+      post_draws[,1:p] = 
+        matrix(1.0,n_draws,1) %*% matrix(object$summary$`Post Mean`,nrow=1) +
+        matrix(rnorm(n_draws*p,
+                     sd = sqrt(rep(post_draws[,"s2"],p))),n_draws,p) %*% Vinv_sqrt
+      
+    }else{
+      
+      post_draws = 
+        mvtnorm::rmvt(n_draws,
+                      type = "shifted",
+                      delta = object$summary$`Post Mean`,
+                      sigma = object$posterior_covariance,
+                      df = object$df)
+      
+    }#End: posterior_covariance without having to add in s2
+    
+  }else{
+    
+    if("importance_sampling_weights" %in% names(object)){ # Handles glm IS
+      
+      post_draws = 
+        object$proposal_draws[sample(nrow(object$proposal_draws),
+                                     n_draws,
+                                     replace = TRUE,
+                                     prob = object$importance_sampling_weights),]
+      
+    }else{
+      if("posterior_draws" %in% names(object)){ # Handles aov, np_glm bootstrapping, bma_inference
+        
+        post_draws = 
+          object$posterior_draws[sample(nrow(object$posterior_draws),
+                                        n_draws,
+                                        replace = TRUE),]
+        
+      }#End: posterior_draws if
+    }#End: importance_sampling_weights ifelse
+  }#End: posterior_covariance ifelse
   
   
   return(post_draws)
