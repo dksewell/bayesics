@@ -12,7 +12,6 @@
 \alias{DIC.aov_b}
 \alias{WAIC.lm_b}
 \alias{WAIC.aov_b}
-\alias{WAIC.glm_b}
 \title{Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.  (Lower is better.)}
 \usage{
 DIC(object, ...)
@@ -25,11 +24,9 @@ DIC(object, ...)
 
 \method{DIC}{aov_b}(object, ...)
 
-\method{WAIC}{lm_b}(object, seed = 1, ...)
+\method{WAIC}{lm_b}(object, seed = 1, mc_error = 0.5, ...)
 
 \method{WAIC}{aov_b}(object, ...)
-
-\method{WAIC}{glm_b}(object, seed = 1, ...)
 }
 \arguments{
 \item{object}{aov_b, lm_b, or glm_b object}
@@ -40,7 +37,10 @@ DIC(object, ...)
 
 \item{mc_error}{The number of posterior draws will ensure that
 with 99\% probability the posterior mean of the deviance for DIC will be
-within \eqn{\pm}\code{mc_error}E(deviance).}
+within \eqn{\pm}\code{mc_error}.  For WAIC, this is based on
+extrapolating the standard error from the preliminary
+posterior samples and may be inaccurate (at least 2000 samples
+will be used in final calculation).}
 }
 \value{
 Numeric (or in the case of DIC, a numeric vector)
