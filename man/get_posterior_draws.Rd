@@ -9,6 +9,8 @@ get_posterior_draws(object, ...)
 \arguments{
 \item{object}{Object of class lm_b}
 
+\item{...}{optional arguments.}
+
 \item{n_draws}{integer.  Number of posterior draws to obtain.}
 
 \item{seed}{integer.}

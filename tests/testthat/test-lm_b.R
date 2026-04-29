@@ -52,8 +52,7 @@ test_that("Test lm_b with conjugate prior",{
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -61,8 +60,6 @@ test_that("Test lm_b with conjugate prior",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Check fractional Bayes factors
   expect_no_error(
@@ -253,8 +250,7 @@ test_that("Test lm_b with conjugate prior",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -262,8 +258,6 @@ test_that("Test lm_b with conjugate prior",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   ## Make sure prediction function works
   expect_no_error(
@@ -351,8 +345,7 @@ test_that("Test lm_b with zellner's g prior",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -360,8 +353,6 @@ test_that("Test lm_b with zellner's g prior",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   
   # Check fractional Bayes factors
@@ -956,8 +947,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -965,8 +955,6 @@ test_that("Test complicated terms in lm_b formula",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   ## Make sure prediction function works
   expect_no_error(predict(fita))
@@ -1064,8 +1052,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1073,8 +1060,6 @@ test_that("Test complicated terms in lm_b formula",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   ## Make sure prediction function works
   expect_no_error(predict(fitb))
@@ -1172,8 +1157,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1181,8 +1165,6 @@ test_that("Test complicated terms in lm_b formula",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   ## Make sure prediction function works
   expect_no_error(
@@ -1283,8 +1265,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1292,8 +1273,6 @@ test_that("Test complicated terms in lm_b formula",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   ## Make sure prediction function works
   expect_no_error(predict(fitd))

@@ -5,6 +5,7 @@
 #' @param object Object of class lm_b
 #' @param n_draws integer.  Number of posterior draws to obtain.
 #' @param seed integer.
+#' @param ... optional arguments.
 #' 
 #' @returns matrix of posterior draws
 #' 

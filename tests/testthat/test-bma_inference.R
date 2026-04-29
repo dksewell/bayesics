@@ -58,10 +58,10 @@ test_that("Bayesian model averaging", {
   expect_no_error(predict(fita))
   expect_no_error(predict(fita,
                           newdata = fita$data[1,]))
-  expect_gt(predict(fita,CI_level = 0.8)$newdata$CI_lower[1],
-            predict(fita,CI_level = 0.9)$newdata$CI_lower[1])
-  expect_gt(predict(fita,PI_level = 0.8)$newdata$PI_lower[1],
-            predict(fita,PI_level = 0.9)$newdata$PI_lower[1])
+  expect_gt(predict(fita,CI_level = 0.8)$CI_lower[1],
+            predict(fita,CI_level = 0.9)$CI_lower[1])
+  expect_gt(predict(fita,PI_level = 0.8)$PI_lower[1],
+            predict(fita,PI_level = 0.9)$PI_lower[1])
   
   # Test plot
   if(!go_fast_for_cran_checks){
@@ -95,6 +95,9 @@ test_that("Bayesian model averaging", {
                          variable = c("x1","x2","x3")),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
+    
+  }
+  
   
   
   # Test if response transformation works
@@ -107,7 +110,8 @@ test_that("Bayesian model averaging", {
                     test_data,
                     user.int = FALSE)
   )
-  }
+  
+  
   # # Make sure parallelization works. 
   # plan(multisession, workers = 5)
   # expect_no_error(

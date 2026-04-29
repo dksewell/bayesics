@@ -51,8 +51,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -60,8 +59,6 @@ test_that("Test glm_b for binomial data fitting with VB",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -262,8 +259,7 @@ test_that("Test glm_b for binomial data fitting with IS",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -271,8 +267,6 @@ test_that("Test glm_b for binomial data fitting with IS",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -504,8 +498,7 @@ test_that("Test glm_b for binomial data fitting with LSA",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -513,8 +506,6 @@ test_that("Test glm_b for binomial data fitting with LSA",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -853,8 +844,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -862,8 +852,6 @@ test_that("Test glm_b for poisson data fitting with VB",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -1075,8 +1063,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1084,8 +1071,6 @@ test_that("Test glm_b for poisson data fitting with IS",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -1304,8 +1289,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1313,8 +1297,6 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -1536,8 +1518,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1545,8 +1526,6 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -1761,8 +1740,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -1770,8 +1748,6 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))
@@ -1996,8 +1972,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   
   expect_identical(colnames(s),
                    c("Variable","Post Mean","Lower","Upper","Prob Dir",
-                     "ROPE","ROPE bounds","BF favoring alternative",
-                     "Interpretation"))
+                     "ROPE","ROPE bounds"))
   expect_type(s$Variable,"character")
   expect_type(s$`Post Mean`,"double")
   expect_type(s$Lower,"double")
@@ -2005,8 +1980,6 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   expect_type(s$`Prob Dir`,"double")
   expect_type(s$ROPE,"double")
   expect_type(s$`ROPE bounds`,"character")
-  expect_type(s$`BF favoring alternative`,"double")
-  expect_type(s$Interpretation,"character")
   
   # Make sure prediction function works
   expect_no_error(predict(fita))

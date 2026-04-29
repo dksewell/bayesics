@@ -521,6 +521,7 @@ lm_b = function(formula,
     qr.solve(return_object$posterior_parameters$V_tilde)
   return_object$df = 
     return_object$posterior_parameters$a_tilde
+  return_object$weights = weights
   
   rownames(return_object$summary) = NULL
   
