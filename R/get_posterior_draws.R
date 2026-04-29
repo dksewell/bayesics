@@ -104,3 +104,70 @@ get_posterior_draws.lm_b = function(object,
   
   return(post_draws)
 }
+
+
+
+
+#' @rdname credint
+#' @exportS3Method get_posterior_draws aov_b 
+get_posterior_draws.aov_b = function(object,
+                                     n_draws = 1e4,
+                                     seed = 1){
+  set.seed(seed)
+  
+  G = length(object$posterior_parameters$nu_g)
+  
+  heteroscedastic = 
+    (length(object$posterior_parameters$a_g) > 1)
+  
+  if(heteroscedastic){
+    
+    
+    s2_g_draws = 
+      future.apply::future_sapply(1:G,
+                                  function(g){
+                                    extraDistr::rinvgamma(n_draws,
+                                                          alpha = object$posterior_parameters$a_g[g]/2,
+                                                          beta = object$posterior_parameters$b_g[g]/2)
+                                  },
+                                  future.seed = seed)
+    mu_g_draws = 
+      future.apply::future_sapply(1:G,
+                                  function(g){
+                                    rnorm(n_draws,
+                                          mean = object$posterior_parameters$mu_g[g],
+                                          sd = sqrt(s2_g_draws[,g] / object$posterior_parameters$nu_g[g]))
+                                  },
+                                  future.seed = seed)
+    
+    post_draws = 
+      cbind(mu_g_draws,
+            s2_g_draws)
+    colnames(post_draws) =
+      object$summary$Variable
+    
+  }else{
+    
+    s2_G_draws =
+      extraDistr::rinvgamma(n_draws,
+                            alpha = object$posterior_parameters$a_g/2,
+                            beta = object$posterior_parameters$b_g/2)
+    mu_g_draws = 
+      future.apply::future_sapply(1:G,
+                                  function(g){
+                                    rnorm(n_draws,
+                                          mean = object$posterior_parameters$mu_g[g],
+                                          sd = sqrt(s2_G_draws / object$posterior_parameters$nu_g[g]))
+                                  },
+                                  future.seed = seed)
+    
+    post_draws = 
+      cbind(mu_g_draws,
+            s2_G_draws)
+    colnames(post_draws) =
+      object$summary$Variable
+    
+  }
+  
+  return(post_draws)
+}

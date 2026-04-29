@@ -5,6 +5,7 @@
 \alias{credint.lm_b}
 \alias{credint.aov_b}
 \alias{get_posterior_draws.lm_b}
+\alias{get_posterior_draws.aov_b}
 \title{Credible Intervals for Model Parameters}
 \usage{
 credint(object, ...)
@@ -14,6 +15,8 @@ credint(object, ...)
 \method{credint}{aov_b}(object, CI_level = 0.95, which = "means", ...)
 
 \method{get_posterior_draws}{lm_b}(object, n_draws = 10000, seed = 1)
+
+\method{get_posterior_draws}{aov_b}(object, n_draws = 10000, seed = 1)
 }
 \arguments{
 \item{object}{a fitted model object from \code{bayesics}}

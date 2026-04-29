@@ -63,8 +63,8 @@
 #' @export
 bayes_pvalue = function(object,
                         statistic,
-                        mc_error = 0.005,
-                        seed = 1,
+                        mc_error,
+                        seed,
                         ...){
   UseMethod("bayes_pvalue")
 }
@@ -176,7 +176,7 @@ bayes_pvalue.lm_b = function(object,
     
     statistic <- function(y, mu, dispersion = NULL) {
       switch(object$family$family,
-             gaussian   = -2.0 * sum(dnorm(y,mu,sqrt(dispersion))),
+             gaussian   = -2.0 * sum(dnorm(y,mu,sqrt(dispersion),log=T)),
              binomial   = -2.0 * sum(dbinom(y,object$trials,mu/object$trials,log=T)),
              poisson    = -2.0 * sum(dpois(y,mu,log=T)),
              negbinom   = -2.0 * dnbinom(y,mu = mu,size = dispersion,log=T),
@@ -212,6 +212,115 @@ bayes_pvalue.lm_b = function(object,
                   T_y_predicted = T_pred))
   )
 }
+
+
+
+
+
+
+
+#' @rdname bayes_pvalue
+#' @exportS3Method bayes_pvalue aov_b 
+bayes_pvalue.aov_b = function(object,
+                              statistic = "deviance",
+                              mc_error = 0.005,
+                              seed = 1,
+                              ...){
+  
+  # Get number of posterior draws required (see details)
+  n_draws = 
+    ceiling(qnorm(0.99)^2 / mc_error^2 * sqrt(0.15 * 0.85))
+  
+  # Get posterior draws
+  theta_draws = 
+    get_posterior_draws(object,
+                        n_draws = n_draws,
+                        seed = seed)
+  
+  
+  # Get new draws of y
+  ## Get group assignments
+  group_assignment =
+    as.integer(object$data$group)
+  G = length(object$posterior_parameters$nu_g)
+  N = nrow(object$data)
+  
+  ## Get mu_draws 
+  mu_draws = 
+    sapply(1:n_draws,
+           function(draw) theta_draws[draw,group_assignment])
+  
+  ## Get variance draws
+  heteroscedastic = 
+    (length(object$posterior_parameters$a_g) > 1)
+  if(heteroscedastic){
+    s2_draws = 
+      sapply(1:n_draws,
+             function(draw) theta_draws[draw,G + group_assignment])
+  }else{
+    s2_draws = 
+      matrix(theta_draws[,G + 1],
+             N,n_draws,
+             byrow = TRUE)
+  }
+  
+  
+  ## Draw y_pred
+  y_pred = 
+    sapply(1:n_draws,
+           function(draw){
+             rnorm(N,
+                   mu_draws[,draw],
+                   sd = sqrt(s2_draws[,draw]))
+           })
+  
+  
+  
+  # Evaulate T(y,theta) and T(y_pred,theta)
+  ## Get test statistic
+  if(isTRUE(statistic == "deviance")){
+    
+    statistic <- function(y, mu, s2) {
+      -2.0 * sum(dnorm(y,mu,sqrt(s2),log=TRUE))
+    }
+    
+  }
+  
+  
+  ## Compute posterior draws of test statistic
+  T_pred = 
+    sapply(1:n_draws,
+           function(draw){
+             statistic(y_pred[,draw],
+                       mu_draws[,draw],
+                       s2_draws[,draw])
+           })
+  T_obs = 
+    sapply(1:n_draws,
+           function(draw){
+             statistic(object$data[[all.vars(object$formula)[1]]],
+                       mu_draws[,draw],
+                       s2_draws[,draw])
+           })
+  
+  # Return bayesian p-value
+  return(
+    list(bpvalue = 
+           mean(T_obs > T_pred),
+         statistic_posterior_draws = 
+           tibble(T_y_observed = T_obs,
+                  T_y_predicted = T_pred))
+  )
+}
+
+
+
+
+
+
+
+
+
 
 
 

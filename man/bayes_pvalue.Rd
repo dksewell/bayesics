@@ -3,11 +3,14 @@
 \name{bayes_pvalue}
 \alias{bayes_pvalue}
 \alias{bayes_pvalue.lm_b}
+\alias{bayes_pvalue.aov_b}
 \title{Bayesian p-values for regression models}
 \usage{
-bayes_pvalue(object, statistic, mc_error = 0.005, seed = 1, ...)
+bayes_pvalue(object, statistic, mc_error, seed, ...)
 
 \method{bayes_pvalue}{lm_b}(object, statistic = "deviance", mc_error = 0.005, seed = 1, ...)
+
+\method{bayes_pvalue}{aov_b}(object, statistic = "deviance", mc_error = 0.005, seed = 1, ...)
 }
 \arguments{
 \item{object}{object of class \code{lm_b} or \code{aov_b}}
