@@ -104,8 +104,8 @@ test_that("Test lm_b with conjugate prior",{
   # Make sure information criteria work
   expect_type(AIC(fita),"double")
   expect_type(BIC(fita),"double")
-  expect_type(DIC(fita),"double")
-  expect_type(WAIC(fita),"double")
+  expect_type(DIC(fita,mc_error = 1),"double")
+  expect_type(WAIC(fita,mc_error = 1),"double")
   
   # Test number and type of inputs
   expect_no_error(
@@ -144,6 +144,30 @@ test_that("Test lm_b with conjugate prior",{
   expect_equal(fitc$hyperparameters$V, diag(7) * 0.1)
   expect_true(!isTRUE(all.equal(fita$summary,
                                 fitc$summary)))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Test plot
@@ -399,8 +423,8 @@ test_that("Test lm_b with zellner's g prior",{
   # Make sure information criteria work
   expect_type(AIC(fita),"double")
   expect_type(BIC(fita),"double")
-  expect_type(DIC(fita),"double")
-  expect_type(WAIC(fita),"double")
+  expect_type(DIC(fita,mc_error = 1),"double")
+  expect_type(WAIC(fita,mc_error = 1),"double")
   
   # Test number and type of inputs
   expect_no_error(
@@ -444,6 +468,30 @@ test_that("Test lm_b with zellner's g prior",{
   )
   expect_true(!isTRUE(all.equal(fita$summary,
                                 fitd$summary)))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Test plot
@@ -622,8 +670,8 @@ test_that("Test lm_b with improper prior",{
   # Make sure information criteria work
   expect_type(AIC(fita),"double")
   expect_type(BIC(fita),"double")
-  expect_type(DIC(fita),"double")
-  expect_type(WAIC(fita),"double")
+  expect_type(DIC(fita,mc_error = 1),"double")
+  expect_type(WAIC(fita,mc_error = 1),"double")
   
   # Test number and type of inputs
   expect_no_error(
@@ -659,6 +707,30 @@ test_that("Test lm_b with improper prior",{
   expect_true(is.na(fitc$hyperparameters))
   expect_true(isTRUE(all.equal(fita$summary,
                                fitc$summary)))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Test plot
@@ -996,8 +1068,32 @@ test_that("Test complicated terms in lm_b formula",{
   ## Make sure information criteria work
   expect_type(AIC(fita),"double")
   expect_type(BIC(fita),"double")
-  expect_type(DIC(fita),"double")
-  expect_type(WAIC(fita),"double")
+  expect_type(DIC(fita,mc_error = 1),"double")
+  expect_type(WAIC(fita,mc_error = 1),"double")
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   ## Test plot
@@ -1101,8 +1197,8 @@ test_that("Test complicated terms in lm_b formula",{
   ## Make sure information criteria work
   expect_type(AIC(fitb),"double")
   expect_type(BIC(fitb),"double")
-  expect_type(DIC(fitb),"double")
-  expect_type(WAIC(fitb),"double")
+  expect_type(DIC(fitb,mc_error = 1),"double")
+  expect_type(WAIC(fitb,mc_error = 1),"double")
   
   
   ## Test plot
@@ -1208,8 +1304,8 @@ test_that("Test complicated terms in lm_b formula",{
   ## Make sure information criteria work
   expect_type(AIC(fitc),"double")
   expect_type(BIC(fitc),"double")
-  expect_type(DIC(fitc),"double")
-  expect_type(WAIC(fitc),"double")
+  expect_type(DIC(fitc,mc_error = 1),"double")
+  expect_type(WAIC(fitc,mc_error = 1),"double")
   
   
   ## Test plot
@@ -1314,8 +1410,8 @@ test_that("Test complicated terms in lm_b formula",{
   ## Make sure information criteria work
   expect_type(AIC(fitd),"double")
   expect_type(BIC(fitd),"double")
-  expect_type(DIC(fitd),"double")
-  expect_type(WAIC(fitd),"double")
+  expect_type(DIC(fitd,mc_error = 1),"double")
+  expect_type(WAIC(fitd,mc_error = 1),"double")
   
   
   ## Test plot

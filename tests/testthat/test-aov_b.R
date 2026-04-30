@@ -134,6 +134,29 @@ test_that("Proper prior and heteroscedastic model works", {
   )
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
   
   # Make sure plotting function works
   expect_s3_class(plot(fita,
@@ -367,6 +390,30 @@ test_that("Proper prior and homoscedastic model works", {
   )
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   # Make sure plotting function works
   expect_s3_class(plot(fita,
                        type = "diagnostics"),
@@ -550,6 +597,30 @@ test_that("Imroper prior and heteroscedastic model works", {
           mc_error = 0.01,
           contrasts = c(-1,-1,-1,1,1))
   )
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Make sure plotting function works
@@ -736,6 +807,31 @@ test_that("Imroper prior and homoscedastic model works", {
           mc_error = 0.01,
           contrasts = c(-1,-1,-1,1,1))
   )
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
   
   # Make sure plotting function works
   expect_s3_class(plot(fita,

@@ -135,6 +135,30 @@ test_that("Test glm_b for binomial data fitting with VB",{
   expect_error(bayes_factors(fitb))
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   
   # Test plot
   if(!go_fast_for_cran_checks){
@@ -374,6 +398,30 @@ test_that("Test glm_b for binomial data fitting with IS",{
   }
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   
   # Test plot
   if(!go_fast_for_cran_checks){
@@ -585,6 +633,30 @@ test_that("Test glm_b for binomial data fitting with LSA",{
   )
   ## Make sure bayes_factors doesn't work for improper prior
   expect_error(bayes_factors(fitb))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   
@@ -927,6 +999,30 @@ test_that("Test glm_b for poisson data fitting with VB",{
   expect_error(bayes_factors(fitb))
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   # Test plot
   if(!go_fast_for_cran_checks){
     expect_s3_class(plot(fita,
@@ -1150,6 +1246,30 @@ test_that("Test glm_b for poisson data fitting with IS",{
   )
   ## Make sure bayes_factors doesn't work for improper prior
   expect_error(bayes_factors(fitb))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Test plot
@@ -1376,6 +1496,30 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   expect_error(bayes_factors(fitb))
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   # Test plot
   if(!go_fast_for_cran_checks){
     expect_s3_class(plot(fita,
@@ -1599,6 +1743,30 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   )
   ## Make sure bayes_factors doesn't work for improper prior
   expect_error(bayes_factors(fitb))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Test plot
@@ -1835,6 +2003,30 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   expect_error(bayes_factors(fitb))
   
   
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   # Test plot
   if(!go_fast_for_cran_checks){
     expect_s3_class(plot(fita,
@@ -2057,6 +2249,30 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   )
   ## Make sure bayes_factors doesn't work for improper prior
   expect_error(bayes_factors(fitb))
+  
+  
+  # Check get_posterior_samples()
+  expect_no_error(
+    postsamples <-
+      get_posterior_draws(fita,
+                          n_draws = 100)
+  )
+  expect_type(postsamples, "double")
+  expect_true(all.equal(class(postsamples), 
+                        c("matrix","array")))
+  
+  
+  # Check Bayesian p-values
+  expect_no_error(
+    bpvals <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05)
+  )
+  expect_named(bpvals,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals[[1]],"double")
+  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
   
   # Test plot
