@@ -97,6 +97,12 @@ bayes_pvalue.lm_b = function(object,
                        object$data)
   y = 
     model.response(mframe)
+  if(is.character(y))
+    y = factor(y)
+  if(is.factor(y)){
+    y = as.integer(y)
+    if(length(unique(y)) == 2) y = y - 1
+  }
   X = model.matrix(object$formula,
                    object$data)
   p = ncol(X)
@@ -112,13 +118,17 @@ bayes_pvalue.lm_b = function(object,
   # Convert beta to E(y) and get dispersion parameter
   mu_draws = 
     object$trials * 
-    object$family$linkinv(os + tcrossprod(X, theta_draws[,1:p]))
+    object$family$linkinv(os + tcrossprod(X, as.matrix(theta_draws[,1:p])))
   
   if(object$family$family == "gaussian"){
-    phi = theta_draws[,p + 1] / object$weights
+    phi = 
+      tcrossprod(1.0 / object$weights,
+                 unlist(theta_draws[,p + 1]))
   }else{
     if(object$family$family == "negbinom"){
-      phi = exp(theta_draws[,p + 1])
+      phi = 
+        matrix(exp(theta_draws[,p + 1]),
+               N,n_draws,byrow = TRUE)
     }else{
       phi = NULL
     }
@@ -132,7 +142,7 @@ bayes_pvalue.lm_b = function(object,
              function(draw){
                rnorm(N,
                      mu_draws[,draw],
-                     sd = sqrt(phi[draw]))
+                     sd = sqrt(phi[,draw]))
              })
   }
   
@@ -164,7 +174,7 @@ bayes_pvalue.lm_b = function(object,
              function(draw){
                rnbinom(N,
                        mu = mu_draws[,draw],
-                       size = phi[draw])
+                       size = phi[,draw])
              })
   }
   
@@ -179,7 +189,7 @@ bayes_pvalue.lm_b = function(object,
              gaussian   = -2.0 * sum(dnorm(y,mu,sqrt(dispersion),log=T)),
              binomial   = -2.0 * sum(dbinom(y,object$trials,mu/object$trials,log=T)),
              poisson    = -2.0 * sum(dpois(y,mu,log=T)),
-             negbinom   = -2.0 * dnbinom(y,mu = mu,size = dispersion,log=T),
+             negbinom   = -2.0 * sum(dnbinom(y,mu = mu,size = dispersion,log=T)),
              stop("Unsupported family")
       )
     }
@@ -193,14 +203,14 @@ bayes_pvalue.lm_b = function(object,
            function(draw){
              statistic(y_pred[,draw],
                        mu_draws[,draw],
-                       phi[draw])
-             })
+                       phi[,draw])
+           })
   T_obs = 
     sapply(1:n_draws,
            function(draw){
              statistic(y,
                        mu_draws[,draw],
-                       phi[draw])
+                       phi[,draw])
            })
   
   # Return bayesian p-value
