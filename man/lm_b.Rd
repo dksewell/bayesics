@@ -8,7 +8,7 @@ lm_b(
   formula,
   data,
   weights,
-  prior = c("zellner", "conjugate", "improper")[1],
+  prior = c("zellner", "conjugate", "improper"),
   zellner_g,
   prior_beta_mean,
   prior_beta_precision,

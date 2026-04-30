@@ -1,4 +1,4 @@
-#' Predict method for glm_b model fits
+#' Predict method for lm_b model fits
 #' 
 #' 
 #' @param object Object of class \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}
@@ -96,10 +96,9 @@
 #' 
 #' }
 #' 
-#' 
+
+#' @rdname predict
 #' @exportS3Method predict lm_b
-
-
 predict.lm_b = function(object,
                         newdata,
                         trials,
@@ -520,6 +519,96 @@ predict.lm_b = function(object,
   }#End: all other estimation algos
   
   
+  # Correct for delta method bound errors
+  if(object$family$family == "binomial"){
+    newdata = 
+      newdata |>
+      dplyr::mutate(across(c(CI_lower,
+                             CI_upper),
+                           ~ ifelse(.x < 0, 0,
+                                    ifelse(.x > 1,
+                                           1,
+                                           .x))))
+    if("PI_lower" %in% names(newdata)){
+      newdata = 
+        newdata |>
+        dplyr::mutate(across(c(PI_lower,
+                               PI_upper),
+                             ~ ifelse(.x < 0, 0,
+                                      ifelse(.x > 1,
+                                             1,
+                                             .x))))
+    }
+    
+  }
+  if(object$family$family %in% c("poisson","negbinom")){
+    newdata = 
+      newdata |>
+      dplyr::mutate(across(c(CI_lower,
+                             CI_upper),
+                           ~ ifelse(.x < 0, 0,.x)))
+    if("PI_lower" %in% names(newdata)){
+      newdata = 
+        newdata |>
+        dplyr::mutate(across(c(PI_lower,
+                               PI_upper),
+                             ~ ifelse(.x < 0, 0,.x)))
+    }
+  }
+  
   
   return(newdata)
 }
+
+
+
+
+#' @rdname predict
+#' @exportS3Method predict aov_b
+predict.aov_b = function(object,
+                         CI_level = 0.95,
+                         PI_level = 0.95,
+                        ...){
+  
+  alpha_ci = 1.0 - CI_level
+  alpha_pi = 1.0 - PI_level
+  
+  G = length(object$posterior_parameters$nu_g)
+  
+  newdata = 
+    tibble(group = 
+             levels(object$data$group),
+           `Post Mean` = object$summary$`Post Mean`[1:G],
+           CI_lower = 
+             extraDistr::qlst(alpha_ci / 2.0, 
+                              df = object$posterior_parameters$a_g,
+                              mu = object$posterior_parameters$mu_g,
+                              sigma = sqrt(object$posterior_parameters$b_g / 
+                                             object$posterior_parameters$a_g / 
+                                             object$posterior_parameters$nu_g)),
+           CI_upper = 
+             extraDistr::qlst(1.0 - alpha_ci / 2.0, 
+                              df = object$posterior_parameters$a_g,
+                              mu = object$posterior_parameters$mu_g,
+                              sigma = sqrt(object$posterior_parameters$b_g / 
+                                             object$posterior_parameters$a_g / 
+                                             object$posterior_parameters$nu_g)),
+           PI_lower = 
+             extraDistr::qlst(alpha_ci / 2.0, 
+                              df = object$posterior_parameters$a_g,
+                              mu = object$posterior_parameters$mu_g,
+                              sigma = sqrt(object$posterior_parameters$b_g / 
+                                             object$posterior_parameters$a_g * 
+                                             (1.0 + 1.0 / object$posterior_parameters$nu_g))),
+           PI_upper = 
+             extraDistr::qlst(1.0 - alpha_ci / 2.0, 
+                              df = object$posterior_parameters$a_g,
+                              mu = object$posterior_parameters$mu_g,
+                              sigma = sqrt(object$posterior_parameters$b_g / 
+                                             object$posterior_parameters$a_g * 
+                                             (1.0 + 1.0 / object$posterior_parameters$nu_g)))
+    )
+  
+  
+}
+

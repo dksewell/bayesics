@@ -173,7 +173,7 @@
 lm_b = function(formula,
                 data,
                 weights,
-                prior = c("zellner","conjugate","improper")[1],
+                prior = c("zellner","conjugate","improper"),
                 zellner_g,
                 prior_beta_mean,
                 prior_beta_precision,
@@ -249,9 +249,7 @@ lm_b = function(formula,
     s_j = apply(X[,-1,drop = FALSE],2,sd)
   
   
-  prior = 
-    c("zellner","conjugate","improper")[pmatch(tolower(prior),
-                                               c("zellner","conjugate","improper"),duplicates.ok = FALSE)]
+  prior = match.arg(prior)
   
   if(prior == "zellner"){
     if(missing(zellner_g)){

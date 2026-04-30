@@ -213,7 +213,7 @@ glm_b = function(formula,
                  data,
                  family,
                  trials,
-                 prior = c("zellner","normal","improper")[1],
+                 prior = c("zellner","normal","improper"),
                  zellner_g,
                  prior_beta_mean,
                  prior_beta_precision,
@@ -221,11 +221,12 @@ glm_b = function(formula,
                  ROPE,
                  CI_level = 0.95,
                  vb_maximum_iterations = 1000,
-                 algorithm = "VB",
+                 algorithm = c("VB","IS","LSA"),
                  proposal_df = 5,
                  seed = 1,
                  mc_error = 0.01,
                  save_memory = FALSE){
+  
   
   set.seed(seed)
   
@@ -289,15 +290,11 @@ glm_b = function(formula,
     prior_phi_rate = 1.0 / prior_phi_mean
   
   # Get prior on $\beta$
-  prior =
-    c("zellner","normal","improper")[pmatch(tolower(prior),
-                                            c("zellner","normal","improper"),duplicates.ok = FALSE)]
+  prior = match.arg(prior)
   
   # Get algorithm
   algorithm =
-    c("VB","IS","LSA")[pmatch(toupper(algorithm),
-                              c("VB","IS","LSA"),
-                              duplicates.ok = FALSE)]
+    match.arg(algorithm)
   
   if( ((family$family == "poisson") & (family$link != "log")) | 
       ((family$family == "binomial") & (family$link != "logit")) |
