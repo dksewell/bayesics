@@ -3,61 +3,16 @@
 \name{plot}
 \alias{plot}
 \alias{plot.lm_b}
-\alias{plot.aov_b}
-\alias{plot.lm_b_bma}
-\alias{plot.glm_b}
-\alias{plot.np_glm_b}
 \alias{plot.mediate_b}
 \alias{plot.survfit_b}
 \title{Plots bayesics objects.}
 \usage{
 \method{plot}{lm_b}(
   x,
-  type,
-  variable,
-  exemplar_covariates,
-  combine_pred_cred = TRUE,
-  variable_seq_length = 30,
-  return_as_list = FALSE,
-  CI_level = 0.95,
-  PI_level = 0.95,
-  backtransformation = function(x) {
-     x
- },
-  ...
-)
-
-\method{plot}{aov_b}(
-  x,
   type = c("diagnostics", "cred band", "pred band"),
-  combine_pred_cred = TRUE,
-  return_as_list = FALSE,
-  CI_level = 0.95,
-  PI_level = 0.95,
-  ...
-)
-
-\method{plot}{lm_b_bma}(
-  x,
-  type = c("diagnostics", "cred band", "pred band"),
-  variable,
-  exemplar_covariates,
-  combine_pred_cred = TRUE,
-  bayes_pvalues_quantiles = c(0.01, 1:19/20, 0.99),
-  variable_seq_length = 30,
-  return_as_list = FALSE,
-  CI_level = 0.95,
-  PI_level = 0.95,
+  statistic = "deviance",
+  mc_error = 0.005,
   seed = 1,
-  backtransformation = function(x) {
-     x
- },
-  ...
-)
-
-\method{plot}{glm_b}(
-  x,
-  type,
   variable,
   exemplar_covariates,
   combine_pred_cred = TRUE,
@@ -65,19 +20,6 @@
   return_as_list = FALSE,
   CI_level = 0.95,
   PI_level = 0.95,
-  seed = 1,
-  ...
-)
-
-\method{plot}{np_glm_b}(
-  x,
-  type,
-  variable,
-  exemplar_covariates,
-  variable_seq_length = 30,
-  return_as_list = FALSE,
-  CI_level = 0.95,
-  seed = 1,
   backtransformation = function(x) {
      x
  },
@@ -91,12 +33,21 @@
 \arguments{
 \item{x}{A bayesics object}
 
-\item{type}{character. Select any of "diagnostics" ("dx" is also allowed),
-"pdp" (partial dependence plot), "cred band", and/or "pred band".
-NOTE: the credible and prediction bands only work for numeric
-variables.  If plotting a \code{mediate_b} object, the valid
-values for \code{type} are "diagnostics" (or "dx"), "acme",
-or "ade".}
+\item{type}{character. Select any of "diagnostics",
+"cred band", and/or "pred band".  If plotting a
+\code{mediate_b} object, the valid values for \code{type}
+are "diagnostics" (or "dx"), "acme", or "ade".}
+
+\item{statistic}{Statistic used to compute Bayesian p-value.
+Either "deviance", or else a function taking in data, expected value, and
+if applicable to the family, disperion (residual variance for \code{gaussian},
+and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).}
+
+\item{mc_error}{The number of posterior draws will ensure that with
+99\% probability the estimated Bayesian p-value will be within
+\eqn{\pm} \code{mc_error} of the actual Bayesian p-value.}
+
+\item{seed}{integer.}
 
 \item{variable}{character. If type = "pdp" , which variable should be plotted?}
 
@@ -122,10 +73,6 @@ should be the inverse of this transformation function.  E.g.,
 if you fit lm_b(log(y) ~ x), then set \code{backtransformation=exp}.}
 
 \item{...}{optional arguments.}
-
-\item{bayes_pvalues_quantiles}{ADD description!}
-
-\item{seed}{ADD description!}
 
 \item{n_draws}{integer.  Number of posterior draws used for visualization
 of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.}

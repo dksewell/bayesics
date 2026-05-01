@@ -342,17 +342,17 @@ plot_bands.lm_b = function(x,
 #' @rdname plot_bands
 #' @exportS3Method plot_bands aov_b
 plot_bands.aov_b = function(x,
-                           type = c("cred band",
-                                    "pred band"),
-                           variable,
-                           exemplar_covariates,
-                           combine_pred_cred = TRUE,
-                           variable_seq_length = 30,
-                           CI_level = 0.95,
-                           PI_level = 0.95,
-                           backtransformation = function(x){x},
-                           return_as_list = TRUE,
-                           ...){
+                            type = c("cred band",
+                                     "pred band"),
+                            variable,
+                            exemplar_covariates,
+                            combine_pred_cred = TRUE,
+                            variable_seq_length = 30,
+                            CI_level = 0.95,
+                            PI_level = 0.95,
+                            backtransformation = function(x){x},
+                            return_as_list = TRUE,
+                            ...){
   
   type = match.arg(type,
                    several.ok = TRUE)

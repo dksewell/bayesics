@@ -3,13 +3,16 @@
 #' @title Diagnostic plots for Bayesian regression objects
 #' 
 #' @param x object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}
-#' @param statistic Statistic used to compute Bayesian p-value.  
+#' @param statistic, statistic_m, statistic_y Statistic used to compute 
+#' Bayesian p-value (\code{statistic_m} and \code{statistic_y} used for the 
+#' mediator and outcome model for a \code{mediate_b} object). 
 #' Either "deviance", or else a function taking in data, expected value, and 
 #' if applicable to the family, disperion (residual variance for \code{gaussian},
 #' and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
 #' @param mc_error The number of posterior draws will ensure that with 
 #' 99% probability the estimated Bayesian p-value will be within 
 #' \eqn{\pm} \code{mc_error} of the actual Bayesian p-value.
+#' @param seed integer.
 #' @param return_as_list logical.  If TRUE, a list of ggplots will be returned, 
 #' rather than a single plot produced by the patchwork package.
 #' @param seed integer.
@@ -77,7 +80,7 @@ plot_dx.lm_b = function(x,
     ggplot(aes(x = .data$T_y_predicted,
                y = .data$T_y_observed ,
                color = .data$obs_gr_pred)) + 
-    geom_point() + 
+    geom_point(alpha = 0.05) + 
     geom_abline(intercept = 0,
                 slope = 1) + 
     xlab(bquote(T(y[pred] * "," * beta))) +
@@ -149,7 +152,7 @@ plot_dx.aov_b = function(x,
     ggplot(aes(x = .data$T_y_predicted,
                y = .data$T_y_observed ,
                color = .data$obs_gr_pred)) + 
-    geom_point() + 
+    geom_point(alpha = 0.05) + 
     geom_abline(intercept = 0,
                 slope = 1) + 
     xlab(bquote(T(y[pred] * "," * beta))) +
@@ -165,6 +168,60 @@ plot_dx.aov_b = function(x,
   }else{
     return(
       patchwork::wrap_plots(plot_list)
+    )
+  }
+}
+
+
+#' @rdname plot_dx
+#' @exportS3Method plot_dx mediate_b
+plot_dx.mediate_b = function(x,
+                             statistic_m = "deviance",
+                             statistic_y = "deviance",
+                             mc_error = 0.005,
+                             seed = 1,
+                             return_as_list = TRUE,
+                             ...){
+  
+  plot_list = list()
+  
+  # Mediator model
+  plot_list[[1]] = 
+    plot_dx(x$model_m,
+            statistic = statistic_m,
+            mc_error = mc_error,
+            seed = seed,
+            return_as_list = TRUE)
+  for(j in names(plot_list[[1]])){
+    plot_list[[1]][[j]] = 
+      plot_list[[1]][[j]] +
+      ggtitle(paste0(plot_list[[1]][[j]]$labels$title,
+                     " (Mediator model)"))
+  }
+  
+  # Outcome model
+  plot_list[[2]] = 
+    plot_dx(x$model_y,
+            statistic = statistic_y,
+            mc_error = mc_error,
+            seed = seed,
+            return_as_list = TRUE)
+  for(j in names(plot_list[[2]])){
+    plot_list[[2]][[j]] = 
+      plot_list[[2]][[j]] +
+      ggtitle(paste0(plot_list[[2]][[j]]$labels$title,
+                     " (Outcome model)"))
+  }
+  
+  
+  
+  plot_list = do.call(c,plot_list)
+  
+  if(return_as_list){
+    return(plot_list)
+  }else{
+    return(
+      wrap_plots(plot_list)
     )
   }
 }

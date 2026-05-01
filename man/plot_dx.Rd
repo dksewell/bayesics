@@ -4,6 +4,7 @@
 \alias{plot_dx}
 \alias{plot_dx.lm_b}
 \alias{plot_dx.aov_b}
+\alias{plot_dx.mediate_b}
 \title{Diagnostic plots for Bayesian regression objects}
 \usage{
 plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
@@ -18,6 +19,15 @@ plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 )
 
 \method{plot_dx}{aov_b}(
+  x,
+  statistic = "deviance",
+  mc_error = 0.005,
+  seed = 1,
+  return_as_list = TRUE,
+  ...
+)
+
+\method{plot_dx}{mediate_b}(
   x,
   statistic = "deviance",
   mc_error = 0.005,
