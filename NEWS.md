@@ -1,3 +1,8 @@
+# bayesics 3.0.0
+
+* Major restructuring of the S3 structure in bayesics.  All regression objects now inherit the lm_b class, and methods now rely heavily on those, better enabling expandability of the bayesics functionality.  Objects have been standardized so in most cases generics will work similarly on any object with the same estimation algorithm. Added plot_dx, plot_bands functions, as well as get_posterior_draws function for aov_b, glm_b, and np_glm_b objects.
+
+
 # bayesics 2.1.1
 
 * Fixed bug relating to response variable transformations and improper prior
