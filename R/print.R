@@ -176,3 +176,133 @@ print.survfit_b = function(x, ...){
   
   cat("Note: The time-to-event data follows a piecewise exponential model.  Each interval follows an exponential distribution, whose rate has a posterior of Gamma(<Shape>,<Rate>).")
 }
+
+
+#' @rdname print
+#' @method print b_procedure
+#' @export
+print.b_procedure = function(x, ...){
+  cat(paste0("\n----------\n\n",
+             x$name,
+             "using Bayesian techniques\n\n----------\n\n"))
+  
+  # Data
+  if(x$print_data){
+    cat("Data: \n")
+    print(x$data)
+  }
+  
+  
+  # Prior
+  if(is.list(x$prior)){
+    cat(x$prior$description)
+    cat("\n")
+    format(signif(x$prior$prior, 3), 
+             scientific = FALSE) |> 
+      noquote() |> 
+      print()
+  }else{
+    cat(x$prior)
+  }
+  
+  
+  # Results
+  ## Estimate, CI, ROPE
+  if(isTRUE(x$display_as_matrices)){ # This is for chisq_test_b
+    
+  }else{
+  
+    for(j in 1:nrow(x$results)){
+        cat("\nPosterior Results:\n")
+        cat(paste0("\n---",
+                   x$results$Quantity[j],
+                   "\n"))
+        cat(
+          paste0("      Estimate: ",
+                 format(signif(x$results$`Post Mean`[j], 3), 
+                        scientific = FALSE),
+                 "\n      ",
+                 x$CI_level*100,
+                 "% CI: (",
+                 format(signif(x$results$Lower[j], 3), 
+                        scientific = FALSE),
+                 ",",
+                 format(signif(x$results$Upper[j], 3), 
+                        scientific = FALSE),
+                 ")")
+        )
+        if(!is.na(x$results$ROPE_lower_bound[j])){
+          cat(
+            paste0("\n      Probability that ",
+                   x$results$Quantity[j],
+                   " is between ",
+                   format(signif(x$results$ROPE_lower_bound[j], 3), 
+                          scientific = FALSE),
+                   " and ",
+                   format(signif(x$results$ROPE_upper_bound[j], 3), 
+                          scientific = FALSE),
+                   ": ",
+                   format(signif(x$results$Pr_in_ROPE[j], 3), 
+                          scientific = FALSE))
+          )
+        }
+    }
+    
+    ## PDir
+    if(!is.null(x$pdir)){
+      
+      if(is.matrix(x$pdir$pdir)){
+        cat(paste0("\n\n",
+                   x$pdir$description,
+                   ":\n"))
+        format(signif(x$pdir$pdir, 3), 
+               scientific = FALSE) |> 
+          noquote() |> 
+          print() 
+        
+      }else{
+        cat(paste0("\n\n",
+                   x$pdir$description,
+                   ": ",
+                   format(signif(x$pdir$pdir, 3),
+                          scientific = FALSE)))
+      }
+    }
+    
+  }
+  
+  ## Overall ROPE (see chisq_test)
+  if(!is.null(x$overall_ROPE)){
+    cat(paste0("\n\n",
+               x$overall_ROPE$description,
+               ": ",
+               format(signif(x$overall_ROPE$Pr_in_ROPE, 3), 
+                      scientific = FALSE)))
+  }
+  
+  
+  ## Bayes factor
+  if(!is.null(x$BF)){
+    cat(paste0("\n\n",
+               x$BF$description,
+               ": ",
+               format(signif(x$BF$BF, 3), 
+                      scientific = FALSE),
+               "\n    =>Level of evidence: ",
+               x$BF$interpretation))
+  }
+  
+  
+  
+  cat("\n----------\n\n")
+  
+  if(!is.null(x$notes)){
+    for(j in 1:length(x$notes)){
+      message(paste0(paste(rep("*",j),collapse=""),
+                     "Note: ",
+                     x$notes[j]))
+    }
+  }
+  
+  invisible(x)
+}

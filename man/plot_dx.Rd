@@ -29,7 +29,8 @@ plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 
 \method{plot_dx}{mediate_b}(
   x,
-  statistic = "deviance",
+  statistic_m = "deviance",
+  statistic_y = "deviance",
   mc_error = 0.005,
   seed = 1,
   return_as_list = TRUE,
@@ -39,7 +40,9 @@ plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 \arguments{
 \item{x}{object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}}
 
-\item{statistic}{Statistic used to compute Bayesian p-value.
+\item{statistic, }{statistic_m, statistic_y Statistic used to compute
+Bayesian p-value (\code{statistic_m} and \code{statistic_y} used for the
+mediator and outcome model for a \code{mediate_b} object).
 Either "deviance", or else a function taking in data, expected value, and
 if applicable to the family, disperion (residual variance for \code{gaussian},
 and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).}

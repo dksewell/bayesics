@@ -30,31 +30,8 @@
 #' \code{"fixed columns"}
 #' }
 #' 
-#' @returns (returned invisible) A list with the following elements:
-#' \itemize{
-#'  \item \code{posterior_shapes}: posterior Dirichlet shape parameters
-#'  \item \code{posterior_mean}: posterior mean
-#'  \item \code{lower_bound}: lower credible interval bounds
-#'  \item \code{upper_bound}: upper credible interval bounds
-#'  \item \code{individual_ROPE}: Probability that joint probabilities are 
-#'  in the ROPE around independent probabilities
-#'  \item \code{overall_ROPE}: Overall probability of falling in the ROPE 
-#'  (i.e., all probabilities are near the product of the marginal probabilities)
-#'  \item \code{prob_pij_less_than_p_i_times_p_j}: (If multinomial sampling design) 
-#'  Probabilities that each joint probability is less than the product of 
-#'  the marginal probabilities
-#'  \item \code{prob_p_j_given_i_less_than_p_j}: (If fixed rows or columns sampling design) 
-#'  Probabilities that each conditional probability is less than the 
-#'  marginal probabilities
-#'  \item \code{prob_direction}: Probability of direction for the joint or 
-#'  conditional (depending on sampling scheme) probabilities (based on 
-#'  \code{prob_pij_less_than_p_i_times_p_j} or \code{prob_p_j_given_i_less_than_p_j})
-#'  \item \code{BF_for_dependence_vs_independence}: Bayes factor testing 
-#'  dependence vs. independence (higher values favor dependence, lower values 
-#'  favor independence)
-#'  \item \code{BF_evidence}: Kass and Raftery's interpretation of the 
-#'  level of evidence of the Bayes factor
-#' }
+#' @return An object of class \code{\link{b_procedure}}.
+#' 
 #' 
 #' @references 
 #' 
@@ -96,9 +73,13 @@
 #' 
 #' @export
 independence_b = function(x,
-                          sampling_design = "multinomial",
+                          sampling_design = 
+                            c("multinomial",
+                              "fixed rows",
+                              "fixed columns"),
                           ROPE,
-                          prior = "jeffreys",
+                          prior = c("jeffreys",
+                                    "uniform"),
                           prior_shapes,
                           CI_level = 0.95,
                           seed = 1,
@@ -107,20 +88,7 @@ independence_b = function(x,
   alpha_ci = 1.0 - CI_level
   
   sampling_design = 
-    c("multinomial",
-      "multinomial",
-      "fixed rows",
-      "fixed rows",
-      "fixed columns",
-      "fixed columns",
-      "fixed columns")[pmatch(tolower(sampling_design),
-                              c("poisson",
-                                "multinomial",
-                                "fixed rows",
-                                "rows",
-                                "fixed columns",
-                                "columns",
-                                "cols"))]
+    match.arg(sampling_design)
   
   if( !("matrix" %in% class(x)) & 
       !("table" %in% class(x)) )
@@ -134,16 +102,19 @@ independence_b = function(x,
     rownames(x) = paste("row",1:nrow(x),sep="_")
   
   
+  results = 
+    list(name = "2-way table test for independence",
+         data = x,
+         print_data = TRUE,
+         CI_level = CI_level)
+  
   # Multinomial sampling design
   if(sampling_design == "multinomial"){
     
     ## Get prior hyperparameters
     if(missing(prior_shapes)){
-      prior = c("uniform",
-                "jeffreys")[pmatch(tolower(prior),
-                                   c("uniform",
-                                     "jeffreys"))]
-      
+      prior = 
+        match.arg(prior)
       if(prior == "uniform"){
         message("Prior shape parameters were not supplied.\nA uniform prior will be used.")
         prior_shapes = rep(1.0,nR * nC)
@@ -163,6 +134,12 @@ independence_b = function(x,
       if(length(prior_shapes) == 1)
         prior_shapes = rep(prior_shapes,nR * nC)
     }
+    results$prior = 
+      list(description = "Dirichlet with shape parameters = ",
+           prior = matrix(prior_shapes,
+                          nR,nC,
+                          dimnames = dimnames(x)))
+      
     
     ## Get ROPE
     if(missing(ROPE)){
@@ -178,31 +155,36 @@ independence_b = function(x,
     
     
     ## Get posterior summary statistics
-    results = list()
-    results$posterior_shapes = 
+    ### Quality character
+    results$results = 
+      expand.grid(Row = paste("Row",1:nR),
+                  Col = paste("Col",1:nC)) |> 
+      mutate(Quantity = 
+               paste(Row,Col,
+                     sep = ", "),
+             .keep = "unused")
+    
+    ### Posterior mean
+    posterior_shapes = 
       x + matrix(prior_shapes,nR,nC)
     
-    results$posterior_mean = 
-      results$posterior_shapes / sum(results$posterior_shapes)
+    results$results$`Post Mean` = 
+      c(posterior_shapes / sum(posterior_shapes))
     
-    results$lower_bound = 
-      matrix(qbeta(0.5 * alpha_ci,
-                   c(results$posterior_shapes),
-                   sum(results$posterior_shapes) - c(results$posterior_shapes)),
-             nR,nC,
-             dimnames = dimnames(x))
+    results$results$Lower = 
+      qbeta(0.5 * alpha_ci,
+            c(posterior_shapes),
+            sum(posterior_shapes) - c(posterior_shapes))
     
-    results$upper_bound = 
-      matrix(qbeta(1.0 - 0.5 * alpha_ci,
-                   c(results$posterior_shapes),
-                   sum(results$posterior_shapes) - c(results$posterior_shapes)),
-             nR,nC,
-             dimnames = dimnames(x))
+    results$results$Upper = 
+      qbeta(1.0 - 0.5 * alpha_ci,
+            c(posterior_shapes),
+            sum(posterior_shapes) - c(posterior_shapes))
     
     ## Compute CIs and ROPE for independence
     ### Get preliminary samples
     p_draws = 
-      extraDistr::rdirichlet(500,c(results$posterior_shapes)) |> 
+      extraDistr::rdirichlet(500,c(posterior_shapes)) |> 
       array(c(500,nR,nC))
     p_product = 
       future.apply::future_lapply(1:500,
@@ -280,7 +262,7 @@ independence_b = function(x,
     
     ### Get all posterior draws needed
     p_draws = 
-      extraDistr::rdirichlet(n_draws,c(results$posterior_shapes)) |> 
+      extraDistr::rdirichlet(n_draws,c(posterior_shapes)) |> 
       array(c(n_draws,nR,nC))
     p_product = 
       future.apply::future_lapply(1:n_draws,
@@ -298,7 +280,7 @@ independence_b = function(x,
       array(c(nR,nC,n_draws))
     
     ### Compute ROPE
-    results$individual_ROPE = 
+    temp_ROPE = 
       odds_ratios |> 
       apply(1:2,
             function(x){
@@ -308,27 +290,37 @@ independence_b = function(x,
     dimnames(results$individual_ROPE) = 
       dimnames(x)
     
+    results$results$Pr_in_ROPE = 
+      c(temp_ROPE)
+    
     odds_ratios_binary_ROPE = 
       (odds_ratios <= ROPE[2]) & 
       (odds_ratios >= ROPE[1])
     results$overall_ROPE = 
-      apply(odds_ratios_binary_ROPE,3,all) |> 
-      mean()
+      list(
+        description = 
+          "Probability that all odds ratios (unrestricted vs. independence) are in the ROPE",
+        Pr_in_ROPE = 
+          apply(odds_ratios_binary_ROPE,3,all) |> 
+          mean()
+      )
     
     
     ### Compute PDir
-    results$prob_pij_less_than_p_i_times_p_j = 
+    results$pdir = list()
+    results$pdirdescription = 
+      "Probability that p_ij < p_(i.) x p_(.j)"
+    results$pdir$pdir = 
       odds_ratios |> 
       apply(1:2,
             function(x){
               mean(x <= 1)
             })
-    results$prob_direction = 
-      apply(results$prob_pij_less_than_p_i_times_p_j,1:2,
+    results$pdir$pdir = 
+      apply(results$pdir$pdir,1:2,
             function(x) max(x, 1.0 - x)
       )
-    dimnames(results$prob_pij_less_than_p_i_times_p_j) = 
-      dimnames(results$prob_direction) = 
+    dimnames(results$pdir$pdir) = 
       dimnames(x)
     
     
@@ -367,10 +359,14 @@ independence_b = function(x,
     
     
     BF10 = exp(-BF01)
-    results$BF_for_dependence_vs_independence = BF10
+    results$BF = list()
+    results$BF$description = 
+      "Bayes factor in favor of dependence"
+    results$BF$BF = BF10
+    
     bf_max = max(BF10,
                  1.0 / BF10)
-    results$BF_evidence =
+    results$BF$interpretation =
       ifelse(bf_max <= 3.2,
              "Not worth more than a bare mention",
              ifelse(bf_max <= 10,
@@ -379,117 +375,14 @@ independence_b = function(x,
                            "Strong",
                            "Decisive")))
     
-    # Print results
-    message("\n----------\n\n2-way table test for independence using Bayesian techniques\n")
-    message("\n----------\n\n")
-    
-    message("Prior used: Dirichlet with shape parameters = \n")
-    prior_shapes = 
-      matrix(prior_shapes,
-             nR,nC,
-             dimnames = dimnames(x))
-    format(signif(prior_shapes, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message("Posterior mean:\n")
-    format(signif(results$posterior_mean, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message(paste0(100 * CI_level,
-               "% (marginal) credible intervals: \n"))
-    credints = 
-      matrix("",nR,nC,dimnames = dimnames(x))
-    for(i in 1:nR){
-      for(j in 1:nC){
-        credints[i,j] = 
-          paste0("(",
-                 format(signif(results$lower_bound[i,j],3),
-                        scientific = FALSE),
-                 ", ",
-                 format(signif(results$upper_bound[i,j],3),
-                        scientific = FALSE),
-                 ")")
-      }
-    }
-    credints |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message("Probability that p_ij < p_(i.) x p_(.j):\n")
-    format(signif(results$prob_pij_less_than_p_i_times_p_j, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message("Probability of direction:\n")
-    format(signif(results$prob_direction, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message(paste0("Probability that all odds ratios (unrestricted vs. independence) are in the ROPE, defined to be (",
-               format(signif(ROPE[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(ROPE[2], 3), 
-                      scientific = FALSE),
-               ") = ",
-               format(signif(results$overall_ROPE, 3), 
-                      scientific = FALSE),
-               "\n\n")) 
-    
-    message("The marginal probabilities that each odds ratio is in the ROPE:\n")
-    format(signif(results$individual_ROPE, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message(paste0("Bayes factor in favor of dependence: ",
-               format(signif(BF10, 3), 
-                      scientific = FALSE),
-               ";\n      =>Level of evidence: ", 
-               results$BF_evidence,
-               "\n\n")) 
-    
-    message("\n----------\n\n")
-    
   }
+  
   if(grepl("fixed",sampling_design)){
     
     ## Get prior hyperparameters
     if(missing(prior_shapes)){
-      prior = c("uniform",
-                "jeffreys")[pmatch(tolower(prior),
-                                   c("uniform",
-                                     "jeffreys"))]
+      prior = 
+        match.arg(prior)
       
       if(prior == "uniform"){
         message("Prior shape parameters were not supplied.\nA uniform prior will be used.")
@@ -510,6 +403,12 @@ independence_b = function(x,
       if(length(prior_shapes) == 1)
         prior_shapes = matrix(prior_shapes,nR, nC)
     }
+    results$prior = 
+      list(description = "Dirichlet prior with shape parameters = ",
+           prior = matrix(prior_shapes,
+                          nR,nC,
+                          dimnames = dimnames(x)))
+    
     
     
     ## Procedure is symmetric, so only code for fixed row sums.  Correct at end.
@@ -536,30 +435,45 @@ independence_b = function(x,
     
     
     ## Get posterior summary statistics
-    results = list()
-    results$posterior_shapes = 
+    ### Quality character
+    if(flipped){
+      results$results = 
+        expand.grid(Col = paste("Col",1:nC),
+                    Row = paste("Row",1:nR)) |> 
+        mutate(Quantity = 
+                 paste(Row,Col,
+                       sep = ", "),
+               .keep = "unused")
+    }else{
+      results$results = 
+        expand.grid(Row = paste("Row",1:nR),
+                    Col = paste("Col",1:nC)) |> 
+        mutate(Quantity = 
+                 paste(Row,Col,
+                       sep = ", "),
+               .keep = "unused")
+    }
+    
+    posterior_shapes = 
       x + matrix(prior_shapes,nR,nC)
     
-    results$posterior_mean = 
-      results$posterior_shapes |> 
+    results$results$`Post Mean` = 
+      posterior_shapes |> 
       apply(1,function(x) x / sum(x)) |> 
-      t()
+      t() |> 
+      c()
     
-    results$lower_bound = 
-      matrix(qbeta(0.5 * alpha_ci,
-                   c(results$posterior_shapes),
-                   c(matrix(rowSums(results$posterior_shapes),nR,nC) - 
-                       results$posterior_shapes)),
-             nR,nC,
-             dimnames = dimnames(x))
+    results$results$Lower = 
+      qbeta(0.5 * alpha_ci,
+            c(posterior_shapes),
+            c(matrix(rowSums(posterior_shapes),nR,nC) - 
+                posterior_shapes))
     
-    results$upper_bound = 
-      matrix(qbeta(1.0 - 0.5 * alpha_ci,
-                   c(results$posterior_shapes),
-                   c(matrix(rowSums(results$posterior_shapes),nR,nC) - 
-                       results$posterior_shapes)),
-             nR,nC,
-             dimnames = dimnames(x))
+    results$results$Upper = 
+      qbeta(1.0 - 0.5 * alpha_ci,
+            c(posterior_shapes),
+            c(matrix(rowSums(posterior_shapes),nR,nC) - 
+                posterior_shapes))
     
     ## Compute CIs and ROPE for independence
     
@@ -571,7 +485,7 @@ independence_b = function(x,
     p_j_given_i = array(0.0,c(500,nR,nC))
     for(i in 1:nR){
       p_j_given_i[,i,] = 
-        extraDistr::rdirichlet(500,results$posterior_shapes[i,])
+        extraDistr::rdirichlet(500,posterior_shapes[i,])
     }
     #### From this, compute p_j:
     p_j = 
@@ -631,7 +545,7 @@ independence_b = function(x,
     p_j_given_i = array(0.0,c(n_draws,nR,nC))
     for(i in 1:nR){
       p_j_given_i[,i,] = 
-        extraDistr::rdirichlet(n_draws,results$posterior_shapes[i,])
+        extraDistr::rdirichlet(n_draws,posterior_shapes[i,])
     }
     #### From this, compute p_j:
     p_j = 
@@ -652,39 +566,50 @@ independence_b = function(x,
     
     
     ### Compute ROPE
-    results$individual_ROPE = 
+    results$results$Pr_in_ROPE = 
       odds_ratios |> 
       apply(1:2,
             function(x){
               mean(x <= ROPE[2]) - 
                 mean(x <= ROPE[1])
-            })
-    dimnames(results$individual_ROPE) = 
-      dimnames(x)
+            }) |> 
+      c()
+    
     
     odds_ratios_binary_ROPE = 
       (odds_ratios <= ROPE[2]) & 
       (odds_ratios >= ROPE[1])
+    
     results$overall_ROPE = 
-      apply(odds_ratios_binary_ROPE,3,all) |> 
-      mean()
+      list(
+        description = 
+          "Probability that all odds ratios (unrestricted vs. independence) are in the ROPE",
+        Pr_in_ROPE = 
+          apply(odds_ratios_binary_ROPE,3,all) |> 
+          mean()
+      )
     
     
     ### Compute PDir
-    results$prob_p_j_given_i_less_than_p_j = 
+    results$pdir = list()
+    results$pdir$description = 
+      ifelse(flipped,
+             "Probability that p_i|j < p_i",
+             "Probability that p_j|i < p_j")
+    results$pdir$pdir = 
       odds_ratios |> 
       apply(1:2,
             function(x){
               mean(x <= 1)
             })
-    results$prob_direction = 
-      apply(results$prob_p_j_given_i_less_than_p_j,1:2,
+    results$pdir$pdir = 
+      apply(results$pdir$pdir,1:2,
             function(x) max(x, 1.0 - x)
       )
-    dimnames(results$prob_p_j_given_i_less_than_p_j) = 
-      dimnames(results$prob_direction) = 
+    dimnames(results$pdir$pdir) = 
       dimnames(x)
-    
+    if(flipped)
+      results$pdir$pdir = t(results$pdir$pdir)
     
     ### Bayes factor 
     prior_shapes = matrix(prior_shapes,nR,nC)
@@ -699,10 +624,14 @@ independence_b = function(x,
     
     
     BF10 = exp(-BF01)
-    results$BF_for_dependence_vs_independence = BF10
+    results$BF = list()
+    results$BF$description = 
+      "Bayes factor in favor of dependence"
+    results$BF$BF = BF10
+    
     bf_max = max(BF10,
                  1.0 / BF10)
-    results$BF_evidence =
+    results$BF$interpretation =
       ifelse(bf_max <= 3.2,
              "Not worth more than a bare mention",
              ifelse(bf_max <= 10,
@@ -711,122 +640,11 @@ independence_b = function(x,
                            "Strong",
                            "Decisive")))
     
-    ## Flip back if needed
-    if(flipped){
-      for(j in names(results))
-        results[[j]] = t(results[[j]])
-      nR = ncol(x)
-      nC = nrow(x)
-      prior_shapes = t(prior_shapes)
-      x = t(x)
-    }
-    
-    
-    ## Print results
-    message("\n----------\n\n2-way table test for independence using Bayesian techniques\n")
-    message("\n----------\n\n")
-    
-    message("Prior used: Dirichlet with shape parameters = \n")
-    prior_shapes = 
-      matrix(prior_shapes,
-             nR,nC,
-             dimnames = dimnames(x))
-    format(signif(prior_shapes, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message("Posterior mean:\n")
-    format(signif(results$posterior_mean, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message(paste0(100 * CI_level,
-               "% (marginal) credible intervals: \n"))
-    credints = 
-      matrix("",nR,nC,dimnames = dimnames(x))
-    for(i in 1:nR){
-      for(j in 1:nC){
-        credints[i,j] = 
-          paste0("(",
-                 format(signif(results$lower_bound[i,j],3),
-                        scientific = FALSE),
-                 ", ",
-                 format(signif(results$upper_bound[i,j],3),
-                        scientific = FALSE),
-                 ")")
-      }
-    }
-    credints |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message("Probability that p_ij < p_(i.) x p_(.j):\n")
-    format(signif(results$prob_p_j_given_i_less_than_p_j, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message("Probability of direction:\n")
-    format(signif(results$prob_direction, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message(paste0("Probability that all odds ratios (unrestricted vs. independence) are in the ROPE, defined to be (",
-               format(signif(ROPE[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(ROPE[2], 3), 
-                      scientific = FALSE),
-               ") = ",
-               format(signif(results$overall_ROPE, 3), 
-                      scientific = FALSE),
-               "\n\n")) 
-    
-    message("The marginal probabilities that each odds ratio is in the ROPE:\n")
-    format(signif(results$individual_ROPE, 3), 
-           scientific = FALSE) |> 
-      noquote() |> 
-      print() |> 
-      capture.output() |> 
-      paste(collapse = "\n") |> 
-      message()
-    message("\n\n")
-    
-    message(paste0("Bayes factor in favor of dependence: ",
-               format(signif(BF10, 3), 
-                      scientific = FALSE),
-               ";\n      =>Level of evidence: ", 
-               results$BF_evidence,
-               "\n\n")) 
-    
-    
-    message("\n----------\n\n")
-    
-    
   }
+  
+  
+  
+  results$display_as_matrices = TRUE
   
   invisible(results)
 }

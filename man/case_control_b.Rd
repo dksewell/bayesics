@@ -38,10 +38,11 @@ set to \code{TRUE} iff all cell counts are greater than or equal to 5.}
 of length two.  If the former, the ROPE will be taken as (1/ROPE,ROPE).
 If the latter, these will be the bounds of the ROPE.}
 
-\item{prior_mean}{numeric.  The prior mean on the log odds ratio}
+\item{prior_mean}{numeric.  The prior mean on the log odds ratio.  Defaults
+to 0 (i.e., odds ratio of 1).}
 
-\item{prior_sd}{numeric.  The prior sd on the log odds ratio. See details
-for default values.}
+\item{prior_sd}{numeric.  The prior sd on the log odds ratio. Defaults to
+place 95\% prior probability that the odds ratio is between 0.1 and 10.}
 
 \item{plot}{logical.  Should a plot be shown?}
 
@@ -78,7 +79,7 @@ where \eqn{\omega} is the odds ratio, \eqn{\hat\omega} is the
 empirical odds ratio, \eqn{n_{ij}}, \eqn{i,j = 1,2} are the cells of the
 2x2 contingency table. The prior on \eqn{\log\omega} is
 \deqn{
- \log\omega \sim N(a,b^2).
+ \log\omega \sim N(\texttt{prior\_mean},\texttt{prior\_sd}^2).
 }
 
 If the large sample approximation is not used, then inference is made on

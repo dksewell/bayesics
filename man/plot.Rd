@@ -26,7 +26,7 @@
   ...
 )
 
-\method{plot}{mediate_b}(x, type, return_as_list = FALSE, ...)
+\method{plot}{mediate_b}(x, type = c("diagnostics", "acme", "ade"), return_as_list = FALSE, ...)
 
 \method{plot}{survfit_b}(x, n_draws = 10000, seed = 1, CI_level = 0.95, ...)
 }
@@ -38,7 +38,9 @@
 \code{mediate_b} object, the valid values for \code{type}
 are "diagnostics" (or "dx"), "acme", or "ade".}
 
-\item{statistic}{Statistic used to compute Bayesian p-value.
+\item{statistic, }{statistic_m, statistic_y Statistic used to compute
+Bayesian p-value (\code{statistic_m} and \code{statistic_y} used for the
+mediator and outcome model for a \code{mediate_b} object).
 Either "deviance", or else a function taking in data, expected value, and
 if applicable to the family, disperion (residual variance for \code{gaussian},
 and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).}

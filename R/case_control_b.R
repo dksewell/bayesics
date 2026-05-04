@@ -13,7 +13,7 @@
 #' empirical odds ratio, \eqn{n_{ij}}, \eqn{i,j = 1,2} are the cells of the 
 #' 2x2 contingency table. The prior on \eqn{\log\omega} is
 #' \deqn{
-#'  \log\omega \sim N(a,b^2).
+#'  \log\omega \sim N(\texttt{prior\_mean},\texttt{prior\_sd}^2).
 #' }
 #' 
 #' If the large sample approximation is not used, then inference is made on 
@@ -36,9 +36,10 @@
 #' @param ROPE ROPE for odds ratio. Provide either a single value or a vector 
 #' of length two.  If the former, the ROPE will be taken as (1/ROPE,ROPE).  
 #' If the latter, these will be the bounds of the ROPE.
-#' @param prior_mean numeric.  The prior mean on the log odds ratio
-#' @param prior_sd numeric.  The prior sd on the log odds ratio. See details 
-#' for default values.
+#' @param prior_mean numeric.  The prior mean on the log odds ratio.  Defaults 
+#' to 0 (i.e., odds ratio of 1).
+#' @param prior_sd numeric.  The prior sd on the log odds ratio. Defaults to 
+#' place 95% prior probability that the odds ratio is between 0.1 and 10.
 #' @param plot logical.  Should a plot be shown?
 #' @param CI_level The posterior probability to be contained in the 
 #' credible interval.
@@ -46,16 +47,10 @@
 #' @param mc_error The relative monte carlo error of the quantiles of the CIs. 
 #' (ignored if \code{large_sample_approx = TRUE}.)
 #' 
-#' @returns (returned invisible) list including the following:
-#' \itemize{
-#'  \item \code{data}: data
-#'  \item \code{posterior_mean}: posterior mean of the odds ratio (cases vs. controls)
-#'  \item \code{CI}: Credible interval
-#'  \item \code{Pr_oddsratio_in_ROPE}: Probability the odds ratio (cases vs. controls) is in the ROPE
-#'  \item \code{posterior_draws}: posterior draws of the odds ratio (cases vs. controls)
-#'  \item \code{or_plot}: odds ratio (cases vs. controls) posterior plot
-#' }
 #' 
+#' @return An object of class \code{\link{b_procedure}}.
+#' 
+#'  
 #' @examples
 #' case_control_b(matrix(c(8,47,1,26),2,2))
 #' 
@@ -139,45 +134,86 @@ case_control_b = function(cases,
   # Perform inference
   colnames(x) = c("Cases","Controls")
   rownames(x) = c("At risk","Not at risk")
-  results = list(data=x)
+  results = 
+    list(name = "Case-control analysis",
+         data = x,
+         print_data = TRUE,
+         CI_level = CI_level)
   
   if(large_sample_approx){
     
-    ## Get posterior parameters
+    ## Set prior
+    results$prior =
+      paste0("Prior on log odds is: N(",
+             prior_mean,
+             prior_sd,
+             "^2)")
+    
+    ## Get posterior results
     s2 = sum(1.0 / c(x))
-    results$posterior_parameters = 
+    posterior_parameters = 
       c((prior_sd^2 * log_or_hat + s2 * prior_mean) / 
           (prior_sd^2 + s2),
         sqrt(prior_sd^2 * s2 / (prior_sd^2 + s2)))
-    names(results$posterior_parameters) = c("mean","sd")
+    names(posterior_parameters) = c("mean","sd")
     
-    ## Get point estimates
-    results$posterior_mean = 
-      exp(results$posterior_parameters["mean"] + 
-            0.5 * results$posterior_parameters["sd"]^2)
-    results$posterior_median = 
-      exp(results$posterior_parameters["mean"])
+    ## Get point and interval estimates
+    results$results = 
+      tibble(Quantity = 
+               "Odds ratio (cases vs. controls)",
+             `Post Mean` = 
+               exp(results$posterior_parameters["mean"] + 
+                     0.5 * results$posterior_parameters["sd"]^2),
+             Lower = 
+               exp(
+                 qnorm(0.5 * alpha_ci,
+                       results$posterior_parameters["mean"],
+                       results$posterior_parameters["sd"])
+               ),
+             Upper = 
+               exp(
+                 qnorm(1.0 - 0.5 * alpha_ci,
+                       results$posterior_parameters["mean"],
+                       results$posterior_parameters["sd"])
+               ))
     
-    ## Get interval estimates
-    results$CI = 
-      exp(
-        qnorm(c(0.5 * alpha_ci,1.0 - 0.5 * alpha_ci),
-              results$posterior_parameters["mean"],
-              results$posterior_parameters["sd"])
-      )
     
     ## Get ROPE
-    results$Pr_oddsratio_in_ROPE = 
-      pnorm(log(ROPE[2]),
-            results$posterior_parameters["mean"],
-            results$posterior_parameters["sd"]) -
-      pnorm(log(ROPE[1]),
-            results$posterior_parameters["mean"],
-            results$posterior_parameters["sd"])
+    results$results = 
+      results$results |> 
+      mutate(Pr_in_ROPE = 
+               pnorm(log(ROPE[2]),
+                     results$posterior_parameters["mean"],
+                     results$posterior_parameters["sd"]) -
+               pnorm(log(ROPE[1]),
+                     results$posterior_parameters["mean"],
+                     results$posterior_parameters["sd"]),
+             ROPE_lower_bound = ROPE[1],
+             ROPE_upper_bound = ROPE[2]
+      )
+    
+    ## Get PDir
+    results$pdir = 
+      list(pdir = 
+             pnorm(0.0,
+                   results$posterior_parameters["mean"],
+                   results$posterior_parameters["sd"])
+      )
+    results$pdir$pdir_description = 
+      paste0("Probability that the odds ratio is ",
+             ifelse(results$pdir$pdir > 0.5,
+                    "less",
+                    "greater"),
+             " than 1")
+    results$pdir$pdir = 
+      max(results$pdir$pdir,
+          1.0 - results$pdir$pdir)
+    
+    
     
     # Plot (if requested)
     if(plot){
-      results$or_plot = 
+      results$plot = 
         tibble::tibble(x = seq(qlnorm(0.005,
                                       results$posterior_parameters["mean"],
                                       results$posterior_parameters["sd"]),
@@ -209,9 +245,6 @@ case_control_b = function(cases,
         ylab("") + 
         labs(color = "Distribution") + 
         ggtitle("Population proportion")
-      
-      print(results$or_plot)
-      
     }
     
     
@@ -219,6 +252,11 @@ case_control_b = function(cases,
   }else{#End: large sample approx
     set.seed(seed)
     message("Cell sizes were too small for large sample approximation.\nInstead, setting uniform prior on Pr(exposure|outcome) and making exact finite sample inference.")
+    
+    ## Set prior
+    results$prior = 
+      "Prior on probability of exposure given outcome is: Unif(0,1)"
+    
     
     # Get posterior parameters
     post_shapes = 
@@ -264,28 +302,49 @@ case_control_b = function(cases,
     odds_ratios = 
       p1_draws / (1.0 - p1_draws) * (1.0 - p2_draws) / p2_draws
     
-    ## Get point estimates
-    results$posterior_mean = 
-      mean(odds_ratios)
+    ## Get point and interval estimates
+    results$results = 
+      tibble(Quantity = 
+               "Odds ratio (cases vs. controls)",
+             `Post Mean` = 
+               mean(odds_ratios),
+             Lower = 
+               quantile(odds_ratios,0.5 * alpha_ci),
+             Upper = 
+               quantile(odds_ratios,1.0 - 0.5 * alpha_ci)
+      )
     
-    ## Get interval estimates
-    results$CI = 
-      quantile(odds_ratios,c(0.5 * alpha_ci,
-                             1.0 - 0.5 * alpha_ci))
     
     ## Get ROPE
-    results$Pr_oddsratio_in_ROPE = 
-      mean( (odds_ratios <= ROPE[2]) & 
-              (odds_ratios >= ROPE[1]) )
+    results$results = 
+      results$results |> 
+      mutate(Pr_in_ROPE = 
+               mean( (odds_ratios <= ROPE[2]) & 
+                       (odds_ratios >= ROPE[1]) ),
+             ROPE_lower_bound = ROPE[1],
+             ROPE_upper_bound = ROPE[2]
+      )
     
-    ## Save posterior draws
-    results$posterior_draws = 
-      odds_ratios
+    
+    ## Get PDir
+    results$pdir = 
+      list(pdir = 
+             mean(odds_ratios < 1.0)
+      )
+    results$pdir$description = 
+      paste0("Probability that the odds ratio is ",
+             ifelse(results$pdir > 0.5,
+                    "less",
+                    "greater"),
+             " than 1")
+    results$pdir$pdir = 
+      max(results$pdir$pdir,
+          1.0 - results$pdir$pdir)
     
     
     ## Plot if requested
     if(plot){
-      results$or_plot = 
+      results$plot = 
         data.frame(or = 
                      odds_ratios[which(odds_ratios <= quantile(odds_ratios,0.99))]) |> 
         ggplot(aes(x = .data$or)) + 
@@ -295,61 +354,13 @@ case_control_b = function(cases,
         xlab("") + 
         ylab("") + 
         ggtitle("Posterior of odds ratio (cases vs. controls)")
-      
-      print(results$or_plot)
     }
     
   }#End: small sample inference
   
+  results = 
+    structure(results,
+              class = "b_procedure")
   
-  # Print results
-  message("\n----------\n\nCase-control analysis using Bayesian techniques\n")
-  message("\n----------\n\n")
-  message("Data: \n")
-  message(paste(capture.output(print(x)),
-                collapse = "\n"))
-  message("\n\n")
-  if(large_sample_approx){
-    message(paste0("Prior used on log odds ratio: N(", 
-               format(signif(prior_mean, 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(prior_sd, 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-  }
-  message(paste0("Posterior mean of the odds ratio: ", 
-             format(signif(results$posterior_mean, 3), 
-                    scientific = FALSE),
-             "; Population 2 = ",
-             "\n\n"))
-  if(large_sample_approx){
-    message(paste0("Posterior median of the odds ratio: ", 
-               format(signif(results$posterior_median, 3), 
-                      scientific = FALSE),
-               "; Population 2 = ",
-               "\n\n"))
-  }
-  message(paste0(100 * CI_level,
-             "% credible interval: (", 
-             format(signif(results$CI[1], 3), 
-                    scientific = FALSE),
-             ", ",
-             format(signif(results$CI[2], 3), 
-                    scientific = FALSE),
-             ")\n\n"))
-  message(paste0("Probability that the odds ratio is in the ROPE, defined to be (",
-             format(signif(ROPE[1], 3), 
-                    scientific = FALSE),
-             ",",
-             format(signif(ROPE[2], 3), 
-                    scientific = FALSE),
-             ") = ",
-             format(signif(results$Pr_oddsratio_in_ROPE, 3), 
-                    scientific = FALSE),
-             "\n\n")) 
-  message("\n----------\n\n")
-  
-  
-  invisible(results)
+  return(results)
 }
