@@ -89,8 +89,8 @@ plot.lm_b = function(x,
   }
   
   if(length(intersect(type,
-                      "cred band",
-                      "pred band")) != 0){
+                      c("cred band",
+                        "pred band"))) != 0){
     
     if(missing(variable) & missing(exemplar_covariates)){
       plot_list[[2]] =
@@ -497,7 +497,7 @@ plot.survfit_b = function(x,
 
 
 #' @rdname plot
-#' @method plot survfit_b
+#' @method plot b_procedure
 #' @export
 plot.b_procedure = function(x,...){
   if(!("plot" %in% names(x))){

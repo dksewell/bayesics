@@ -31,7 +31,7 @@
 
 \method{plot}{survfit_b}(x, n_draws = 10000, seed = 1, CI_level = 0.95, ...)
 
-\method{plot}{survfit_b}(x, ...)
+\method{plot}{b_procedure}(x, ...)
 }
 \arguments{
 \item{x}{A bayesics object}

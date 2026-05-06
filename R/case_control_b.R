@@ -145,8 +145,9 @@ case_control_b = function(cases,
     ## Set prior
     results$prior =
       paste0("Prior on log odds is: N(",
-             prior_mean,
-             prior_sd,
+             format(signif(prior_mean,3),scientific = FALSE),
+             ", ",
+             format(signif(prior_sd,3),scientific = FALSE),
              "^2)")
     
     ## Get posterior results
@@ -160,21 +161,21 @@ case_control_b = function(cases,
     ## Get point and interval estimates
     results$results = 
       tibble(Quantity = 
-               "Odds ratio (cases vs. controls)",
+               "Odds ratio (at risk vs. not at risk)",
              `Post Mean` = 
-               exp(results$posterior_parameters["mean"] + 
-                     0.5 * results$posterior_parameters["sd"]^2),
+               exp(posterior_parameters["mean"] + 
+                     0.5 * posterior_parameters["sd"]^2),
              Lower = 
                exp(
                  qnorm(0.5 * alpha_ci,
-                       results$posterior_parameters["mean"],
-                       results$posterior_parameters["sd"])
+                       posterior_parameters["mean"],
+                       posterior_parameters["sd"])
                ),
              Upper = 
                exp(
                  qnorm(1.0 - 0.5 * alpha_ci,
-                       results$posterior_parameters["mean"],
-                       results$posterior_parameters["sd"])
+                       posterior_parameters["mean"],
+                       posterior_parameters["sd"])
                ))
     
     
@@ -183,11 +184,11 @@ case_control_b = function(cases,
       results$results |> 
       mutate(Pr_in_ROPE = 
                pnorm(log(ROPE[2]),
-                     results$posterior_parameters["mean"],
-                     results$posterior_parameters["sd"]) -
+                     posterior_parameters["mean"],
+                     posterior_parameters["sd"]) -
                pnorm(log(ROPE[1]),
-                     results$posterior_parameters["mean"],
-                     results$posterior_parameters["sd"]),
+                     posterior_parameters["mean"],
+                     posterior_parameters["sd"]),
              ROPE_lower_bound = ROPE[1],
              ROPE_upper_bound = ROPE[2]
       )
@@ -196,8 +197,8 @@ case_control_b = function(cases,
     results$pdir = 
       list(pdir = 
              pnorm(0.0,
-                   results$posterior_parameters["mean"],
-                   results$posterior_parameters["sd"])
+                   posterior_parameters["mean"],
+                   posterior_parameters["sd"])
       )
     results$pdir$pdir_description = 
       paste0("Probability that the odds ratio is ",
@@ -215,11 +216,11 @@ case_control_b = function(cases,
     if(plot){
       results$plot = 
         tibble::tibble(x = seq(qlnorm(0.005,
-                                      results$posterior_parameters["mean"],
-                                      results$posterior_parameters["sd"]),
+                                      posterior_parameters["mean"],
+                                      posterior_parameters["sd"]),
                                qlnorm(0.995,
-                                      results$posterior_parameters["mean"],
-                                      results$posterior_parameters["sd"]),
+                                      posterior_parameters["mean"],
+                                      posterior_parameters["sd"]),
                                l = 50)) |> 
         ggplot(aes(x=x)) +
         stat_function(fun = 
@@ -233,8 +234,8 @@ case_control_b = function(cases,
         stat_function(fun = 
                         function(x){
                           dlnorm(x,
-                                 results$posterior_parameters["mean"],
-                                 results$posterior_parameters["sd"])
+                                 posterior_parameters["mean"],
+                                 posterior_parameters["sd"])
                         },
                       aes(color = "Posterior"),
                       linewidth = 2) + 
@@ -244,7 +245,7 @@ case_control_b = function(cases,
         xlab("") + 
         ylab("") + 
         labs(color = "Distribution") + 
-        ggtitle("Population proportion")
+        ggtitle("Posterior of odds ratio (at risk vs. not at risk)")
     }
     
     
@@ -305,7 +306,7 @@ case_control_b = function(cases,
     ## Get point and interval estimates
     results$results = 
       tibble(Quantity = 
-               "Odds ratio (cases vs. controls)",
+               "Odds ratio (at risk vs. not at risk)",
              `Post Mean` = 
                mean(odds_ratios),
              Lower = 
@@ -353,7 +354,7 @@ case_control_b = function(cases,
         theme_classic(base_size = 15) +
         xlab("") + 
         ylab("") + 
-        ggtitle("Posterior of odds ratio (cases vs. controls)")
+        ggtitle("Posterior of odds ratio (at risk vs. not at risk)")
     }
     
   }#End: small sample inference
