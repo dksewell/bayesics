@@ -5,6 +5,7 @@
 \alias{plot.lm_b}
 \alias{plot.mediate_b}
 \alias{plot.survfit_b}
+\alias{plot.b_procedure}
 \title{Plots bayesics objects.}
 \usage{
 \method{plot}{lm_b}(
@@ -29,6 +30,8 @@
 \method{plot}{mediate_b}(x, type = c("diagnostics", "acme", "ade"), return_as_list = FALSE, ...)
 
 \method{plot}{survfit_b}(x, n_draws = 10000, seed = 1, CI_level = 0.95, ...)
+
+\method{plot}{survfit_b}(x, ...)
 }
 \arguments{
 \item{x}{A bayesics object}

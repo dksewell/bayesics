@@ -184,17 +184,19 @@ print.survfit_b = function(x, ...){
 print.b_procedure = function(x, ...){
   cat(paste0("\n----------\n\n",
              x$name,
-             "using Bayesian techniques\n\n----------\n\n"))
+             " using Bayesian techniques\n\n----------\n\n"))
   
   # Data
   if(x$print_data){
     cat("Data: \n")
     print(x$data)
+    cat("\n")
   }
   
   
   # Prior
   if(is.list(x$prior)){
+    cat("\n\n")
     cat(x$prior$description)
     cat("\n")
     format(signif(x$prior$prior, 3), 
@@ -202,18 +204,128 @@ print.b_procedure = function(x, ...){
       noquote() |> 
       print()
   }else{
+    
     cat(x$prior)
   }
   
   
   # Results
-  ## Estimate, CI, ROPE
+  ## Estimate, CI, ROPE, pdir
   if(isTRUE(x$display_as_matrices)){ # This is for chisq_test_b
     
-  }else{
-  
+    ## Get row and column numbers
+    results = 
+      x$results |> 
+      mutate(row = 
+               as.integer(stringr::str_extract(Quantity, "(?<=Row )\\d+")),
+             col = 
+               as.integer(stringr::str_extract(Quantity, "(?<=Col )\\d+"))
+      )
+    nR = max(results$row)
+    nC = max(results$col)
+    
+    ## Get the type of probability being modeled
+    prob_type = 
+      dplyr::case_when(
+        is.null(x$sampling_design) ~ "",
+        x$sampling_design == "multinomial" ~ "P_(row,col)",
+        x$sampling_design == "fixed columns" ~ "P_(row|col)",
+        x$sampling_design == "multinomial" ~ "P(col|row)"
+      )
+    
+    ## Print posterior mean
+    cat(paste0(
+      "\n\nEstimated probabilities ",
+      prob_type,
+      ":\n"))
+    x_matrix = 
+      matrix(0.0,nR,nC,
+             dimnames = dimnames(x$data))
+    x_matrix[cbind(results$row,
+                   results$col)] = 
+      results$`Post Mean`
+    x_matrix |> 
+      signif(3) |> 
+      format(scientific = FALSE) |> 
+      noquote() |> 
+      print()
+    
+    
+    ## Print CIs
+    cat(paste0("\n\n",
+               100 * x$CI_level, "% credible intervals: \n"))
+    
+    ci_lower = ci_upper = x_matrix
+    ci_lower[cbind(results$row,
+                   results$col)] = 
+      results$Lower
+    ci_upper[cbind(results$row,
+                   results$col)] = 
+      results$Upper
+    credints = matrix("",nR,nC,
+                     dimnames = dimnames(x$data))
+    for(i in 1:nR){
+      for(j in 1:nC){
+        credints[i, j] = paste0("(", format(signif(ci_lower[i,j], 3),
+                                            scientific = FALSE),
+                                ", ",
+                                format(signif(ci_upper[i,j], 3),
+                                       scientific = FALSE),
+                                ")")
+      }
+    }
+    credints |> 
+      noquote() |> 
+      print()
+    
+    
+    ## Print ROPE
+    if(!is.null(x$ROPE)){
+      cat(
+        paste0("\n\n",
+               x$ROPE$description,
+               " is in the ROPE (i.e., between ",
+               format(signif(x$ROPE$ROPE_lower_bound, 3), 
+                      scientific = FALSE),
+               " and ",
+               format(signif(x$ROPE$ROPE_upper_bound, 3), 
+                      scientific = FALSE),
+               "): \n")
+      )
+      
+      x_matrix[cbind(results$row,
+                     results$col)] = 
+        results$Pr_in_ROPE
+      x_matrix |> 
+        signif(3) |> 
+        format(scientific = FALSE) |> 
+        noquote() |> 
+        print()
+      
+    }
+    
+    
+    ## Print pdir
+    if(!is.null(x$pdir)){
+      cat(paste0("\n\n",
+                 x$pdir$description,
+                 ": \n"))
+      x_matrix[cbind(results$row,
+                     results$col)] = 
+        x$pdir$pdir
+      x_matrix |> 
+        signif(3) |> 
+        format(scientific = FALSE) |> 
+        noquote() |> 
+        print()
+    }
+    
+    
+  }else{ #End: if(isTRUE(x$display_as_matrices))
+    
+    cat("\n\nPosterior Results:\n")
+    
     for(j in 1:nrow(x$results)){
-        cat("\nPosterior Results:\n")
         cat(paste0("\n---",
                    x$results$Quantity[j],
                    "\n"))
@@ -231,10 +343,11 @@ print.b_procedure = function(x, ...){
                         scientific = FALSE),
                  ")")
         )
-        if(!is.na(x$results$ROPE_lower_bound[j])){
+        if( ("ROPE_lower_bound" %in% colnames(x$results)) &&
+             (!is.na(x$results$Pr_in_ROPE[j])) ){
           cat(
             paste0("\n      Probability that ",
-                   x$results$Quantity[j],
+                   tolower(x$results$Quantity[j]),
                    " is between ",
                    format(signif(x$results$ROPE_lower_bound[j], 3), 
                           scientific = FALSE),
@@ -250,26 +363,15 @@ print.b_procedure = function(x, ...){
     
     ## PDir
     if(!is.null(x$pdir)){
-      
-      if(is.matrix(x$pdir$pdir)){
-        cat(paste0("\n\n",
-                   x$pdir$description,
-                   ":\n"))
-        format(signif(x$pdir$pdir, 3), 
-               scientific = FALSE) |> 
-          noquote() |> 
-          print() 
-        
-      }else{
-        cat(paste0("\n\n",
-                   x$pdir$description,
-                   ": ",
-                   format(signif(x$pdir$pdir, 3),
-                          scientific = FALSE)))
-      }
+      cat(paste0("\n\n",
+                 x$pdir$description,
+                 ": ",
+                 format(signif(x$pdir$pdir, 3),
+                        scientific = FALSE)))
     }
     
-  }
+  }#End: if(!isTRUE(x$display_as_matrices))
+  
   
   ## Overall ROPE (see chisq_test)
   if(!is.null(x$overall_ROPE)){
@@ -283,7 +385,7 @@ print.b_procedure = function(x, ...){
   
   ## Bayes factor
   if(!is.null(x$BF)){
-    cat(paste0("\n\n",
+    cat(paste0("\n\n\n",
                x$BF$description,
                ": ",
                format(signif(x$BF$BF, 3), 
@@ -294,7 +396,7 @@ print.b_procedure = function(x, ...){
   
   
   
-  cat("\n----------\n\n")
+  cat("\n\n----------\n\n")
   
   if(!is.null(x$notes)){
     for(j in 1:length(x$notes)){

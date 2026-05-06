@@ -10,12 +10,10 @@ prop_test_b(
   n_failures,
   n_total,
   p,
-  predict_for_n,
   ROPE,
-  prior = "jeffreys",
+  prior = c("jeffreys", "uniform"),
   prior_shapes,
   CI_level = 0.95,
-  PI_level = 0.95,
   plot = TRUE,
   seed = 1,
   mc_error = 0.002
@@ -35,9 +33,6 @@ OR n_failures.}
 a single population, \code{prop_test_b} will return the posterior
 probability that the population proportion is less than this value.}
 
-\item{predict_for_n}{Number in a future trial.  If missing, \code{prop_test_b}
-will use the observed number of trials.}
-
 \item{ROPE}{ROPE for odds ratio if inference is being made for two populations.
 Provide either a single value or a vector of length two.  If the former,
 the ROPE will be taken as (1/ROPE,ROPE).  If the latter, these will be
@@ -50,8 +45,8 @@ This is ignored if prior_shapes is provided.}
 for the beta distribution that will act as the prior on the population
 proportions.}
 
-\item{CI_level, PI_level}{The posterior probability to be contained in the
-credible and prediction intervals respectively.}
+\item{CI_level}{The posterior probability to be contained in the
+credible intervals.}
 
 \item{plot}{logical.  Should a plot be shown?}
 
@@ -62,24 +57,7 @@ probability the bounds of the credible intervals of \eqn{p_1 - p_2} will be
 within \eqn{\pm} \code{mc_error}. (Ignored for a single population proportion.)}
 }
 \value{
-(returned invisible) A list with the following:
-\itemize{
-\item \code{successes}, \code{failures}: Number of successes and failures
-\item \code{posterior_mean}, \code{posterior_mean_pop1}, \code{posterior_mean_pop2}:
-posterior means for the population proportion
-\item \code{CI}, \code{CI_pop1}, \code{CI_pop2}: Credible interval for the
-population proportion
-\item \code{Pr_oddsratio_in_ROPE}: (2 sample analysis only) Posterior
-probability that the odds ratio is in the ROPE
-\item \code{PI}, \code{PI_pop1}, \code{PI_pop2}: Prediction interval for the
-number of trials given in \code{predict_for_n}
-\item \code{Pr_less_than_p}: (1 sample analysis only) If \code{p} was
-supplied, the posterior probability that the population proportion is less
-than \code{p}
-\item \code{prop_plot}: Prior and posterior plot of population proportion(s)
-\item \code{posterior_parameters}: Posterior beta shape parameters for the
-population proportion(s)
-}
+An object of class \code{\link{b_procedure}}.
 }
 \description{
 \code{prop_test_b} either makes inference on a single population

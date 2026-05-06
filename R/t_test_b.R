@@ -36,15 +36,7 @@
 #' @param seed integer.  Always set your seed!!!
 #' @param plot logical. Should the resulting inverse gamma distribution be plotted?
 #' 
-#' @returns Either an aov_b object, if two samples are being compared,
-#' or a list with the following elements:
-#' \itemize{
-#'  \item Variable
-#'  \item Post Mean
-#'  \item Lower (bound of credible interval)
-#'  \item Upper (bound of credible interval)
-#'  \item Prob Dir (Probability of Direction)
-#' }
+#' @returns An object of class \code{\link{b_procedure}}.
 #' 
 #' 
 #' @examples
@@ -98,14 +90,14 @@ t_test_b = function(x,
   }
   
   if(rlang::is_formula(x) & missing(data)) stop("If formula is given, data must also be given.")
-  if(missing(y) & paired) stop("Cannot have paired data without y.")
+  
   
   if(is.numeric(x)){
     
     # One sample inference
     if(missing(y) | paired){
       if(!missing(y) && paired && (length(x) != length(y)) ) stop("Length of x must equal that of y.")
-      if(paired){
+      if(paired & !missing(y)){
         x = x - y
         outcome_name = "x minus y"
       }
@@ -149,39 +141,126 @@ t_test_b = function(x,
             prior_mean_nu * data_quants$n / (nu_g + data_quants$n) * (prior_mean_mu - data_quants$ybar)^2
         )
       
-      # Return a summary including the posterior mean, credible intervals, and probability of direction
-      ret = 
-        tibble::tibble(Variable = 
-                         c(outcome_name,
-                           "Var"),
-                       `Post Mean` = c(mu_g, b_G/2 / (a_G/2 - 1.0)),
-                       Lower = c(extraDistr::qlst(a/2, 
-                                                  df = a_G,
-                                                  mu = mu_g,
-                                                  sigma = sqrt(b_G / nu_g / a_G)),
-                                 extraDistr::qinvgamma(a/2, alpha = a_G/2, beta = b_G/2)),
-                       Upper = c(extraDistr::qlst(1 - a/2, 
-                                                  df = a_G,
-                                                  mu = mu_g,
-                                                  sigma = sqrt(b_G / nu_g / a_G)),
-                                 extraDistr::qinvgamma(1 - a/2, alpha = a_G/2, beta = b_G/2)),
-                       `Prob Dir` = c(extraDistr::plst(0, 
-                                                    df = a_G,
-                                                    mu = mu_g,
-                                                    sigma = sqrt(b_G / nu_g / a_G)),
-                                   NA))
-      ret$`Prob Dir` = 
-        sapply(ret$`Prob Dir`, function(x) max(x,1-x))
+      # Construct results
+      results = 
+        list(name = 
+               "One sample population mean analysis",
+             data = x,
+             print_data = FALSE,
+             CI_level = CI_level,
+             prior = 
+               paste0(
+                 "Prior: mu ~ N(",
+                 format(signif(prior_mean_mu, 3), 
+                        scientific = FALSE),
+                 ", sigma^2/",
+                 format(signif(prior_mean_nu, 3), 
+                        scientific = FALSE),
+                 "), sigma^2 ~ IG(shape=",
+                 format(signif(prior_var_shape, 3), 
+                        scientific = FALSE),
+                 "/2, rate=",
+                 format(signif(prior_var_rate, 3), 
+                        scientific = FALSE),
+                 "/2)"
+               )
+        )
       
-      return(ret)
+      # posterior summary
+      results$results = 
+        tibble(
+          Quantity = 
+            c("Population mean",
+              "Population variance"),
+          `Post Mean` = 
+            c(mu_g, 
+              b_G/2 / (a_G/2 - 1.0)),
+          Lower = c(extraDistr::qlst(a/2, 
+                                     df = a_G,
+                                     mu = mu_g,
+                                     sigma = sqrt(b_G / nu_g / a_G)),
+                    extraDistr::qinvgamma(a/2, alpha = a_G/2, beta = b_G/2)),
+          Upper = c(extraDistr::qlst(1 - a/2, 
+                                     df = a_G,
+                                     mu = mu_g,
+                                     sigma = sqrt(b_G / nu_g / a_G)),
+                    extraDistr::qinvgamma(1 - a/2, alpha = a_G/2, beta = b_G/2))
+        )
+      
+      # Compute pdir
+      if(paired){
+        results$pdir = 
+          list(pdir = extraDistr::plst(0, 
+                                       df = a_G,
+                                       mu = mu_g,
+                                       sigma = sqrt(b_G / nu_g / a_G)))
+        results$pdir$description = 
+          paste0("Probability that the difference in means (x - y) is ",
+                 ifelse(results$pdir$pdir > 0.5,
+                        "less",
+                        "greater"),
+                 " than 0")
+        results$pdir$pdir = 
+          max(results$pdir$pdir,
+              1.0 - results$pdir$pdir)
+      }
+      
+      
+      if(plot){
+        
+        results$plot =
+          tibble::tibble(x = 
+                           seq(
+                             extraDistr::qlst(0.005,
+                                              df = a_G,
+                                              mu = mu_g,
+                                              sigma = 
+                                                sqrt( b_G / a_G / nu_g)
+                             ),
+                             extraDistr::qlst(0.995,
+                                              df = a_G,
+                                              mu = mu_g,
+                                              sigma = 
+                                                sqrt( b_G / a_G / nu_g)
+                             ),
+                             l = 50)) |> 
+          ggplot(aes(x=x)) +
+          stat_function(fun = 
+                          function(x){
+                            extraDistr::dlst(x,
+                                             df = a_G,
+                                             mu = mu_g,
+                                             sigma = 
+                                               sqrt( b_G / a_G / nu_g))
+                          },
+                        linewidth = 2) +
+          theme_classic(base_size = 15) +
+          xlab(expression(mu)) + 
+          ylab("") + 
+          ggtitle(ifelse(paired,
+                         "Difference in means (x - y)",
+                         "Population mean"))
+      }
+      
+      results = 
+        structure(results,
+                  class = "b_procedure")
+      
+      return(results)
       
     }else{#End: one sample inference
       
+      # Create data tibble
       ttest_data = 
         tibble::tibble(group = rep(c("x","y"),
                                    c(length(x),
                                      length(y)))) |> 
         dplyr::mutate(y = c(x,y))
+      
+      # Set prior_mean_mu if missing
+      if(missing(prior_mean_mu))
+        prior_mean_mu = mean(ttest_data$y)
+      
       
       ret = 
         aov_b(y ~ group,
@@ -197,6 +276,80 @@ t_test_b = function(x,
               seed = seed,
               mc_error = mc_error)
       
+      # Create results object
+      results = 
+        list(
+          name = "Two sample population means analysis",
+          data = ttest_data,
+          print_data = FALSE,
+          CI_level = CI_level,
+          prior =
+            paste0(
+              "Prior: mu ~ N(",
+              format(signif(prior_mean_mu, 3), 
+                     scientific = FALSE),
+              ", sigma^2/",
+              format(signif(prior_mean_nu, 3), 
+                     scientific = FALSE),
+              "), sigma^2 ~ IG(shape=",
+              format(signif(prior_var_shape, 3), 
+                     scientific = FALSE),
+              "/2, rate=",
+              format(signif(prior_var_rate, 3), 
+                     scientific = FALSE),
+              "/2)"
+            ),
+          notes = "ROPE for the difference in means is given in terms of Cohen's D."
+        )
+      
+      # Get posterior summary
+      ## Get each population's parameters
+      if(heteroscedastic){
+        results$results = 
+          tibble(Quantity = 
+                   c("Population 1 mean",
+                     "Population 2 mean",
+                     "Population 1 variance",
+                     "Population 2 variance"))
+      }else{
+          results$results = 
+            tibble(Quantity = 
+                     c("Population 1 mean",
+                       "Population 2 mean",
+                       "Population 1 and 2 variance"))
+      }
+      
+      for(j in c("Post Mean","Lower","Upper")) results$results[[j]] = ret$summary[[j]]
+      
+      ## Get difference in means
+      results$results = 
+        results$results |> 
+        dplyr::bind_rows(
+          tibble(
+            Quantity = "Difference in population means (Pop 1 - Pop 2)",
+            `Post Mean` = ret$pairwise_summary$`Post Mean`[1],
+            Lower = ret$pairwise_summary$Lower[1],
+            Upper = ret$pairwise_summary$Upper[1],
+            Pr_in_ROPE = 
+              ret$pairwise_summary |> 
+              dplyr::pull(dplyr::contains("ROPE")),
+            ROPE_lower_bound = -ROPE,
+            ROPE_upper_bound = ROPE
+          )
+        )
+      
+      
+      # Get pdir
+      results$pdir = 
+        list(
+          pdir = ret$pairwise_summary$`Prob Dir`[1],
+          description = 
+            paste0("Probability that the difference in means (x - y) is ",
+                   ifelse(ret$pairwise_summary$`Post Mean` < 0,
+                          "less",
+                          "greater"),
+                   " than 0")
+        )
       
       
       if(plot){
@@ -208,7 +361,7 @@ t_test_b = function(x,
           sqrt(ret$summary |> 
                  dplyr::filter(grepl("Var : ",ret$summary$Variable)) |> 
                  dplyr::pull(.data$`Post Mean`))
-        ttest_plot = 
+        results$plot = 
           tibble::tibble(x = 
                            seq(
                              min(
@@ -249,14 +402,14 @@ t_test_b = function(x,
                   post_means,
                   post_sds) |> 
             max()
-          ttest_plot = 
-            ttest_plot +
+          results$plot = 
+            results$plot +
             geom_hline(yintercept = post_modes / 10,
                        aes(color = "Prior"),
                        linewidth = 2)
         }else{
-          ttest_plot =
-            ttest_plot  +
+          results$plot =
+            results$plot  +
             stat_function(fun = 
                             function(x){
                               dlst(x,
@@ -270,8 +423,8 @@ t_test_b = function(x,
                           aes(color = "Prior"),
                           linewidth = 2) 
         }
-        ttest_plot = 
-          ttest_plot + 
+        results$plot = 
+          results$plot + 
           scale_color_manual(values = c("Prior" = "#440154FF", 
                                         "Posterior (Pop1)" = "#21908CFF", 
                                         "Posterior (Pop2)" = "#FDE725FF")) +
@@ -279,15 +432,21 @@ t_test_b = function(x,
           xlab("") + 
           ylab("") + 
           labs(color = "Distribution") + 
-          ggtitle("Subpopulation means")
-        
-        print(ttest_plot)
+          ggtitle("Population means")
       }
       
-      return(summary(ret))
+      # attach aov_b object
+      results$object_fit = ret
+      
+      results = 
+        structure(results,
+                  class = "b_procedure")
+      
+      return(results)
     }
   }else{
     
+    # Set prior_mean_mu if missing
     if(missing(prior_mean_mu))
       prior_mean_mu = mean(data[[outcome_name]])
     
@@ -306,9 +465,218 @@ t_test_b = function(x,
             seed = seed,
             mc_error = mc_error)
     
-    if(plot) print(plot(ret))
+    # Get factor levels
+    factor_levels = 
+      sapply(ret$summary$Variable,
+             function(z) trimws(strsplit(z,":")[[1]][3])) |> 
+      unique() |> 
+      na.omit()
     
-    return(summary(ret))
+    
+    # Create results object
+    results = 
+      list(
+        name = "Two sample population means analysis",
+        data = data,
+        print_data = FALSE,
+        CI_level = CI_level,
+        prior =
+          paste0(
+            "Prior: mu ~ N(",
+            format(signif(prior_mean_mu, 3), 
+                   scientific = FALSE),
+            ", sigma^2/",
+            format(signif(prior_mean_nu, 3), 
+                   scientific = FALSE),
+            "), sigma^2 ~ IG(shape=",
+            format(signif(prior_var_shape, 3), 
+                   scientific = FALSE),
+            "/2, rate=",
+            format(signif(prior_var_rate, 3), 
+                   scientific = FALSE),
+            "/2)"
+          ),
+        notes = "ROPE for the difference in means is given in terms of Cohen's D."
+      )
+    
+    # Get posterior summary
+    ## Get each population's parameters
+    if(heteroscedastic){
+      results$results = 
+        tibble(Quantity = 
+                 c(paste0("Population ",
+                          factor_levels[1],
+                          " mean"),
+                   paste0("Population ",
+                          factor_levels[2],
+                          " mean"),
+                   paste0("Population ",
+                          factor_levels[1],
+                          " variance"),
+                   paste0("Population ",
+                          factor_levels[2],
+                          " variance")))
+    }else{
+      results$results = 
+        tibble(Quantity = 
+                 c(paste0("Population ",
+                          factor_levels[1],
+                          " mean"),
+                   paste0("Population ",
+                          factor_levels[2],
+                          " mean"),
+                   paste0("Population ",
+                          factor_levels[1],
+                          " and ",
+                          factor_levels[2],
+                          " variance")))
+    }
+    
+    for(j in c("Post Mean","Lower","Upper")) results$results[[j]] = ret$summary[[j]]
+    
+    ## Get difference in means
+    results$results = 
+      results$results |> 
+      dplyr::bind_rows(
+        tibble(
+          Quantity = 
+            paste0("Difference in population means (Pop ",
+                   factor_levels[1]," - Pop ",
+                   factor_levels[2],")"),
+          `Post Mean` = ret$pairwise_summary$`Post Mean`[1],
+          Lower = ret$pairwise_summary$Lower[1],
+          Upper = ret$pairwise_summary$Upper[1],
+          Pr_in_ROPE = 
+            ret$pairwise_summary |> 
+            dplyr::pull(dplyr::contains("ROPE")),
+          ROPE_lower_bound = -ROPE,
+          ROPE_upper_bound = ROPE
+        )
+      )
+    
+    
+    # Get pdir
+    results$pdir = 
+      list(
+        pdir = ret$pairwise_summary$`Prob Dir`[1],
+        description = 
+          paste0("Probability that the difference in means (",
+                 factor_levels[1],
+                 " - ",
+                 factor_levels[2],
+                 ") is ",
+                 ifelse(ret$pairwise_summary$`Post Mean` < 0,
+                        "less",
+                        "greater"),
+                 " than 0")
+      )
+    
+    
+    if(plot){
+      
+      color_labels = 
+        paste("Posterior (",
+              factor_levels,
+              ")",
+              sep = "")
+      color_values = 
+        c("#440154FF",
+          "#21908CFF",
+          "#FDE725FF")
+      names(color_values) = 
+        c("Prior", color_labels)
+      
+        
+      post_means = 
+        ret$summary |> 
+        dplyr::filter(grepl("Mean : ",ret$summary$Variable)) |> 
+        dplyr::pull(.data$`Post Mean`)
+      post_sds = 
+        sqrt(ret$summary |> 
+               dplyr::filter(!grepl("Mean :",ret$summary$Variable)) |> 
+               dplyr::pull(.data$`Post Mean`))
+      results$plot = 
+        tibble::tibble(x = 
+                         seq(
+                           min(
+                             qnorm(0.005,
+                                   post_means,
+                                   post_sds)
+                           ),
+                           max(
+                             qnorm(0.995,
+                                   ret$summary |> 
+                                     dplyr::filter(grepl("Mean : ",
+                                                         ret$summary$Variable)) |> 
+                                     dplyr::pull(.data$`Post Mean`),
+                                   sqrt(ret$summary |> 
+                                          dplyr::filter(!grepl("Mean : ",
+                                                               ret$summary$Variable)) |> 
+                                          dplyr::pull(.data$`Post Mean`)))
+                           ),
+                           l = 50)) |> 
+        ggplot(aes(x=x)) +
+        stat_function(fun = 
+                        function(x){
+                          dnorm(x,
+                                post_means[1],
+                                post_sds[1])
+                        },
+                      aes(color = color_labels[1]),
+                      linewidth = 2) +
+        stat_function(fun = 
+                        function(x){
+                          dnorm(x,
+                                post_means[2],
+                                post_sds[1 + heteroscedastic])
+                        },
+                      aes(color = color_labels[2]),
+                      linewidth = 2)
+      if(improper){
+        post_modes = 
+          dnorm(post_means,
+                post_means,
+                post_sds) |> 
+          max()
+        results$plot = 
+          results$plot +
+          geom_hline(yintercept = post_modes / 10,
+                     aes(color = "Prior"),
+                     linewidth = 2)
+      }else{
+        results$plot =
+          results$plot  +
+          stat_function(fun = 
+                          function(x){
+                            dlst(x,
+                                 df = ret$hyperparameters$a,
+                                 mu = ret$hyperparameters$mu,
+                                 sigma = 
+                                   ret$hyperparameters$b / 
+                                   ret$hyperparameters$a / 
+                                   ret$hyperparameters$nu)
+                          },
+                        aes(color = "Prior"),
+                        linewidth = 2) 
+      }
+      results$plot = 
+        results$plot + 
+        scale_color_manual(values = color_values) +
+        theme_classic(base_size = 15) +
+        xlab("") + 
+        ylab("") + 
+        labs(color = "Distribution") + 
+        ggtitle("Population means")
+    }
+    
+    # attach aov_b object
+    results$object_fit = ret
+    
+    results = 
+      structure(results,
+                class = "b_procedure")
+    
+    return(results)
   }
   
 }

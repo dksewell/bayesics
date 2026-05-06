@@ -45,25 +45,7 @@
 #' then a Jeffrey's prior will be used, i.e., \eqn{\Gamma(0.5,0)} (improper), 
 #' while if \code{prior = "flat"}, \eqn{\Gamma(0.001,0.001)} will be used.  
 #' 
-#' @returns (returned invisible) A list with the following:
-#' \itemize{
-#'  \item \code{x}, \code{offset}: data and offset(s)
-#'  \item \code{posterior_mean}, \code{posterior_mean_pop1}, \code{posterior_mean_pop2}: 
-#'  posterior means of the Poisson rates
-#'  \item \code{CI}, \code{CI_pop1}, \code{CI_pop2}: Credible interval bounds for the rates
-#'  \item \code{CI_lambda1_over_lambda2}: Credible interval bounds for the rate 
-#'  ratio (rate of population 1 over the rate of population 2)
-#'  \item \code{Pr_less_than_r}: (1 sample analysis only) If \code{r} was 
-#'  supplied, the posterior probability that the rate is less than \code{r}.
-#'  \item \code{Pr_rate_ratio_lt_one}: (2 sample analysis only) Posterior 
-#'  probability that the rate ratio is less than 1
-#'  \item \code{Pr_rateratio_in_ROPE}: (2 sample analysis only) Posterior 
-#'  probability that the rate ratio is in the ROPE (based on 
-#'  \code{Pr_rate_ratio_lt_one})
-#'  \item \code{rate_plot}: Posterior and prior plots for the rates
-#'  \item \code{posterior_parameters}: Posterior parameters for rates for the 
-#'  gamma posterior distribution
-#' }
+#' @returns An object of class \code{\link{b_procedure}}.
 #' 
 #' @examples
 #' \donttest{
@@ -94,7 +76,8 @@ poisson_test_b = function(x,
                           offset,
                           r,
                           ROPE,
-                          prior = "jeffreys",
+                          prior = c("jeffreys",
+                                    "flat"),
                           prior_shape_rate,
                           CI_level = 0.95,
                           plot = TRUE,
@@ -116,10 +99,7 @@ poisson_test_b = function(x,
   
   # Prior distribution
   if(missing(prior_shape_rate)){
-    prior = c("flat",
-              "jeffreys")[pmatch(tolower(prior),
-                                 c("flat",
-                                   "jeffreys"))]
+    prior = match.arg(prior)
     
     if(prior == "flat"){
       message("Prior shape parameters were not supplied.\nA flat Gamma(0.001,0.001) prior will be used.")
@@ -137,6 +117,24 @@ poisson_test_b = function(x,
   }
   
   
+  # Setup results object
+  results = 
+    list(name = 
+           paste0("Analysis of ",
+                  c("a single population rate",
+                    "two population rates")[length(x)]),
+         data = tibble(`Number of events` = x,
+                       `Time/area base`  = offset),
+         print_data = TRUE,
+         CI_level = CI_level,
+         prior = 
+           paste0("Prior on the population rate: Gamma(shape=",
+                  prior_shape_rate[1],
+                  ", rate=",
+                  prior_shape_rate[2],
+                  ")"))
+  
+  
   # One sample inference ----------------------------------------------------
   
   if(length(x) == 1){
@@ -148,68 +146,45 @@ poisson_test_b = function(x,
         offset)
     
     # Compute results
-    results = 
-      list(x = 
-             x,
-           offset = 
-             offset,
-           posterior_mean = 
-             post_shape_rate[1] / post_shape_rate[2],
-           CI = 
-             c(
-               qgamma(0.5 * alpha_ci,
-                      shape = post_shape_rate[1],
-                      rate = post_shape_rate[2]),
-               qgamma(1.0 - 0.5 * alpha_ci,
-                      shape = post_shape_rate[1],
-                      rate = post_shape_rate[2])
-             )
+    results$results = 
+      tibble(
+        Quantity = "Rate",
+        `Post Mean` = 
+          post_shape_rate[1] / post_shape_rate[2],
+        Lower = 
+          qgamma(0.5 * alpha_ci,
+                 shape = post_shape_rate[1],
+                 rate = post_shape_rate[2]),
+        Upper = 
+          qgamma(1.0 - 0.5 * alpha_ci,
+                 shape = post_shape_rate[1],
+                 rate = post_shape_rate[2])
       )
     
-    # Print results
-    message("\n----------\n\nAnalysis of a single population rate using Bayesian techniques\n")
-    message("\n----------\n\n")
-    message(paste0("Number of events: ", x,"\n\n"))
-    message(paste0("Time/area base for event counts: ", offset,"\n\n"))
-    message(paste0("Prior used: Gamma(", 
-               format(signif(prior_shape_rate[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(prior_shape_rate[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Posterior mean of the rate: ", 
-               format(signif(results$posterior_mean, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0(100 * CI_level,
-               "% credible interval: (", 
-               format(signif(results$CI[1], 3), 
-                      scientific = FALSE),
-               ", ",
-               format(signif(results$CI[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
+    # Compute pdir
     if(!missing(r)){
-      results$Pr_less_than_r = 
-        pgamma(r,
-               shape = post_shape_rate[1],
-               rate = post_shape_rate[2])
-      message(paste0("Probability that rate < ",
-                 format(signif(r, 3), 
-                        scientific = FALSE),
-                 ": ",
-                 format(signif(results$Pr_less_than_r, 3), 
-                        scientific = FALSE),
-                 "\n\n"))
+      results$pdir = 
+        list(pdir = 
+               pgamma(r,
+                      shape = post_shape_rate[1],
+                      rate = post_shape_rate[2]))
+      
+      results$pdir$description = 
+        paste0("Probability that the rate is ",
+               ifelse(results$pdir$pdir > 0.5,
+                      "less",
+                      "greater"),
+               " than ",
+               r)
+      results$pdir$pdir = 
+        max(results$pdir$pdir,
+            1.0 - results$pdir$pdir)
     }
-    message("\n----------\n\n")
-    
     
     # Plot (if requested)
     if(plot){
       
-      results$rate_plot = 
+      results$plot = 
         tibble::tibble(x = seq(qgamma(0.005,
                                       shape = post_shape_rate[1],
                                       rate = post_shape_rate[2]),
@@ -244,16 +219,13 @@ poisson_test_b = function(x,
         labs(color = "Distribution") + 
         ggtitle("Population rate")
       
-      print(results$rate_plot)
-      
     }
     
-    # Add posterior parameters to returned object
-    results$posterior_parameters = 
-      c(shape_1 = post_shape_rate[1],
-        shape_2 = post_shape_rate[2])
+    results = 
+      structure(results,
+                class = "b_procedure")
     
-    invisible(results)
+    return(results)
   }else{#End: One sample inference
     
     # Two sample inference ----------------------------------------------------
@@ -316,116 +288,60 @@ poisson_test_b = function(x,
       lambda1_draws / lambda2_draws
     
     
-    # Find CI for rate ratios
-    CI_bounds = 
-      quantile(lambda1_draws / lambda2_draws,
-               c(0.5 * alpha_ci,
-                 1.0 - 0.5 * alpha_ci))
-    
-    # Compute results
-    results = 
-      list(x = x,
-           offset = offset,
-           posterior_mean_pop1 = 
-             post_shape_rate[1,1] / post_shape_rate[1,2],
-           posterior_mean_pop2 = 
-             post_shape_rate[2,1] / post_shape_rate[2,2],
-           CI_pop1 = 
-             c(
-               qgamma(0.5 * alpha_ci,
-                      shape = post_shape_rate[1,1],
-                      rate = post_shape_rate[1,2]),
-               qgamma(1.0 - 0.5 * alpha_ci,
-                      shape = post_shape_rate[1,1],
-                      rate = post_shape_rate[1,2])
-             ),
-           CI_pop2 = 
-             c(
-               qgamma(0.5 * alpha_ci,
-                      shape = post_shape_rate[2,1],
-                      rate = post_shape_rate[2,2]),
-               qgamma(1.0 - 0.5 * alpha_ci,
-                      shape = post_shape_rate[2,1],
-                      rate = post_shape_rate[2,2])
-             ),
-           CI_lambda1_over_lambda2 = 
-             c(CI_bounds[1],CI_bounds[2]),
-           Pr_rateratio_in_ROPE = 
-             mean( (rate_ratios > ROPE[1]) & 
-                     (rate_ratios < ROPE[2]) ),
-           Pr_rate_ratio_lt_one = 
-             mean( rate_ratios < 1.0 )
+    # Compute posterior results
+    results$results = 
+      tibble(
+        Quantity = 
+          c("Population 1 rate",
+            "Population 2 rate",
+            "Rate ratio (Pop 1 vs. Pop 2)"),
+        `Post Mean` = 
+          c(post_shape_rate[1,1] / post_shape_rate[1,2],
+            post_shape_rate[2,1] / post_shape_rate[2,2],
+            mean(lambda1_draws / lambda2_draws)),
+        Lower = 
+          c(qgamma(0.5 * alpha_ci,
+                   shape = post_shape_rate[1,1],
+                   rate = post_shape_rate[1,2]),
+            qgamma(0.5 * alpha_ci,
+                   shape = post_shape_rate[2,1],
+                   rate = post_shape_rate[2,2]),
+            quantile(lambda1_draws / lambda2_draws,
+                     0.5 * alpha_ci)),
+        Upper = 
+          c(qgamma(1.0 - 0.5 * alpha_ci,
+                   shape = post_shape_rate[1,1],
+                   rate = post_shape_rate[1,2]),
+            qgamma(1.0 - 0.5 * alpha_ci,
+                   shape = post_shape_rate[2,1],
+                   rate = post_shape_rate[2,2]),
+            quantile(lambda1_draws / lambda2_draws,
+                     1.0 - 0.5 * alpha_ci)),
+        Pr_in_ROPE = 
+          c(NA,NA,
+            mean( (rate_ratios > ROPE[1]) & 
+                    (rate_ratios < ROPE[2]) )),
+        ROPE_lower_bound = 
+          c(NA,NA,ROPE[1]),
+        ROPE_upper_bound = 
+          c(NA,NA,ROPE[2])
       )
     
-    # Print results
-    message("\n----------\n\nAnalysis of two population rates using Bayesian techniques\n")
-    message("\n----------\n\n")
-    message(paste0("Number of events: Population 1 = ", 
-               x[1],
-               "; Population 2 = ",
-               x[2],
-               "\n\n"))
-    message(paste0("Time/area base for event counts: Population 1 = ",
-               offset[1],
-               "; Population 2 = ",
-               offset[2],
-               "\n\n"))
-    message(paste0("Prior used: Gamma(", 
-               format(signif(prior_shape_rate[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(prior_shape_rate[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Posterior mean: Population 1 = ", 
-               format(signif(results$posterior_mean_pop1, 3), 
-                      scientific = FALSE),
-               "; Population 2 = ",
-               format(signif(results$posterior_mean_pop2, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0(100 * CI_level,
-               "% credible interval: Population 1 = (", 
-               format(signif(results$CI_pop1[1], 3), 
-                      scientific = FALSE),
-               ", ",
-               format(signif(results$CI_pop1[2], 3), 
-                      scientific = FALSE),
-               "); Population 2 = (",
-               format(signif(results$CI_pop2[1], 3), 
-                      scientific = FALSE),
-               ", ",
-               format(signif(results$CI_pop2[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0(100 * CI_level,
-               "% credible interval: (Population 1) / (Population 2) = (", 
-               format(signif(results$CI_lambda1_over_lambda2[1], 3), 
-                      scientific = FALSE),
-               ", ",
-               format(signif(results$CI_lambda1_over_lambda2[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Probability that the rate ratio is < 1 = ", 
-               format(signif(results$Pr_rate_ratio_lt_one, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0("Probability that the rate ratio (pop 1 vs. pop 2) is in the ROPE, defined to be (",
-               format(signif(ROPE[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(ROPE[2], 3), 
-                      scientific = FALSE),
-               ") = ",
-               format(signif(results$Pr_rateratio_in_ROPE, 3), 
-                      scientific = FALSE),
-               "\n\n")) 
-    message("\n----------\n\n")
-    
+    # compute pdir
+    results$pdir = list(pdir = mean( rate_ratios < 1.0 ))
+    results$pdir$description = 
+      paste0("Probability that the rate ratio (Pop 1 vs. Pop 2) is ",
+             ifelse(results$pdir$pdir > 0.5,
+                    "less",
+                    "greater"),
+             " than 1")
+    results$pdir$pdir = 
+      max(results$pdir$pdir,
+          1.0 - results$pdir$pdir)
     
     # Plot (if requested)
     if(plot){
-      results$rate_plot = 
+      results$plot = 
         tibble::tibble(x = seq(min(qgamma(0.005,
                                           shape = post_shape_rate[,1],
                                           rate = post_shape_rate[,2])),
@@ -466,21 +382,13 @@ poisson_test_b = function(x,
         ylab("") + 
         labs(color = "Distribution") + 
         ggtitle("Population rate")
-      
-      print(results$rate_plot)
-      
     }
     
-    # Add posterior parameters to returned object
-    results$posterior_parameters = list()
-    results$posterior_parameters$population_1 = 
-      c(shape_1 = post_shape_rate[1,1],
-        shape_2 = post_shape_rate[1,2])
-    results$posterior_parameters$population_2 = 
-      c(shape_1 = post_shape_rate[2,1],
-        shape_2 = post_shape_rate[2,2])
     
+    results = 
+      structure(results,
+                class = "b_procedure")
     
-    invisible(results)
+    return(results)
   }#End: 2 sample inference
 }

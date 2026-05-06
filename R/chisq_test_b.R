@@ -106,7 +106,8 @@ independence_b = function(x,
     list(name = "2-way table test for independence",
          data = x,
          print_data = TRUE,
-         CI_level = CI_level)
+         CI_level = CI_level,
+         sampling_design = sampling_design)
   
   # Multinomial sampling design
   if(sampling_design == "multinomial"){
@@ -139,7 +140,7 @@ independence_b = function(x,
            prior = matrix(prior_shapes,
                           nR,nC,
                           dimnames = dimnames(x)))
-      
+    
     
     ## Get ROPE
     if(missing(ROPE)){
@@ -287,11 +288,15 @@ independence_b = function(x,
               mean(x <= ROPE[2]) - 
                 mean(x <= ROPE[1])
             })
-    dimnames(results$individual_ROPE) = 
-      dimnames(x)
     
     results$results$Pr_in_ROPE = 
       c(temp_ROPE)
+    
+    results$ROPE = 
+      list(ROPE_lower_bound = ROPE[1],
+           ROPE_upper_bound = ROPE[2],
+           description = "Probability the odds ratio (unrestricted vs. independence)")
+           
     
     odds_ratios_binary_ROPE = 
       (odds_ratios <= ROPE[2]) & 
@@ -308,18 +313,18 @@ independence_b = function(x,
     
     ### Compute PDir
     results$pdir = list()
-    results$pdirdescription = 
-      "Probability that p_ij < p_(i.) x p_(.j)"
+    results$pdir$description = 
+      "Probability that P(row,col) < P(row) x P(col)"
     results$pdir$pdir = 
       odds_ratios |> 
       apply(1:2,
             function(x){
               mean(x <= 1)
             })
-    results$pdir$pdir = 
-      apply(results$pdir$pdir,1:2,
-            function(x) max(x, 1.0 - x)
-      )
+    # results$pdir$pdir = 
+    #   apply(results$pdir$pdir,1:2,
+    #         function(x) max(x, 1.0 - x)
+    #   )
     dimnames(results$pdir$pdir) = 
       dimnames(x)
     
@@ -438,8 +443,8 @@ independence_b = function(x,
     ### Quality character
     if(flipped){
       results$results = 
-        expand.grid(Col = paste("Col",1:nC),
-                    Row = paste("Row",1:nR)) |> 
+        expand.grid(Col = paste("Col",1:nR),
+                    Row = paste("Row",1:nC)) |> 
         mutate(Quantity = 
                  paste(Row,Col,
                        sep = ", "),
@@ -575,6 +580,11 @@ independence_b = function(x,
             }) |> 
       c()
     
+    results$ROPE = 
+      list(ROPE_lower_bound = ROPE[1],
+           ROPE_upper_bound = ROPE[2],
+           description = "Probability the odds ratio (unrestricted vs. independence)")
+    
     
     odds_ratios_binary_ROPE = 
       (odds_ratios <= ROPE[2]) & 
@@ -594,18 +604,18 @@ independence_b = function(x,
     results$pdir = list()
     results$pdir$description = 
       ifelse(flipped,
-             "Probability that p_i|j < p_i",
-             "Probability that p_j|i < p_j")
+             "Probability that P(row|col) < P(row)",
+             "Probability that P(col|row) < P(col)")
     results$pdir$pdir = 
       odds_ratios |> 
       apply(1:2,
             function(x){
               mean(x <= 1)
             })
-    results$pdir$pdir = 
-      apply(results$pdir$pdir,1:2,
-            function(x) max(x, 1.0 - x)
-      )
+    # results$pdir$pdir = 
+    #   apply(results$pdir$pdir,1:2,
+    #         function(x) max(x, 1.0 - x)
+    #   )
     dimnames(results$pdir$pdir) = 
       dimnames(x)
     if(flipped)
@@ -646,113 +656,11 @@ independence_b = function(x,
   
   results$display_as_matrices = TRUE
   
-  invisible(results)
+  results = 
+    structure(results,
+              class = "b_procedure")
+  
+  return(results)
 }
 
 
-# #' @export
-# homogeneity_b = function(x,
-#                          y,
-#                          ROPE,
-#                          prior = "uniform",
-#                          prior_shapes,
-#                          CI_level = 0.95,
-#                          seed = 1,
-#                          mc_error = 0.01){
-#   
-#   # Get data
-#   x = as.matrix(x)
-#   if(dim(x)[2] == 1){
-#     x = as.vector(x)
-#     if(missing(y))
-#       stop("if x is a vector, y must also be supplied")
-#     if (length(x) != length(y)) 
-#       stop("'x' and 'y' must have the same length")
-#     x = rbind(x,c(y))
-#   }
-#   if(nrow(x) != 2)
-#     stop("x must have two rows.")
-#   
-#   J = ncol(x)
-#   alpha_ci = 1.0 - CI_level
-#   
-#   
-#   # Prior distribution
-#   if(missing(prior_shapes)){
-#     prior = c("uniform",
-#               "jeffreys")[pmatch(tolower(prior),
-#                                  c("uniform",
-#                                    "jeffreys"))]
-#     
-#     if(prior == "uniform"){
-#       message("Prior shape parameters were not supplied.\nA uniform prior will be used.")
-#       prior_shapes = rep(1.0,J)
-#     }
-#     if(prior == "jeffreys"){
-#       message("Prior shape parameters were not supplied.\nJeffrey's prior will be used.")
-#       prior_shapes = rep(0.5,J)
-#     }
-#   }else{
-#     if(any(prior_shapes <= 0))
-#       stop("Prior shape parameters must be positive.")
-#     if(length(prior_shapes) == 1)
-#       prior_shapes == rep(prior_shapes,J)
-#     if(length(prior_shapes) != J)
-#       stop("Length of prior_shapes should either match the number of categories or be of length 1")
-#   }
-#   
-#   # Get ROPE
-#   if(missing(ROPE)){
-#     ROPE = c(1.0 / 1.125, 1.125)
-#     # From Kruchke (2018) on rate ratios from FDA <1.25. (Use half of small effect size for ROPE, hence 0.25/2) 
-#     #   Use the same thing for odds ratios.
-#   }else{
-#     if(length(ROPE) > 2) stop("ROPE must be given as an upper bound, or given as both lower and upper bounds.")
-#     if((length(ROPE) > 1) & (ROPE[1] >= ROPE[2])) stop("ROPE lower bound must be smaller than ROPE upper bound")
-#     if(length(ROPE) == 1) ROPE = c(1.0 / ROPE, ROPE)
-#   }
-#   
-#   # Get posterior parameters
-#   post_shapes = 
-#     tcrossprod(matrix(1.0,2,1), prior_shapes) + x
-#   
-#   # Get posterior draws
-#   set.seed(seed)
-#   ## Get preliminary draws
-#   p1_draws = 
-#     rdirichlet(500,
-#                post_shapes[1,])
-#   p2_draws = 
-#     rdirichlet(500,
-#                post_shapes[2,])
-#   ## Use CLT for empirical quantiles:
-#   #     A Central Limit Theorem For Empirical Quantiles in the Markov Chain Setting. Peter W. Glynn and Shane G. Henderson
-#   #     With prob 0.99 we will be within mc_relative_error of the alpha_ci/2 quantile
-#   fhat = 
-#     lapply(1:J,
-#            function(j){
-#              density(p1_draws[,j] - p2_draws[,j],
-#                      from = -1.0 + .Machine$double.eps,
-#                      to = 1.0 - .Machine$double.eps)
-#            })
-#     
-#   n_draws = 
-#     sapply(1:J,
-#            function(j){
-#              0.5 * alpha_ci * (1.0 - 0.5 * alpha_ci) *
-#                (
-#                  qnorm(0.5 * (1.0 - 0.99)) / 
-#                    mc_relative_error /
-#                    quantile(p1_draws[,j] - p2_draws[,j], 0.5 * alpha_ci) /
-#                    fhat[[j]]$y[which.min(abs(fhat[[j]]$x - 
-#                                           quantile(p1_draws[,j] - p2_draws[,j], 0.5 * alpha_ci)))]
-#                )^2 |> 
-#                round()
-#            })
-#     
-#   
-#   
-#   
-# }
-# 
-# 

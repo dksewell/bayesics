@@ -494,3 +494,16 @@ plot.survfit_b = function(x,
     
   }#End: multiple group analysis
 }
+
+
+#' @rdname plot
+#' @method plot survfit_b
+#' @export
+plot.b_procedure = function(x,...){
+  if(!("plot" %in% names(x))){
+    warning("Either no plot is available or the plot argument was set to FALSE.")
+  }else{
+    print(x$plot)
+  }
+}
+                          

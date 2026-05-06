@@ -34,20 +34,7 @@
 #' credible interval for \eqn{p}.
 #' @param plot logical.  Should a plot be shown?
 #' 
-#' @returns (returned invisible) A list with the following:
-#' \itemize{
-#'  \item \code{posterior_mean}: Posterior mean of the median difference
-#'  \item \code{CI}: Credible interval for the median difference
-#'  \item \code{Pr_less_than_p}: Posterior probability that the proportion of 
-#'  differences that are positive is less than the argument \code{p0}.
-#'  \item \code{ROPE_bounds}: ROPE bounds for the proportion of differences 
-#'  that are positive
-#'  \item \code{ROPE}: Posterior probability that the proportion of differences 
-#'  which are positive falls in the ROPE
-#'  \item \code{prop_plot}: Prior and posterior plot
-#'  \item \code{posterior_parameters}: Posterior beta shape parameters for the 
-#'  proportion of differences which are positive
-#' }
+#' @returns An object of class \code{\link{b_procedure}}.
 #' 
 #' @examples
 #' \donttest{
@@ -81,7 +68,8 @@
 sign_test_b = function(x,
                        y,
                        p0 = 0.5,
-                       prior = "jeffreys",
+                       prior = c("jeffreys",
+                                 "uniform"),
                        prior_shapes,
                        ROPE,
                        CI_level = 0.95,
@@ -138,10 +126,7 @@ sign_test_b = function(x,
   
   # Prior distribution
   if(missing(prior_shapes)){
-    prior = c("uniform",
-              "jeffreys")[pmatch(tolower(prior),
-                                 c("uniform",
-                                   "jeffreys"))]
+    prior = match.arg(prior)
     
     if(prior == "uniform"){
       message("Prior shape parameters were not supplied.\nA uniform prior will be used.")
@@ -163,75 +148,62 @@ sign_test_b = function(x,
     c(sum(near(z,1.0)),
       length(z) - sum(near(z,1.0)))
   
-  # Compute results
-  results = 
-    list(posterior_mean = 
-           post_shapes[1] / sum(post_shapes),
-         CI = 
-           c(
-             qbeta(0.5 * alpha_ci,
-                   post_shapes[1],
-                   post_shapes[2]),
-             qbeta(1.0 - 0.5 * alpha_ci,
-                   post_shapes[1],
-                   post_shapes[2])
-           ),
-         Pr_less_than_p = 
-           pbeta(p0,post_shapes[1],post_shapes[2]),
-         ROPE = 
-           pbeta(ROPE_bounds[2],post_shapes[1],post_shapes[2]) - 
-           pbeta(ROPE_bounds[1],post_shapes[1],post_shapes[2]),
-         ROPE_bounds = ROPE_bounds
+  # Construct results list
+  results = list(name = "Non-parametric sign test")
+  results$data = 
+    tibble(x = x)
+  if(!missing(y)) results$data$y = y
+  results$print_data = FALSE
+  results$CI_level = CI_level
+  results$prior = 
+    paste0("Prior on the probability x > y: Beta(",
+           prior_shapes[1],
+           ", ",
+           prior_shapes[2])
+  
+  # Posterior results
+  results$results = 
+    tibble(
+      Quantity = "Probability x > y",
+      `Post Mean` = 
+        post_shapes[1] / sum(post_shapes),
+      Lower = 
+        qbeta(0.5 * alpha_ci,
+              post_shapes[1],
+              post_shapes[2]),
+      Upper = 
+        qbeta(1.0 - 0.5 * alpha_ci,
+              post_shapes[1],
+              post_shapes[2]),
+      Pr_in_ROPE = 
+        pbeta(ROPE_bounds[2],post_shapes[1],post_shapes[2]) - 
+        pbeta(ROPE_bounds[1],post_shapes[1],post_shapes[2]),
+      ROPE_lower_bound = 
+        ROPE_bounds[1],
+      ROPE_upper_bound = 
+        ROPE_bounds[2]
     )
   
-  
-  
-  # Print results
-  message("\n----------\n\n Non-parametric sign test using Bayesian techniques\n")
-  message("\n----------\n\n")
-  message(paste0("Prior used: Beta(", 
-             format(signif(prior_shapes[1], 3), 
-                    scientific = FALSE),
-             ",",
-             format(signif(prior_shapes[2], 3), 
-                    scientific = FALSE),
-             ")\n\n"))
-  message(paste0("Posterior mean: ", 
-             format(signif(results$posterior_mean, 3), 
-                    scientific = FALSE),
-             "\n\n"))
-  message(paste0(100 * CI_level,
-             "% credible interval: (", 
-             format(signif(results$CI[1], 3), 
-                    scientific = FALSE),
-             ", ",
-             format(signif(results$CI[2], 3), 
-                    scientific = FALSE),
-             ")\n\n"))
-  message(paste0("Probability that p < ",
-             format(signif(p0, 3), 
-                    scientific = FALSE),
-             ": ",
-             format(signif(results$Pr_less_than_p, 3), 
-                    scientific = FALSE),
-             "\n\n"))
-  message(paste0("Probability that ",
-             format(signif(ROPE_bounds[1], 3), 
-                    scientific = FALSE),
-             " < p < ",
-             format(signif(ROPE_bounds[2], 3), 
-                    scientific = FALSE),
-             ": ",
-             format(signif(results$ROPE, 3), 
-                    scientific = FALSE),
-             "\n\n"))
-  message("\n----------\n\n")
+  # Get pdir
+  results$pdir = list()
+  results$pdir$pdir = 
+    pbeta(p0,post_shapes[1],post_shapes[2])
+  results$pdir$description = 
+    paste0("Probability that the Probability x > y is ",
+           ifelse(results$pdir$pdir > 0.5,
+                  "less",
+                  "greater"),
+           " than ",
+           p0)
+  results$pdir$pdir = 
+    max(results$pdir$pdir,
+        1.0 - results$pdir$pdir)
   
   
   # Plot (if requested)
   if(plot){
     
-    results$prop_plot = 
+    results$plot = 
       tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                              l = 50)) |> 
       ggplot(aes(x=x)) +
@@ -261,14 +233,12 @@ sign_test_b = function(x,
       labs(color = "Distribution") + 
       ggtitle(plot_title)
     
-    print(results$prop_plot)
-    
   }
   
-  # Add posterior parameters to returned object
-  results$posterior_parameters = 
-    c(shape_1 = post_shapes[1],
-      shape_2 = post_shapes[2])
   
-  invisible(results)
+  results = 
+    structure(results,
+              class = "b_procedure")
+  
+  return(results)
 }

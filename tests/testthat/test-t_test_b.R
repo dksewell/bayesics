@@ -36,6 +36,7 @@ test_that("Test t_test_b",{
              paired = TRUE)
   )
   
+  
   # Test output
   ## Single population
   expect_s3_class(fita,c("tbl_df", "tbl", "data.frame"))

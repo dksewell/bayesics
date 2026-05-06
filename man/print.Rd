@@ -6,6 +6,7 @@
 \alias{print.lm_b}
 \alias{print.mediate_b}
 \alias{print.survfit_b}
+\alias{print.b_procedure}
 \title{Print bayesics objects.}
 \usage{
 \method{print}{aov_b}(x, ...)
@@ -15,6 +16,8 @@
 \method{print}{mediate_b}(x, ...)
 
 \method{print}{survfit_b}(x, ...)
+
+\method{print}{b_procedure}(x, ...)
 }
 \arguments{
 \item{x}{an object used to select a method.}

@@ -55,15 +55,7 @@ credible interval.}
 (ignored if \code{large_sample_approx = TRUE}.)}
 }
 \value{
-(returned invisible) list including the following:
-\itemize{
-\item \code{data}: data
-\item \code{posterior_mean}: posterior mean of the odds ratio (cases vs. controls)
-\item \code{CI}: Credible interval
-\item \code{Pr_oddsratio_in_ROPE}: Probability the odds ratio (cases vs. controls) is in the ROPE
-\item \code{posterior_draws}: posterior draws of the odds ratio (cases vs. controls)
-\item \code{or_plot}: odds ratio (cases vs. controls) posterior plot
-}
+An object of class \code{\link{b_procedure}}.
 }
 \description{
 Bayesian analysis of a case-control study (without covariates).

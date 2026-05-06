@@ -5,7 +5,8 @@
 #' and optional plotting output.
 #'
 #' @details
-#' A \code{b_procedure} object is a named list with the following components:
+#' A \code{b_procedure} object is a named list with the following components 
+#' (not all bayesian procedures will yield objects with all of these entries):
 #'
 #' \describe{
 #'   \item{name}{Character string giving the name of the procedure.}
@@ -14,8 +15,9 @@
 #'   \code{print.b_procedure}.}
 #'   \item{CI_level}{Numeric scalar giving the credible interval level as 
 #'   provided by the user.}
+#'   \item {sampling_design}{Character; Used by \code{independence_b}.}
 #'   \item{prior}{Character string describing the prior used.}
-#'   \item{posterior_summaries}{A tibble containing posterior summaries with
+#'   \item{results}{A tibble containing posterior summaries with
 #'     columns:
 #'     \itemize{
 #'       \item \code{Quantity}: character
@@ -26,27 +28,31 @@
 #'       \item \code{ROPE_lower_bound},\code{ROPE_upper_bound}: optional numeric
 #'     }
 #'   }
-#'   \item{PDir}{If applicable, list containing:
+#'   \item{PDir}{List containing:
 #'     \itemize{
-#'       \item \code{description}: character
-#'       \item \code{pdir}: numeric scalar giving the probability of 
+#'       \item \code{description}: Character describing the probability of 
+#'       direction.
+#'       \item \code{pdir}: Numeric scalar giving the probability of 
 #'   direction.
 #'     }
 #'   }
-#'   \item{BF}{If applicable, list containing:
+#'   \item{BF}{List containing:
 #'     \itemize{
 #'       \item \code{description}: character
 #'       \item \code{BF}: numeric scalar giving the Bayes factor
 #'       \item \code{interpretation}: character
 #'     }
 #'   }
-#'   \item{PDir_description}{If applicable, character string describing the 
-#'   probability of direction.}
-#'   \item{plot}{A \code{ggplot} object associated with the procedure 
-#'   (optional).}
-#'   \item{plot_description}{Character string describing the plot (optional).}
+#'   \item{overall_ROPE}{List containing:
+#'    \itemize{
+#'      \item \code{description}: character
+#'      \item \code{Pr_in_ROPE}: numeric
+#'    }
+#'   }
+#'   \item{plot}{A \code{ggplot} object associated with the procedure.}
 #'   \item{object_fit}{If applicable, the underlying fitted model object 
 #'   (e.g., \code{aov_b}).}
+#'   \item{notes} character vector
 #' }
 #'
 #' @section S3 methods:

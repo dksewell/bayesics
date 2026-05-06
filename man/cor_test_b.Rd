@@ -13,7 +13,7 @@ cor_test_b(x, ...)
   y,
   tau = 0,
   ROPE,
-  prior = "centered",
+  prior = c("centered", "uniform", "positive", "negative"),
   prior_shapes,
   CI_level = 0.95,
   plot = TRUE,
@@ -61,18 +61,7 @@ interval.}
 \item{data}{ADD description!}
 }
 \value{
-(returned invisible) A list with the following:
-\itemize{
-\item \code{posterior_mean}: posterior mean of Kendall's tau
-\item \code{CI}: Credible interval bounds
-\item \code{Pr_less_than_tau}: Posterior probability that Kendall's tau is less than provided reference \code{tau}
-\item \code{Pr_in_ROPE}: Posterior probability that Kendall's tau is in the ROPE
-\item \code{prob_plot}: Posterior and prior plot
-\item \code{posterior_parameters}: The posterior for Kendall's tau is a location shift and scaled
-beta distribution to fall over the range -1 to 1, i.e., \eqn{0.5 * (\tau + 1.0)} follows a
-beta with shape parameters given by \code{posterior_parameters}.
-\item \code{dfba_bivariate_concordance_object}: The underlying object from the DFBA package
-}
+An object of class \code{\link{b_procedure}}.
 }
 \description{
 Test for Association/Correlation Between Paired Samples via Kendall's tau
@@ -80,7 +69,7 @@ Test for Association/Correlation Between Paired Samples via Kendall's tau
 \details{
 cor_test_b relies on the robust Kendall's tau, defined to be
 \deqn{
- \tau := \frac{(\# \text{concordant pairs}) - (\# \text{discordant pairs})}{(\# \text{concordant pairs}) - (\# \text{discordant pairs})},
+ \tau := \frac{(\# \text{concordant pairs}) - (\# \text{discordant pairs})}{(\# \text{concordant pairs}) + (\# \text{discordant pairs})},
 }
 where a concordant pair is a pair of points such that if the rank of the x
 values is higher for the first (second) point of the pair, so too the rank
@@ -89,7 +78,7 @@ of the y value is higher for the first (second) point of the pair.
 The Bayesian approach of Chechile (2020) puts a Beta prior on \eqn{phi}, the
 proportion of concordance, i.e.,
 \deqn{
- \phi := \frac{(\# \text{concordant pairs})}{(\# \text{concordant pairs}) - (\# \text{discordant pairs})}.
+ \phi := \frac{(\# \text{concordant pairs})}{(\# \text{concordant pairs}) + (\# \text{discordant pairs})}.
 }
 The relationship between the two, then, is \eqn{\tau = 2\phi - 1}, or
 equivalently \eqn{\phi = (\tau + 1)/2}.

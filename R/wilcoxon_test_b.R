@@ -45,39 +45,7 @@
 #' @param plot logical.  Should a plot be shown?
 #' @param seed Always set your seed! (Unused for \eqn{\geq} 20 observations.)
 #' 
-#' @returns (returned invisible) If signed rank analysis is implemented, a list with the following:
-#' \itemize{
-#'  \item \code{posterior_mean}: Posterior mean of the proportion of differences that are positive
-#'  \item \code{CI}: Credible interval of the proportion of differences that 
-#'  are positive
-#'  \item \code{Pr_less_than_p}: Probability proportion of differences that are 
-#'  positive is less than the argument \code{p}
-#'  \item \code{Pr_in_ROPE}: Probability proportion of differences that are 
-#'  positive is in the ROPE
-#'  \item \code{prob_plot}: Prior and posterior plot of differences that are 
-#'  positive
-#'  \item \code{posterior_parameters}: Posterior beta shape parameters for the 
-#'  proportion of differences that are positive
-#'  \item \code{BF_for_phi_gr_onehalf_vs_phi_less_onehalf}: Bayes factor giving 
-#'  evidence in favor of the proportion of differences that are positive being 
-#'  greater than one half vs. less than one half
-#'  \item \code{dfba_wilcoxon_object}: Underlying DFBA object
-#' }
-#' If rank sum analysis is implemented, a list with the following:
-#' \itemize{
-#'  \item \code{posterior_mean}: Posterior mean of \eqn{\Omega_x} (see details)
-#'  \item \code{CI}: Credible interval for \eqn{\Omega_x}
-#'  \item \code{Pr_less_than_p}: Posterior probability \eqn{\Omega_x} is less 
-#'  than the argument \code{p}
-#'  \item \code{Pr_in_ROPE}: Probability \eqn{\Omega_x} is in the ROPE
-#'  \item \code{prob_plot}: Prior and posterior plot of \eqn{\Omega_x}
-#'  \item \code{posterior_parameters}: Posterior beta shape parameters for 
-#'  \eqn{\Omega_x}
-#'  \item \code{BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf}: Bayes factor 
-#'  in favor of \eqn{\Omega_x} being greater than one half vs. less than one 
-#'  half
-#'  \item \code{dfba_wilcoxon_object}: Underlying DFBA object
-#' }
+#' @returns An object of class \code{\link{b_procedure}}.
 #' 
 #' @references 
 #' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction to Distribution-Free Methods. Cambridge: MIT Press.
@@ -135,7 +103,8 @@ wilcoxon_test_b = function(x,
                            paired = FALSE,
                            p = 0.5,
                            ROPE,
-                           prior = "centered",
+                           prior = c("centered",
+                                     "uniform"),
                            prior_shapes,
                            CI_level = 0.95,
                            plot = TRUE,
@@ -175,10 +144,7 @@ wilcoxon_test_b = function(x,
   
   ## Prior distribution
   if(missing(prior_shapes)){
-    prior = c("uniform",
-              "centered")[pmatch(tolower(prior),
-                                 c("uniform",
-                                   "centered"))]
+    prior = match.arg(prior)
     
     if(prior == "uniform"){
       message("Prior shape parameters were not supplied.\nA uniform prior will be used.")
@@ -200,9 +166,27 @@ wilcoxon_test_b = function(x,
     
     # Do signed rank test
     
+    ## Construct results object
+    results = 
+      list(name = 
+             "Wilcoxon signed-rank analysis",
+           data = 
+             tibble(x = x) |> 
+             tidyr::drop_na(),
+           print_data = FALSE,
+           CI_level = CI_level,
+           prior = 
+             paste0("Prior on the probability x > y: Beta(",
+                    prior_shapes[1],
+                    ", ",
+                    prior_shapes[2],
+                    ")"))
+    
+    
     ## Get outcome vector of differences
     if(!missing(y)){
       x = na.omit(x); y = na.omit(y)
+      results$data$y = y
       if(length(x) != length(y))
         stop("If paired = TRUE, then x and y must be of the same length.")
       x = x - y
@@ -217,29 +201,49 @@ wilcoxon_test_b = function(x,
                           prob_interval = CI_level)
     
     # Compute results
+    
     ## If small, do:
     if("phipost" %in% names(dfba_object)){
-      results = 
-        list(posterior_mean = 
-               sum(dfba_object$phiv * dfba_object$phipost),
-             CI = 
-               c(dfba_object$hdi_lower,
-                 dfba_object$hdi_upper),
-             Pr_less_than_p = 
-               dfba_object$cumulative_phi[max(which(dfba_object$phiv <= p))],
-             Pr_in_ROPE = 
-               dfba_object$cumulative_phi[min(which(dfba_object$phiv >= ROPE_bounds[2]))] - 
-               dfba_object$cumulative_phi[max(which(dfba_object$phiv <= ROPE_bounds[1]))],
-             posterior_distribution = 
-               tibble::tibble(`Pr(x>y)` = dfba_object$phiv,
-                              `Posterior value` = dfba_object$phipost),
-             dfba_wilcoxon_object = dfba_object
+      ### posterior summary
+      results$results = 
+        tibble(
+          Quantity = "Probability x > y",
+          `Post Mean` = 
+            sum(dfba_object$phiv * dfba_object$phipost),
+          Lower = 
+            dfba_object$hdi_lower,
+          Upper = 
+            dfba_object$hdi_upper,
+          Pr_in_ROPE = 
+            dfba_object$cumulative_phi[min(which(dfba_object$phiv >= ROPE_bounds[2]))] - 
+            dfba_object$cumulative_phi[max(which(dfba_object$phiv <= ROPE_bounds[1]))],
+          ROPE_lower_bound = ROPE_bounds[1],
+          ROPE_upper_bound = ROPE_bounds[2]
         )
+      
+      ### Compute pdir
+      results$pdir = 
+        list(pdir = 
+               dfba_object$cumulative_phi[max(which(dfba_object$phiv <= p))])
+      results$pdir$description = 
+        paste0("Probability that the Probability x > y is ",
+               ifelse(results$pdir$pdir > 0.5,
+                      "less",
+                      "greater"),
+               " than ",
+               p)
+      results$pdir$pdir = 
+        max(results$pdir$pdir,
+            1.0 - results$pdir$pdir)
       
       # Plot (if requested)
       if(plot){
         
-        results$prob_plot = 
+        posterior_distribution = 
+          tibble::tibble(`Pr(x>y)` = dfba_object$phiv,
+                         `Posterior value` = dfba_object$phipost)
+        
+        results$plot = 
           tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                                  l = 50)) |> 
           ggplot(aes(x=x)) +
@@ -251,7 +255,7 @@ wilcoxon_test_b = function(x,
                           },
                         aes(color = "Prior"),
                         linewidth = 2) + 
-          geom_smooth(data = results$posterior_distribution |> 
+          geom_smooth(data = posterior_distribution |> 
                         dplyr::mutate(`Posterior value` = 
                                         .data$`Posterior value` / 
                                         max(.data$`Posterior value`) * 
@@ -275,42 +279,54 @@ wilcoxon_test_b = function(x,
           ylim(0,1.025 * max(dbeta(seq(0.001,0.999,l = 50),
                                    prior_shapes[1],
                                    prior_shapes[2])))
-        
-        suppressWarnings({
-          print(results$prob_plot)
-        })
-        
       }
       
       
     }else{
       ## If large, do:
-      results = 
-        list(posterior_mean = 
-               dfba_object$a_post / 
-               sum( dfba_object$a_post + dfba_object$b_post),
-             CI = 
-               c(dfba_object$eti_lower,
-                 dfba_object$eti_upper),
-             Pr_less_than_p = 
-               pbeta(p,
-                     dfba_object$a_post,
-                     dfba_object$b_post),
-             Pr_in_ROPE = 
-               pbeta(ROPE_bounds[2],
-                     dfba_object$a_post,
-                     dfba_object$b_post) - 
-               pbeta(ROPE_bounds[1],
-                     dfba_object$a_post,
-                     dfba_object$b_post),
-             dfba_wilcoxon_object = dfba_object
+      ### posterior summary
+      results$results = 
+        tibble(
+          Quantity = "Probability x > y",
+          `Post Mean` = 
+            dfba_object$a_post / 
+            sum( dfba_object$a_post + dfba_object$b_post),
+          Lower = 
+            dfba_object$eti_lower,
+          Upper = 
+            dfba_object$eti_upper,
+          Pr_in_ROPE = 
+            pbeta(ROPE_bounds[2],
+                  dfba_object$a_post,
+                  dfba_object$b_post) - 
+            pbeta(ROPE_bounds[1],
+                  dfba_object$a_post,
+                  dfba_object$b_post),
+          ROPE_lower_bound = ROPE_bounds[1],
+          ROPE_upper_bound = ROPE_bounds[2]
         )
       
+      ### Compute pdir
+      results$pdir = 
+        list(pdir = 
+               pbeta(p,
+                     dfba_object$a_post,
+                     dfba_object$b_post))
+      results$pdir$description = 
+        paste0("Probability that the Probability x > y is ",
+               ifelse(results$pdir$pdir > 0.5,
+                      "less",
+                      "greater"),
+               " than ",
+               p)
+      results$pdir$pdir = 
+        max(results$pdir$pdir,
+            1.0 - results$pdir$pdir)
       
       # Plot (if requested)
       if(plot){
         
-        results$prob_plot = 
+        results$plot = 
           tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                                  l = 50)) |> 
           ggplot(aes(x=x)) +
@@ -339,24 +355,19 @@ wilcoxon_test_b = function(x,
           ylab("") + 
           labs(color = "Distribution") + 
           ggtitle(ifelse(missing(y),"Pr(x > 0)","Pr(x > y)"))
-        
-        
-        print(results$prob_plot)
-        
       }
-      
-      # Add posterior parameters to returned object
-      results$posterior_parameters = 
-        c(shape_1 = dfba_object$a_post,
-          shape_2 = dfba_object$b_post)
       
     }
     
-    results$BF_for_phi_gr_onehalf_vs_phi_less_onehalf = 
+    ## Extract BF
+    results$BF = list()
+    results$BF$description = 
+      "Bayes factor in favor of phi>0.5 vs. phi<=0.5"
+    results$BF$BF = 
       dfba_object$BF10
-    bf_max = max(results$BF_for_phi_gr_onehalf_vs_phi_less_onehalf,
-                 1.0 / results$BF_for_phi_gr_onehalf_vs_phi_less_onehalf)
-    BF_evidence =
+    bf_max = max(results$BF$BF,
+                 1.0 / results$BF$BF)
+    results$BF$interpretation =
       ifelse(bf_max <= 3.2,
              "Not worth more than a bare mention",
              ifelse(bf_max <= 10,
@@ -365,65 +376,37 @@ wilcoxon_test_b = function(x,
                            "Strong",
                            "Decisive")))
     
+    # Attach dfba object
+    results$object_fit =
+      dfba_object
     
-    # Print results
-    message("\n----------\n\nWilcoxon signed-rank analysis using Bayesian techniques\n")
-    message("\n----------\n\n")
-    message(paste0("Prior used: Beta(", 
-               format(signif(prior_shapes[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(prior_shapes[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Posterior mean: ", 
-               format(signif(results$posterior_mean, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0(100 * CI_level,
-               "% credible interval: (", 
-               format(signif(results$CI[1], 3), 
-                      scientific = FALSE),
-               ", ",
-               format(signif(results$CI[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Probability that Pr(x > y) > ",
-               format(signif(p, 3), 
-                      scientific = FALSE),
-               " = ",
-               format(signif(1.0 - results$Pr_less_than_p, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0("Probability that Pr(x > y) is in the ROPE, defined to be (",
-               format(signif(ROPE_bounds[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(ROPE_bounds[2], 3), 
-                      scientific = FALSE),
-               ") = ",
-               format(signif(results$Pr_in_ROPE, 3), 
-                      scientific = FALSE),
-               "\n\n")) 
-    if(p == 0.5){
-      message(paste0("Bayes factor in favor of phi>0.5 vs. phi<=0.5: ",
-                 format(signif(results$BF_for_phi_gr_onehalf_vs_phi_less_onehalf, 3), 
-                        scientific = FALSE),
-                 ";\n      =>Level of evidence: ", 
-                 BF_evidence,
-                 "\n\n")) 
-      
-    }
-    message("\n----------\n\n")
+    results = 
+      structure(results,
+                class = "b_procedure")
     
-    
-    
-    
-    invisible(results)
+    return(results)
     
   }else{#End: Wilcoxon signed rank analysis
     
     # Do rank sum test
+    
+    ## Construct results object
+    results = 
+      list(name = 
+             "Wilcoxon rank sum analysis",
+           data = 
+             list(x = na.omit(x),
+                  y = na.omit(y)),
+           print_data = FALSE,
+           CI_level = CI_level,
+           prior = 
+             paste0("Prior on Omega_x: Beta(",
+                    prior_shapes[1],
+                    ", ",
+                    prior_shapes[2],
+                    ")"),
+           notes = "Omega_x is defined to be the proportion of (non-tied) pairs where x is bigger than y")
+    
     
     ## Use DFBA package to do analysis
     dfba_object = 
@@ -436,27 +419,48 @@ wilcoxon_test_b = function(x,
     # Compute results
     ## If small, do:
     if("omegapost" %in% names(dfba_object)){
-      results = 
-        list(posterior_mean = 
-               sum(dfba_object$omega_E * dfba_object$omegapost),
-             CI = 
-               c(dfba_object$eti_lower,
-                 dfba_object$eti_upper),
-             Pr_less_than_p = 
-               dfba_object$cumulative_omega[max(which(dfba_object$omega_E <= p))],
-             Pr_in_ROPE = 
-               dfba_object$cumulative_omega[min(which(dfba_object$omega_E >= ROPE_bounds[2]))] - 
-               dfba_object$cumulative_omega[max(which(dfba_object$omega_E <= ROPE_bounds[1]))],
-             posterior_distribution = 
-               tibble::tibble(`Pr(x>y)` = dfba_object$omega_E,
-                              `Posterior value` = dfba_object$omegapost),
-             dfba_wilcoxon_object = dfba_object
+      
+      ### Posterior summary
+      results$results = 
+        tibble(
+          Quantity = "Omega_x",
+          `Post Mean` = 
+            sum(dfba_object$omega_E * dfba_object$omegapost),
+          Lower = 
+            dfba_object$eti_lower,
+          Upper = 
+            dfba_object$eti_upper,
+          Pr_in_ROPE = 
+            dfba_object$cumulative_omega[min(which(dfba_object$omega_E >= ROPE_bounds[2]))] - 
+            dfba_object$cumulative_omega[max(which(dfba_object$omega_E <= ROPE_bounds[1]))],
+          ROPE_lower_bound = ROPE_bounds[1],
+          ROPE_upper_bound = ROPE_bounds[2]
         )
+      
+      ### pdir
+      results$pdir = 
+        list(pdir = 
+               dfba_object$cumulative_omega[max(which(dfba_object$omega_E <= p))]
+        )
+      results$pdir$description = 
+        paste0("Probability that the Omega_x is ",
+               ifelse(results$pdir$pdir > 0.5,
+                      "less",
+                      "greater"),
+               " than ",
+               p)
+      results$pdir$pdir = 
+        max(results$pdir$pdir,
+            1.0 - results$pdir$pdir)
       
       # Plot (if requested)
       if(plot){
         
-        results$prob_plot = 
+        posterior_distribution = 
+          tibble::tibble(`Pr(x>y)` = dfba_object$omega_E, 
+                         `Posterior value` = dfba_object$omegapost)
+        
+        results$plot = 
           tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                                  l = 50)) |> 
           ggplot(aes(x=x)) +
@@ -468,7 +472,7 @@ wilcoxon_test_b = function(x,
                           },
                         aes(color = "Prior"),
                         linewidth = 2) + 
-          geom_smooth(data = results$posterior_distribution |> 
+          geom_smooth(data = posterior_distribution |> 
                         mutate(`Posterior value` = 
                                  .data$`Posterior value` / 
                                  max(.data$`Posterior value`) * 
@@ -492,42 +496,57 @@ wilcoxon_test_b = function(x,
           ylim(0,1.025 * max(dbeta(seq(0.001,0.999,l = 50),
                                    prior_shapes[1],
                                    prior_shapes[2])))
-        
-        suppressWarnings({
-          print(results$prob_plot)
-        })
-        
       }
       
       
     }else{
       ## If large, do:
-      results = 
-        list(posterior_mean = 
-               dfba_object$a_post / 
-               sum( dfba_object$a_post + dfba_object$b_post),
-             CI = 
-               c(dfba_object$eti_lower,
-                 dfba_object$eti_upper),
-             Pr_less_than_p = 
+      
+      ### posterior summary
+      results$results = 
+        tibble(
+          Quantity = "Omega_x",
+          `Post Mean` = 
+            dfba_object$a_post / 
+            sum( dfba_object$a_post + dfba_object$b_post),
+          Lower = 
+            dfba_object$eti_lower,
+          Upper = 
+            dfba_object$eti_upper,
+          Pr_in_ROPE = 
+            pbeta(ROPE_bounds[2],
+                  dfba_object$a_post,
+                  dfba_object$b_post) - 
+            pbeta(ROPE_bounds[1],
+                  dfba_object$a_post,
+                  dfba_object$b_post),
+          ROPE_lower_bound = ROPE_bounds[1],
+          ROPE_upper_bound = ROPE_bounds[2]
+        )
+      
+      ### pdir
+      results$pdir = 
+        list(pdir = 
                pbeta(p,
                      dfba_object$a_post,
-                     dfba_object$b_post),
-             Pr_in_ROPE = 
-               pbeta(ROPE_bounds[2],
-                     dfba_object$a_post,
-                     dfba_object$b_post) - 
-               pbeta(ROPE_bounds[1],
-                     dfba_object$a_post,
-                     dfba_object$b_post),
-             dfba_wilcoxon_object = dfba_object
+                     dfba_object$b_post)
         )
+      results$pdir$description = 
+        paste0("Probability that the Omega_x is ",
+               ifelse(results$pdir$pdir > 0.5,
+                      "less",
+                      "greater"),
+               " than ",
+               p)
+      results$pdir$pdir = 
+        max(results$pdir$pdir,
+            1.0 - results$pdir$pdir)
       
       
       # Plot (if requested)
       if(plot){
         
-        results$prob_plot = 
+        results$plot = 
           tibble::tibble(x = seq(0.001,0.999,#seq(.Machine$double.eps,1.0 - .Machine$double.eps,
                                  l = 50)) |> 
           ggplot(aes(x=x)) +
@@ -556,23 +575,18 @@ wilcoxon_test_b = function(x,
           ylab("") + 
           labs(color = "Distribution") + 
           ggtitle(expression(Omega[x])) 
-        
-        print(results$prob_plot)
-        
       }
-      
-      # Add posterior parameters to returned object
-      results$posterior_parameters = 
-        c(shape_1 = dfba_object$a_post,
-          shape_2 = dfba_object$b_post)
-      
     }
     
-    results$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf = 
+    # BF
+    results$BF = list()
+    results$BF$description = 
+      "Bayes factor in favor of Omega_x>0.5 vs. Omega_x<=0.5"
+    results$BF$BF = 
       dfba_object$BF10
-    bf_max = max(results$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf,
-                 1.0 / results$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf)
-    BF_evidence =
+    bf_max = max(results$BF$BF,
+                 1.0 / results$BF$BF)
+    results$BF$interpretation =
       ifelse(bf_max <= 3.2,
              "Not worth more than a bare mention",
              ifelse(bf_max <= 10,
@@ -581,65 +595,17 @@ wilcoxon_test_b = function(x,
                            "Strong",
                            "Decisive")))
     
-    # Print results
-    message("\n----------\n\nWilcoxon rank sum analysis using Bayesian techniques\n")
-    message("\n----------\n\n")
-    message(
-      "NOTE: Estimand is Omega_x := Proportion of (non-tied) pairs where x is bigger than y"
-    )
-    message("\n\n----------\n\n")
-    message(paste0("Prior used: Beta(", 
-               format(signif(prior_shapes[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(prior_shapes[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Posterior mean: ", 
-               format(signif(results$posterior_mean, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0(100 * CI_level,
-               "% credible interval: (", 
-               format(signif(results$CI[1], 3), 
-                      scientific = FALSE),
-               ", ",
-               format(signif(results$CI[2], 3), 
-                      scientific = FALSE),
-               ")\n\n"))
-    message(paste0("Probability that Omega_x > ",
-               format(signif(p, 3), 
-                      scientific = FALSE),
-               " = ",
-               format(signif(1.0 - results$Pr_less_than_p, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    message(paste0("Probability that Omega_x is in the ROPE, defined to be (",
-               format(signif(ROPE_bounds[1], 3), 
-                      scientific = FALSE),
-               ",",
-               format(signif(ROPE_bounds[2], 3), 
-                      scientific = FALSE),
-               ") = ",
-               format(signif(results$Pr_in_ROPE, 3), 
-                      scientific = FALSE),
-               "\n\n"))
-    if(p == 0.5){
-      message(paste0("Bayes factor in favor of phi>0.5 vs. phi<=0.5: ",
-                 format(signif(results$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf, 3), 
-                        scientific = FALSE),
-                 ";\n      =>Level of evidence: ", 
-                 BF_evidence,
-                 "\n\n")) 
-      
-    }
-    message("\n----------\n\n")
     
     
+    # Attach dfba object
+    results$object_fit =
+      dfba_object
     
+    results = 
+      structure(results,
+                class = "b_procedure")
     
-    invisible(results)
-    
+    return(results)
     
   }
   

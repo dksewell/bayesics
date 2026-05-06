@@ -10,7 +10,7 @@ wilcoxon_test_b(
   paired = FALSE,
   p = 0.5,
   ROPE,
-  prior = "centered",
+  prior = c("centered", "uniform"),
   prior_shapes,
   CI_level = 0.95,
   plot = TRUE,
@@ -54,39 +54,7 @@ beta distribution that will act as the prior on the population proportions.}
 \item{seed}{Always set your seed! (Unused for \eqn{\geq} 20 observations.)}
 }
 \value{
-(returned invisible) If signed rank analysis is implemented, a list with the following:
-\itemize{
-\item \code{posterior_mean}: Posterior mean of the proportion of differences that are positive
-\item \code{CI}: Credible interval of the proportion of differences that
-are positive
-\item \code{Pr_less_than_p}: Probability proportion of differences that are
-positive is less than the argument \code{p}
-\item \code{Pr_in_ROPE}: Probability proportion of differences that are
-positive is in the ROPE
-\item \code{prob_plot}: Prior and posterior plot of differences that are
-positive
-\item \code{posterior_parameters}: Posterior beta shape parameters for the
-proportion of differences that are positive
-\item \code{BF_for_phi_gr_onehalf_vs_phi_less_onehalf}: Bayes factor giving
-evidence in favor of the proportion of differences that are positive being
-greater than one half vs. less than one half
-\item \code{dfba_wilcoxon_object}: Underlying DFBA object
-}
-If rank sum analysis is implemented, a list with the following:
-\itemize{
-\item \code{posterior_mean}: Posterior mean of \eqn{\Omega_x} (see details)
-\item \code{CI}: Credible interval for \eqn{\Omega_x}
-\item \code{Pr_less_than_p}: Posterior probability \eqn{\Omega_x} is less
-than the argument \code{p}
-\item \code{Pr_in_ROPE}: Probability \eqn{\Omega_x} is in the ROPE
-\item \code{prob_plot}: Prior and posterior plot of \eqn{\Omega_x}
-\item \code{posterior_parameters}: Posterior beta shape parameters for
-\eqn{\Omega_x}
-\item \code{BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf}: Bayes factor
-in favor of \eqn{\Omega_x} being greater than one half vs. less than one
-half
-\item \code{dfba_wilcoxon_object}: Underlying DFBA object
-}
+An object of class \code{\link{b_procedure}}.
 }
 \description{
 Bayesian Wilcoxon Rank Sum (aka Mann-Whitney U) and Signed Rank Analyses

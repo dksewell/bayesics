@@ -48,7 +48,7 @@
 #' (ignored if \code{large_sample_approx = TRUE}.)
 #' 
 #' 
-#' @return An object of class \code{\link{b_procedure}}.
+#' @returns An object of class \code{\link{b_procedure}}.
 #' 
 #'  
 #' @examples

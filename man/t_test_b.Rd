@@ -69,15 +69,7 @@ probability the bounds of the credible intervals will be within \eqn{\pm}
 trimmed range of y. (Ignored for single population inference.)}
 }
 \value{
-Either an aov_b object, if two samples are being compared,
-or a list with the following elements:
-\itemize{
-\item Variable
-\item Post Mean
-\item Lower (bound of credible interval)
-\item Upper (bound of credible interval)
-\item Prob Dir (Probability of Direction)
-}
+An object of class \code{\link{b_procedure}}.
 }
 \description{
 One and two sample t-tests on vectors of data
