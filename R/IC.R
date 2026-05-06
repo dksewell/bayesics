@@ -56,8 +56,13 @@ BIC.lm_b = function(object, ...){
   
   ll = logLik(object)
   
-  -2.0 * ll + 
+  ret = 
+    -2.0 * ll + 
     log(nrow(object$data)) * attr(ll,"df")
+  
+  attributes(ret) = NULL
+  
+  ret
 }
 
 
@@ -67,8 +72,13 @@ AIC.lm_b = function(object, ...){
   
   ll = logLik(object)
   
-  -2.0 * ll + 
+  ret = 
+    -2.0 * ll + 
     2.0 * attr(ll,"df")
+  
+  attributes(ret) = NULL
+  
+  ret
 }
 
 
