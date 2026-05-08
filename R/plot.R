@@ -79,6 +79,20 @@ plot.lm_b = function(x,
   
   plot_list = list()
   
+  if(x$model_type == "nonparametric"){
+    type = 
+      setdiff(type,c("diagnostics",
+                     "pred band"))
+  }else{
+    if( (x$family$family == "binomial") & 
+        ("pred band" %in% type) ){
+      type = "cred band"
+    }
+  }
+  
+  if(length(type) == 0)
+    stop("No valid plotting type given.")
+  
   if("diagnostics" %in% type){
     plot_list[[1]] = 
       plot_dx(x = x,
