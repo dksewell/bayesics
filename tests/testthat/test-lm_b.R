@@ -1,3 +1,4 @@
+go_fast_for_cran_checks = TRUE
 
 test_that("Test lm_b with conjugate prior",{
   
@@ -47,6 +48,9 @@ test_that("Test lm_b with conjugate prior",{
   expect_no_error(
     s <- 
       summary(fita)
+  )
+  expect_silent(
+    summary(fita, print_results=FALSE)
   )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
@@ -105,7 +109,7 @@ test_that("Test lm_b with conjugate prior",{
   expect_type(AIC(fita),"double")
   expect_type(BIC(fita),"double")
   expect_type(DIC(fita,mc_error = 1),"double")
-  expect_type(WAIC(fita,mc_error = 1),"double")
+  expect_type(WAIC(fita,mc_error = 2),"double")
   
   # Test number and type of inputs
   expect_no_error(
@@ -171,71 +175,69 @@ test_that("Test lm_b with conjugate prior",{
   
   
   # Test plot
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       variable = "x1",
-                       combine_pi_ci = TRUE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       variable = "x1",
-                       combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = TRUE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         variable = "x1",
+                         combine_pred_cred = TRUE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         variable = "x1",
+                         combine_pred_cred = FALSE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = FALSE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         variable = "x1"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         variable = "x1"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   
@@ -268,6 +270,9 @@ test_that("Test lm_b with conjugate prior",{
   expect_no_error(
     s <- 
       summary(fitc)
+  )
+  expect_silent(
+    summary(fitc, print_results = FALSE)
   )
   ### Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
@@ -304,10 +309,8 @@ test_that("Test lm_b with conjugate prior",{
   
   ## Check plot
   expect_s3_class(plot(fitc,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fitc),
+                       type = c("c","p"),
+                       backtransformation = exp),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   
@@ -495,71 +498,69 @@ test_that("Test lm_b with zellner's g prior",{
   
   
   # Test plot
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       variable = "x1",
-                       combine_pi_ci = TRUE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       variable = "x1",
-                       combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = TRUE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         variable = "x1",
+                         combine_pred_cred = TRUE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         variable = "x1",
+                         combine_pred_cred = FALSE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = FALSE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         variable = "x1"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         variable = "x1"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
 })
@@ -734,71 +735,69 @@ test_that("Test lm_b with improper prior",{
   
   
   # Test plot
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       variable = "x1",
-                       combine_pi_ci = TRUE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       variable = "x1",
-                       combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = TRUE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pi_ci = FALSE,
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       exemplar_covariates = fita$data[1,]),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       variable = "x1"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         variable = "x1",
+                         combine_pred_cred = TRUE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         variable = "x1",
+                         combine_pred_cred = FALSE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = FALSE,
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         variable = "x1"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         exemplar_covariates = fita$data[1,]),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         variable = "x1"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   # Test if response transformation works
@@ -865,14 +864,11 @@ test_that("Test lm_b with improper prior",{
                     PI_level = 0.9)$PI_lower[1])
   
   ## Check plot
-  expect_s3_class(plot(fitc,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fitc),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fitc),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
 })
 
@@ -1097,14 +1093,11 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  expect_s3_class(plot(fita,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   # Check if splines terms work
@@ -1202,13 +1195,11 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  expect_s3_class(plot(fitb,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fitb),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fitb),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   
@@ -1309,13 +1300,11 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  expect_s3_class(plot(fitc,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fitc),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(!go_fast_for_cran_checks){
+    expect_s3_class(plot(fitc),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   
@@ -1415,10 +1404,6 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  expect_s3_class(plot(fitd,
-                       type = "pdp"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fitd),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))

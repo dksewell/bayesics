@@ -1499,11 +1499,6 @@ test_that("Test glm_b for poisson data fitting with LSA",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
@@ -1747,11 +1742,6 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   if(!go_fast_for_cran_checks){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
@@ -2008,11 +1998,6 @@ test_that("Test glm_b for nbinom data fitting with IS",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
@@ -2257,11 +2242,6 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   if(!go_fast_for_cran_checks){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,

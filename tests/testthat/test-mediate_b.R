@@ -60,6 +60,9 @@ test_that("Binary treatment, GLM response mediation",{
     s <- 
       summary(m3)
   )
+  expect_silent(
+    summary(m3,print_results=FALSE)
+  )
   expect_identical(s$Estimand,
                    c("ACME (Control)",
                      "ACME (Treatment)",
@@ -78,7 +81,7 @@ test_that("Binary treatment, GLM response mediation",{
   expect_s3_class(plot(m3),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "dx"),
+  expect_s3_class(plot(m3,type = "diagnostics"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(m3,type = "acme"),
@@ -177,6 +180,9 @@ test_that("Continuous treatment, GLM response mediation",{
     s <- 
       summary(m3)
   )
+  expect_silent(
+    summary(m3,print_results=F)
+  )
   expect_identical(s$Estimand,
                    c("ACME (Control)",
                      "ACME (Treatment)",
@@ -195,7 +201,7 @@ test_that("Continuous treatment, GLM response mediation",{
   expect_s3_class(plot(m3),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "dx"),
+  expect_s3_class(plot(m3,type = "diagnostics"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(m3,type = "acme"),
@@ -265,6 +271,9 @@ test_that("Simple case mediation",{
   expect_no_error(
     s <- 
       summary(m3)
+  )
+  expect_silent(
+    summary(m3,print_results=FALSE)
   )
   expect_identical(s$Estimand,
                    c("ACME",
