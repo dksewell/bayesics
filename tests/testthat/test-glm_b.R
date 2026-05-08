@@ -90,30 +90,29 @@ test_that("Test glm_b for binomial data fitting with VB",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = binomial(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = binomial(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = binomial(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = binomial(),
-            prior = "normal")
-    )
-  }
+  
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = binomial(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = binomial(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = binomial(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = binomial(),
+          prior = "normal")
+  )
     
   # Test different priors
   expect_no_error(
@@ -167,40 +166,35 @@ test_that("Test glm_b for binomial data fitting with VB",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -322,34 +316,32 @@ test_that("Test glm_b for binomial data fitting with IS",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-  }
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "IS")
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "IS")
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "IS")
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "IS")
+  )
   
   # Test different priors
   expect_no_error(
@@ -383,19 +375,17 @@ test_that("Test glm_b for binomial data fitting with IS",{
             algorithm = "IS",
             mc_error = 0.1)
   )
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      fitd <-
-        glm_b(outcome ~ x1 + x2 + x3,
-              data = test_data,
-              family = binomial(),
-              seed = 2025,
-              algorithm = "IS",
-              mc_error = 0.005)
-    )
-    expect_lt(nrow(fitc$proposal_draws),
-              nrow(fitd$proposal_draws))
-  }
+  expect_no_error(
+    fitd <-
+      glm_b(outcome ~ x1 + x2 + x3,
+            data = test_data,
+            family = binomial(),
+            seed = 2025,
+            algorithm = "IS",
+            mc_error = 0.05)
+  )
+  expect_lt(nrow(fitc$proposal_draws),
+            nrow(fitd$proposal_draws))
   
   
   # Check get_posterior_samples()
@@ -429,40 +419,35 @@ test_that("Test glm_b for binomial data fitting with IS",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -585,34 +570,32 @@ test_that("Test glm_b for binomial data fitting with LSA",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "LSA")
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "LSA")
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "LSA")
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = binomial(),
-            prior = "normal",
-            algorithm = "LSA")
-    )
-  }
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "LSA")
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "LSA")
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "LSA")
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = binomial(),
+          prior = "normal",
+          algorithm = "LSA")
+  )
   
   # Test different priors
   expect_no_error(
@@ -666,40 +649,35 @@ test_that("Test glm_b for binomial data fitting with LSA",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -911,6 +889,9 @@ test_that("Test glm_b for poisson data fitting with VB",{
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   
@@ -955,30 +936,28 @@ test_that("Test glm_b for poisson data fitting with VB",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = poisson(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = poisson(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = poisson(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = poisson(),
-            prior = "normal")
-    )
-  }
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = poisson(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = poisson(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = poisson(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = poisson(),
+          prior = "normal")
+  )
   
   # Test different priors
   expect_no_error(
@@ -1029,40 +1008,35 @@ test_that("Test glm_b for poisson data fitting with VB",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1154,6 +1128,9 @@ test_that("Test glm_b for poisson data fitting with IS",{
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   
@@ -1198,34 +1175,32 @@ test_that("Test glm_b for poisson data fitting with IS",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = poisson(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = poisson(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = poisson(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = poisson(),
-            prior = "normal",
-            algorithm = "IS")
-    )
-  }
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = poisson(),
+          prior = "normal",
+          algorithm = "IS")
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = poisson(),
+          prior = "normal",
+          algorithm = "IS")
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = poisson(),
+          prior = "normal",
+          algorithm = "IS")
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = poisson(),
+          prior = "normal",
+          algorithm = "IS")
+  )
   
   # Test different priors
   expect_no_error(
@@ -1278,40 +1253,35 @@ test_that("Test glm_b for poisson data fitting with IS",{
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
-    
-    expect_s3_class(plot(fita,
-                         type = "pdp"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1403,6 +1373,9 @@ test_that("Test glm_b for poisson data fitting with LSA",{
   expect_no_error(
     s <- 
       summary(fita)
+  )
+  expect_silent(
+    summary(fita,print_results=FALSE)
   )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
@@ -1534,31 +1507,31 @@ test_that("Test glm_b for poisson data fitting with LSA",{
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1657,6 +1630,9 @@ test_that("Test glm_b for nbinom data fitting with VB",{
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   
@@ -1701,30 +1677,28 @@ test_that("Test glm_b for nbinom data fitting with VB",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = negbinom(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = negbinom(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = negbinom(),
-            prior = "normal")
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = negbinom(),
-            prior = "normal")
-    )
-  }
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = negbinom(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = negbinom(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = negbinom(),
+          prior = "normal")
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = negbinom(),
+          prior = "normal")
+  )
   
   # Test different priors
   expect_no_error(
@@ -1783,32 +1757,32 @@ test_that("Test glm_b for nbinom data fitting with VB",{
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1903,6 +1877,9 @@ test_that("Test glm_b for nbinom data fitting with IS",{
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   
@@ -1947,38 +1924,36 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   expect_type(WAIC(fita),"double")
   
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
-    expect_no_error(
-      glm_b(test_data$outcome ~ test_data$x1,
-            family = negbinom(),
-            prior = "normal",
-            algorithm = "IS",
-            mc_error = 0.05)
-    )
-    expect_no_error(
-      glm_b(test_data$outcome ~ 1,
-            family = negbinom(),
-            prior = "normal",
-            algorithm = "IS",
-            mc_error = 0.05)
-    )
-    expect_no_error(
-      glm_b(outcome ~ x1,
-            data = test_data,
-            family = negbinom(),
-            prior = "normal",
-            algorithm = "IS",
-            mc_error = 0.05)
-    )
-    expect_no_error(
-      glm_b(outcome ~ 1,
-            data = test_data,
-            family = negbinom(),
-            prior = "normal",
-            algorithm = "IS",
-            mc_error = 0.05)
-    )
-  }
+  expect_no_error(
+    glm_b(test_data$outcome ~ test_data$x1,
+          family = negbinom(),
+          prior = "normal",
+          algorithm = "IS",
+          mc_error = 0.05)
+  )
+  expect_no_error(
+    glm_b(test_data$outcome ~ 1,
+          family = negbinom(),
+          prior = "normal",
+          algorithm = "IS",
+          mc_error = 0.05)
+  )
+  expect_no_error(
+    glm_b(outcome ~ x1,
+          data = test_data,
+          family = negbinom(),
+          prior = "normal",
+          algorithm = "IS",
+          mc_error = 0.05)
+  )
+  expect_no_error(
+    glm_b(outcome ~ 1,
+          data = test_data,
+          family = negbinom(),
+          prior = "normal",
+          algorithm = "IS",
+          mc_error = 0.05)
+  )
   
   # Test different priors
   expect_no_error(
@@ -2041,32 +2016,32 @@ test_that("Test glm_b for nbinom data fitting with IS",{
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -2158,6 +2133,9 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
   expect_no_error(
     s <- 
       summary(fita)
+  )
+  expect_silent(
+    summary(fita,print_results=FALSE)
   )
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
@@ -2289,31 +2267,31 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
                          variable = "x1",
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE,
+                         combine_pred_cred = TRUE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = TRUE),
+                         combine_pred_cred = TRUE),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
                          type = c("cr","pr"),
-                         combine_pi_ci = FALSE,
+                         combine_pred_cred = FALSE,
                          exemplar_covariates = fita$data[1,]),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))

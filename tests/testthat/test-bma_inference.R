@@ -66,12 +66,7 @@ test_that("Bayesian model averaging", {
   # Test plot
   if(!go_fast_for_cran_checks){
     expect_s3_class(plot(fita,
-                         "dx"),
-                    c("patchwork","ggplot2::ggplot","ggplot",
-                      "ggplot2::gg","S7_object","gg"))
-    expect_s3_class(plot(fita,
-                         "pdp",
-                         variable = c("x1","x2","x3")),
+                         "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     expect_s3_class(plot(fita,
@@ -111,6 +106,12 @@ test_that("Bayesian model averaging", {
                     user.int = FALSE)
   )
   
+  if(FALSE){
+    fita2
+    plot(fita2, type="c",
+         backtransformation = exp,
+         variable = "x1")
+  }
   
   # # Make sure parallelization works. 
   # plan(multisession, workers = 5)

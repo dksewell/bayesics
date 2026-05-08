@@ -7,11 +7,17 @@
 \alias{summary.mediate_b}
 \title{Summary functions for bayesics objects}
 \usage{
-\method{summary}{lm_b}(object, CI_level = 0.95, interpretable_scale = TRUE, ...)
+\method{summary}{lm_b}(
+  object,
+  CI_level = 0.95,
+  interpretable_scale = TRUE,
+  print_results = TRUE,
+  ...
+)
 
-\method{summary}{aov_b}(object, CI_level = 0.95, ...)
+\method{summary}{aov_b}(object, CI_level = 0.95, print_results = TRUE, ...)
 
-\method{summary}{mediate_b}(object, CI_level = 0.95, ...)
+\method{summary}{mediate_b}(object, CI_level = 0.95, print_results = TRUE, ...)
 }
 \arguments{
 \item{object}{bayesics object}
@@ -21,7 +27,8 @@
 \item{interpretable_scale}{If a GLM is fit using
 \code{binomial(link="logit")}, \code{poisson(link="log")}, or
 \code{negbinom()}, and if \code{interpretable_scale = TRUE}
-then the results will be exponentiated.}
+then the results will be exponentiated.
+\code{print_results}}
 
 \item{...}{optional arguments.}
 }

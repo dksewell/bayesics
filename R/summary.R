@@ -8,6 +8,7 @@
 #' \code{binomial(link="logit")}, \code{poisson(link="log")}, or 
 #' \code{negbinom()}, and if \code{interpretable_scale = TRUE} 
 #' then the results will be exponentiated.
+#' \code{print_results}
 #' @param ... optional arguments.
 #' 
 #' @returns tibble with summary values
@@ -36,6 +37,7 @@
 summary.lm_b = function(object,
                         CI_level = 0.95,
                         interpretable_scale = TRUE,
+                        print_results = TRUE,
                         ...){
   alpha = 1 - CI_level
   p = 
@@ -104,13 +106,15 @@ summary.lm_b = function(object,
   }
   
   if(interpretable_scale){
-    paste0("\n----------\n\nValues given in terms of ",
-           ifelse(object$family$family == "binomial",
-                  "odds ratios",
-                  "rate ratios")
-    ) |> 
-      cat()
-    cat("\n\n----------\n\n")
+    if(print_results){
+      paste0("\n----------\n\nValues given in terms of ",
+             ifelse(object$family$family == "binomial",
+                    "odds ratios",
+                    "rate ratios")
+      ) |> 
+        cat()
+      cat("\n\n----------\n\n")
+    }
     summ = summ[-1,]
     summ[,c("Post Mean","Lower","Upper")] =
       summ[,c("Post Mean","Lower","Upper")] |> 
@@ -171,8 +175,8 @@ summary.lm_b = function(object,
   }#End: add in s^2
   
   
-  
-  summ
+  if(print_results) print(summ)
+  invisible(summ)
 }
 
 #' @rdname summary
@@ -180,12 +184,17 @@ summary.lm_b = function(object,
 #' @export
 summary.aov_b = function(object,
                          CI_level = 0.95,
+                         print_results = TRUE,
                          ...){
   alpha = 1 - CI_level
-  summ = object$summary
-  pw_summ = 
-    object$pairwise_summary |> 
-    as.data.frame()
+  
+  summary_object = 
+    list(
+      summary = object$summary,
+      pw_summary = 
+        object$pairwise_summary |> 
+        as.data.frame()
+    )
   
   if("BF_for_different_vs_same_means" %in% names(object)){
     
@@ -193,27 +202,51 @@ summary.aov_b = function(object,
       max(object$BF_for_different_vs_same_means, 
           1.0 / object$BF_for_different_vs_same_means)
     
-    cat("\n---\n") 
-    cat(paste0(
-      "Bayes factor in favor of the full vs. null model: ",
-      format(signif(object$BF_for_different_vs_same_means, 3), 
-             scientific = 
-               (object$BF_for_different_vs_same_means > 1e3) | 
-               (object$BF_for_different_vs_same_means < 1e-3)),
-      ";\n      =>Level of evidence: ", 
-      ifelse(bf_max <= 3.2,
-             "Not worth more than a bare mention",
-             ifelse(bf_max <= 10,
-                    "Substantial",
-                    ifelse(bf_max <= 100,
-                           "Strong",
-                           "Decisive")))
-    )
-    )
+    summary_object$BF = 
+      list(BF = 
+             object$BF_for_different_vs_same_means,
+           interpretation = 
+             paste0(
+               "Bayes factor in favor of the full vs. null model: ",
+               format(signif(object$BF_for_different_vs_same_means, 3), 
+                      scientific = 
+                        (object$BF_for_different_vs_same_means > 1e3) | 
+                        (object$BF_for_different_vs_same_means < 1e-3)),
+               ";\n      =>Level of evidence: ", 
+               ifelse(bf_max <= 3.2,
+                      "Not worth more than a bare mention",
+                      ifelse(bf_max <= 10,
+                             "Substantial",
+                             ifelse(bf_max <= 100,
+                                    "Strong",
+                                    "Decisive")))
+             )
+      )
+    
+    if(print_results){
+      cat("\n---\n") 
+      cat(paste0(
+        "Bayes factor in favor of the full vs. null model: ",
+        format(signif(object$BF_for_different_vs_same_means, 3), 
+               scientific = 
+                 (object$BF_for_different_vs_same_means > 1e3) | 
+                 (object$BF_for_different_vs_same_means < 1e-3)),
+        ";\n      =>Level of evidence: ", 
+        ifelse(bf_max <= 3.2,
+               "Not worth more than a bare mention",
+               ifelse(bf_max <= 10,
+                      "Substantial",
+                      ifelse(bf_max <= 100,
+                             "Strong",
+                             "Decisive")))
+      )
+      )
+    }
     
   }
-  cat("\n\n\n\n--- Summary of factor level means ---\n")
-  summ$Lower = 
+  
+  if(print_results) cat("\n\n\n\n--- Summary of factor level means ---\n")
+  summary_object$summary$Lower = 
     c(extraDistr::qlst(alpha/2, 
                        df = object$posterior_parameters$a_g,
                        mu = object$posterior_parameters$mu_g,
@@ -221,7 +254,7 @@ summary.aov_b = function(object,
       extraDistr::qinvgamma(alpha/2, 
                             alpha = object$posterior_parameters$a_g/2, 
                             beta = object$posterior_parameters$b_g/2))
-  summ$Upper = 
+  summary_object$summary$Upper = 
     c(extraDistr::qlst(1 - alpha/2, 
                        df = object$posterior_parameters$a_g,
                        mu = object$posterior_parameters$mu_g,
@@ -229,45 +262,43 @@ summary.aov_b = function(object,
       extraDistr::qinvgamma(1 - alpha/2, 
                             alpha = object$posterior_parameters$a_g/2, 
                             beta = object$posterior_parameters$b_g/2))
-  print(summ)
+  if(print_results) print(summary_object$summary)
   
   
-  cat("\n\n\n\n--- Summary of pairwise differences ---\n")
+  if(print_results) cat("\n\n\n\n--- Summary of pairwise differences ---\n")
   temp = 
     combn(1:length(levels(object$data$group)),2)
-  for(i in 1:nrow(pw_summ)){
-    pw_summ[i,c("Lower","Upper")] = 
+  for(i in 1:nrow(summary_object$pw_summary)){
+    summary_object$pw_summary[i,c("Lower","Upper")] = 
       quantile(object$posterior_draws[,temp[1,i]] - 
                  object$posterior_draws[,temp[2,i]],
                probs = c(alpha/2, 
                          1 - alpha/2))
   }
-  pw_summ = as_tibble(pw_summ)
-  print(pw_summ)
-  cat("\n\n   *Note: EPR (Exceedence in Pairs Rate) for a Comparison of g-h = Pr(Y_(gi) > Y_(hi)|parameters) ")
+  summary_object$pw_summary = as_tibble(summary_object$pw_summary)
+  if(print_results) print(summary_object$pw_summary)
+  if(print_results) cat("\n\n   *Note: EPR (Exceedence in Pairs Rate) for a Comparison of g-h = Pr(Y_(gi) > Y_(hi)|parameters) ")
   
   if(is.null(object$contrasts)){
-    invisible(list(summary = object$summary,
-                   pairwise = object$pairwise_summary))
+    invisible(summary_object)
   }else{
     
-    cat("\n\n\n\n--- Summary of Contrasts ---\n")
-    csumm = object$contrasts$summary
+    summary_object$contrasts = 
+      list(L = object$contrasts$L)
+    
+    if(print_results) cat("\n\n\n\n--- Summary of Contrasts ---\n")
+    summary_object$contrasts$summary = object$contrasts$summary
     contrast_draws = 
       tcrossprod(object$posterior_draws[,grep("mean_",colnames(object$posterior_draws))],
                  object$contrasts$L)
-    csumm$Lower = 
+    summary_object$contrasts$summary$Lower = 
       apply(contrast_draws,2,quantile,probs = alpha/2)
-    csumm$Upper = 
+    summary_object$contrasts$summary$Upper = 
       apply(contrast_draws,2,quantile,probs = 1 - alpha/2)
     
-    print(csumm)
+    if(print_results) print(summary_object$contrasts$summary)
     
-    invisible(list(summary = object$summary,
-                   pairwise = object$pairwise_summary,
-                   contrasts = 
-                     list(L = object$contrasts$L,
-                          summary = csumm)))
+    invisible(summary_object)
   }
 }
 
@@ -278,6 +309,7 @@ summary.aov_b = function(object,
 #' @export
 summary.mediate_b = function(object,
                              CI_level = 0.95,
+                             print_results = TRUE,
                              ...){
   alpha_ci = 1 - CI_level
   summ = object$summary
@@ -343,5 +375,6 @@ summary.mediate_b = function(object,
       )
   }
   
-  summ
+  if(print_results) print(summ)
+  invisible(summ)
 }

@@ -33,10 +33,13 @@ test_that("Proper prior and heteroscedastic model works", {
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_type(s,"list")
-  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   
+  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   expect_named(s$summary,c("Variable","Post Mean","Lower","Upper","Prob Dir"))
   expect_type(s$summary$Variable,"character")
   expect_type(s$summary$`Post Mean`,"double")
@@ -44,14 +47,20 @@ test_that("Proper prior and heteroscedastic model works", {
   expect_type(s$summary$Upper,"double")
   expect_type(s$summary$`Prob Dir`,"double")
   
-  expect_type(s$pairwise$Comparison,"character")
-  expect_type(s$pairwise$`Post Mean`,"double")
-  expect_type(s$pairwise$Lower,"double")
-  expect_type(s$pairwise$Upper,"double")
-  expect_type(unlist(s$pairwise[,5]),"double")
-  expect_type(s$pairwise$EPR,"double")
-  expect_type(s$pairwise$`EPR Lower`,"double")
-  expect_type(s$pairwise$`EPR Upper`,"double")
+  expect_s3_class(s$pw_summary,c("tbl_df", "tbl", "data.frame"))
+  expect_type(s$pw_summary$Comparison,"character")
+  expect_type(s$pw_summary$`Post Mean`,"double")
+  expect_type(s$pw_summary$Lower,"double")
+  expect_type(s$pw_summary$Upper,"double")
+  expect_type(unlist(s$pw_summary[,5]),"double")
+  expect_type(s$pw_summary$EPR,"double")
+  expect_type(s$pw_summary$`EPR Lower`,"double")
+  expect_type(s$pw_summary$`EPR Upper`,"double")
+  
+  expect_type(s$BF,"list")
+  expect_named(s$BF,c("BF","interpretation"))
+  expect_type(s$BF$BF,"double")
+  expect_type(s$BF$interpretation,"character")
   
   
   ## Make sure coef.aov_b works
@@ -165,7 +174,7 @@ test_that("Proper prior and heteroscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
                        type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
+                       combine_pred_cred = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
@@ -229,9 +238,27 @@ test_that("Proper prior and heteroscedastic model works", {
                      PI_level = 0.9)$PI_lower[1])
   
   ## Test plot
-  expect_s3_class(plot(fite),
+  expect_s3_class(plot(fite,
+                       type = c("cred","pred")),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
+  
+  
+  # Test no BF
+  # No errors upon fitting
+  expect_no_error(
+    fitf <-
+      aov_b(outcome ~ x1,
+            test_data,
+            prior_mean_mu = 2,
+            prior_mean_nu = 0.5,
+            prior_var_shape = 0.01,
+            prior_var_rate = 0.01,
+            compute_bayes_factor = FALSE)
+  )
+  
+  # Make sure print works
+  expect_no_error(fitf)
   
   
   # Make sure parallelization works
@@ -285,10 +312,12 @@ test_that("Proper prior and homoscedastic model works", {
     s <- 
       summary(fita)
   )
-  ## Check output format
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   expect_type(s,"list")
-  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   
+  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   expect_named(s$summary,c("Variable","Post Mean","Lower","Upper","Prob Dir"))
   expect_type(s$summary$Variable,"character")
   expect_type(s$summary$`Post Mean`,"double")
@@ -296,14 +325,21 @@ test_that("Proper prior and homoscedastic model works", {
   expect_type(s$summary$Upper,"double")
   expect_type(s$summary$`Prob Dir`,"double")
   
-  expect_type(s$pairwise$Comparison,"character")
-  expect_type(s$pairwise$`Post Mean`,"double")
-  expect_type(s$pairwise$Lower,"double")
-  expect_type(s$pairwise$Upper,"double")
-  expect_type(unlist(s$pairwise[,5]),"double")
-  expect_type(s$pairwise$EPR,"double")
-  expect_type(s$pairwise$`EPR Lower`,"double")
-  expect_type(s$pairwise$`EPR Upper`,"double")
+  expect_s3_class(s$pw_summary,c("tbl_df", "tbl", "data.frame"))
+  expect_type(s$pw_summary$Comparison,"character")
+  expect_type(s$pw_summary$`Post Mean`,"double")
+  expect_type(s$pw_summary$Lower,"double")
+  expect_type(s$pw_summary$Upper,"double")
+  expect_type(unlist(s$pw_summary[,5]),"double")
+  expect_type(s$pw_summary$EPR,"double")
+  expect_type(s$pw_summary$`EPR Lower`,"double")
+  expect_type(s$pw_summary$`EPR Upper`,"double")
+  
+  expect_type(s$BF,"list")
+  expect_named(s$BF,c("BF","interpretation"))
+  expect_type(s$BF$BF,"double")
+  expect_type(s$BF$interpretation,"character")
+  
   
   
   ## Make sure coef.aov_b works
@@ -421,7 +457,12 @@ test_that("Proper prior and homoscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
                        type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
+                       combine_pred_cred = TRUE),
+                  c("patchwork","ggplot2::ggplot","ggplot",
+                    "ggplot2::gg","S7_object","gg"))
+  expect_s3_class(plot(fita,
+                       type = c("cr","pr"),
+                       combine_pred_cred = FALSE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
@@ -446,6 +487,23 @@ test_that("Proper prior and homoscedastic model works", {
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
+  
+  # Test no BF
+  # No errors upon fitting
+  expect_no_error(
+    fitf <-
+      aov_b(outcome ~ x1,
+            test_data,
+            prior_mean_mu = 2,
+            prior_mean_nu = 0.5,
+            prior_var_shape = 0.01,
+            prior_var_rate = 0.01,
+            compute_bayes_factor = FALSE)
+  )
+  
+  # Make sure print works
+  expect_no_error(fitf)
+  
   
   # Make sure parallelization works
   if(!go_fast_for_cran_checks){
@@ -496,10 +554,13 @@ test_that("Imroper prior and heteroscedastic model works", {
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_type(s,"list")
-  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   
+  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   expect_named(s$summary,c("Variable","Post Mean","Lower","Upper","Prob Dir"))
   expect_type(s$summary$Variable,"character")
   expect_type(s$summary$`Post Mean`,"double")
@@ -507,15 +568,17 @@ test_that("Imroper prior and heteroscedastic model works", {
   expect_type(s$summary$Upper,"double")
   expect_type(s$summary$`Prob Dir`,"double")
   
-  expect_type(s$pairwise$Comparison,"character")
-  expect_type(s$pairwise$`Post Mean`,"double")
-  expect_type(s$pairwise$Lower,"double")
-  expect_type(s$pairwise$Upper,"double")
-  expect_type(unlist(s$pairwise[,5]),"double")
-  expect_type(s$pairwise$EPR,"double")
-  expect_type(s$pairwise$`EPR Lower`,"double")
-  expect_type(s$pairwise$`EPR Upper`,"double")
+  expect_s3_class(s$pw_summary,c("tbl_df", "tbl", "data.frame"))
+  expect_type(s$pw_summary$Comparison,"character")
+  expect_type(s$pw_summary$`Post Mean`,"double")
+  expect_type(s$pw_summary$Lower,"double")
+  expect_type(s$pw_summary$Upper,"double")
+  expect_type(unlist(s$pw_summary[,5]),"double")
+  expect_type(s$pw_summary$EPR,"double")
+  expect_type(s$pw_summary$`EPR Lower`,"double")
+  expect_type(s$pw_summary$`EPR Upper`,"double")
   
+  expect_type(s$BF,"NULL")
   
   ## Make sure coef.aov_b works
   expect_type(coef(fita), "double")
@@ -630,7 +693,7 @@ test_that("Imroper prior and heteroscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
                        type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
+                       combine_pred_cred = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
@@ -655,6 +718,8 @@ test_that("Imroper prior and heteroscedastic model works", {
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
+  
+  
   
   # Make sure parallelization works
   if(!go_fast_for_cran_checks){
@@ -702,10 +767,13 @@ test_that("Imroper prior and homoscedastic model works", {
     s <- 
       summary(fita)
   )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
   ## Check output format
   expect_type(s,"list")
-  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   
+  expect_s3_class(s$summary,c("tbl_df", "tbl", "data.frame"))
   expect_named(s$summary,c("Variable","Post Mean","Lower","Upper","Prob Dir"))
   expect_type(s$summary$Variable,"character")
   expect_type(s$summary$`Post Mean`,"double")
@@ -713,14 +781,18 @@ test_that("Imroper prior and homoscedastic model works", {
   expect_type(s$summary$Upper,"double")
   expect_type(s$summary$`Prob Dir`,"double")
   
-  expect_type(s$pairwise$Comparison,"character")
-  expect_type(s$pairwise$`Post Mean`,"double")
-  expect_type(s$pairwise$Lower,"double")
-  expect_type(s$pairwise$Upper,"double")
-  expect_type(unlist(s$pairwise[,5]),"double")
-  expect_type(s$pairwise$EPR,"double")
-  expect_type(s$pairwise$`EPR Lower`,"double")
-  expect_type(s$pairwise$`EPR Upper`,"double")
+  expect_s3_class(s$pw_summary,c("tbl_df", "tbl", "data.frame"))
+  expect_type(s$pw_summary$Comparison,"character")
+  expect_type(s$pw_summary$`Post Mean`,"double")
+  expect_type(s$pw_summary$Lower,"double")
+  expect_type(s$pw_summary$Upper,"double")
+  expect_type(unlist(s$pw_summary[,5]),"double")
+  expect_type(s$pw_summary$EPR,"double")
+  expect_type(s$pw_summary$`EPR Lower`,"double")
+  expect_type(s$pw_summary$`EPR Upper`,"double")
+  
+  expect_type(s$BF,"NULL")
+  
   
   
   ## Make sure coef.aov_b works
@@ -840,7 +912,7 @@ test_that("Imroper prior and homoscedastic model works", {
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
                        type = c("cr","pr"),
-                       combine_pi_ci = TRUE),
+                       combine_pred_cred = TRUE),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(fita,
@@ -865,6 +937,8 @@ test_that("Imroper prior and homoscedastic model works", {
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
+  
+  
   
   # Make sure parallelization works
   if(!go_fast_for_cran_checks){

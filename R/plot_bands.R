@@ -90,6 +90,10 @@ plot_bands.lm_b = function(x,
       delete.response() |> 
       all.vars() |> 
       unique()
+    if(!is.null(attributes(terms(x))$offset)){
+      variable = 
+        variable[-(attributes(terms(x))$offset - 1)]
+    }
   }
   
   # Get unique values and x sequences for plots

@@ -24,9 +24,9 @@ test_that("Testing Kendall's tau analysis",{
   test2 = 
     cor_test_b(x,y,
                tau = 0.1)
-  expect_lt(
-    test1$Pr_less_than_tau,
-    test2$Pr_less_than_tau
+  expect_gt(
+    test1$pdir$pdir,
+    test2$pdir$pdir
   )
   
   # Check ROPE
@@ -37,8 +37,8 @@ test_that("Testing Kendall's tau analysis",{
     cor_test_b(x,y,
                ROPE = 0.2)
   expect_lt(
-    test3$Pr_in_ROPE,
-    test4$Pr_in_ROPE
+    test3$results$Pr_in_ROPE,
+    test4$results$Pr_in_ROPE
   )
   
   # Check prior
