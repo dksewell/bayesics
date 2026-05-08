@@ -690,6 +690,9 @@ np_glm_b = function(formula,
         }
       }
       
+      beta_draws = 
+        na.omit(beta_draws)
+      
     }else{
       
       helper = function(i){
@@ -723,6 +726,9 @@ np_glm_b = function(formula,
         t() |> 
         na.omit()
     }
+    
+    n_current_draws = nrow(beta_draws)
+    
     ## Evaluate number of draws required for accurate CI bounds
     fhats = 
       future.apply::future_lapply(1:NCOL(beta_draws),
@@ -797,11 +803,14 @@ np_glm_b = function(formula,
                     control = list(maxit = 1e4))
           }
           if(temp$conv == 0){
-            beta_draws[n_draws + i,] = temp$par
+            beta_draws[n_current_draws + i,] = temp$par
           }else{
-            beta_draws[n_draws + i,] = NA
+            beta_draws[n_current_draws + i,] = NA
           }
         }
+        
+        beta_draws = 
+          na.omit(beta_draws)
         
       }else{
         
