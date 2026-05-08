@@ -17,6 +17,6 @@
 #' @importFrom survival Surv
 #' @importFrom BMS bms
 #' @importFrom stringr str_extract
-#' @importFrom stats AIC BIC as.formula binomial coef cov dbeta dbinom delete.response density dgamma dlnorm dnbinom dnorm dpois gaussian glm lm model.frame model.matrix model.offset model.response na.omit optim optimize pbeta pgamma pnorm poisson predict qbeta qgamma qlnorm qnorm quantile rbeta rbinom resid rgamma rnbinom rnorm rpois sd sigma terms var vcov weighted.mean
+#' @importFrom stats AIC BIC as.formula binomial coef cov dbeta dbinom delete.response density dgamma dlnorm dnbinom dnorm dpois gaussian glm lm model.frame model.matrix model.offset model.response na.omit optim optimize pbeta pgamma pnorm poisson predict qbeta qgamma qlnorm qnorm quantile rbeta rbinom resid rgamma rnbinom rnorm rpois sd sigma terms var vcov weighted.mean logLik
 NULL
 

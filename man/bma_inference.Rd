@@ -56,7 +56,7 @@ A list with the following elements:
 \item \code{summary} - Tibble with point and interval estimates
 \item \code{lm_b_fits} - A list of lm_b fits using zellner's g prior for
 all the top models from \code{\link[BMS]{bms}}
-\item \code{bms_fit} - A list of class \code{\link[BMS]{`bma-class`}}
+\item \code{bms_fit} - A list of class \code{\link[BMS]{bma-class}}
 \item \code{hyperparameters} - A named list with the user-specified zellner's g value.
 \item \code{posterior_draws} - matrix of posterior draws of the regression parameters,
 marginalizing out the model

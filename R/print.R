@@ -217,9 +217,9 @@ print.b_procedure = function(x, ...){
     results = 
       x$results |> 
       mutate(row = 
-               as.integer(stringr::str_extract(Quantity, "(?<=Row )\\d+")),
+               as.integer(stringr::str_extract(.data$Quantity, "(?<=Row )\\d+")),
              col = 
-               as.integer(stringr::str_extract(Quantity, "(?<=Col )\\d+"))
+               as.integer(stringr::str_extract(.data$Quantity, "(?<=Col )\\d+"))
       )
     nR = max(results$row)
     nC = max(results$col)

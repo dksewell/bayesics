@@ -82,9 +82,9 @@ independence_b(round(N * dep_probs),
 
 # Fixed marginals
 independence_b(round(N * dep_probs),
-               sampling_design = "rows")
+               sampling_design = "fixed rows")
 independence_b(round(N * dep_probs),
-               sampling_design = "cols")
+               sampling_design = "fixed col")
 }
 
 

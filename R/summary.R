@@ -8,7 +8,7 @@
 #' \code{binomial(link="logit")}, \code{poisson(link="log")}, or 
 #' \code{negbinom()}, and if \code{interpretable_scale = TRUE} 
 #' then the results will be exponentiated.
-#' \code{print_results}
+#' @param print_results logical
 #' @param ... optional arguments.
 #' 
 #' @returns tibble with summary values

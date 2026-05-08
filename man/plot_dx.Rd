@@ -29,8 +29,7 @@ plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 
 \method{plot_dx}{mediate_b}(
   x,
-  statistic_m = "deviance",
-  statistic_y = "deviance",
+  statistic = list(m = "deviance", y = "deviance"),
   mc_error = 0.005,
   seed = 1,
   return_as_list = TRUE,
@@ -38,14 +37,16 @@ plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 )
 }
 \arguments{
-\item{x}{object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}}
+\item{x}{object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, or
+\code{mediate_b}}
 
-\item{statistic, }{statistic_m, statistic_y Statistic used to compute
-Bayesian p-value (\code{statistic_m} and \code{statistic_y} used for the
-mediator and outcome model for a \code{mediate_b} object).
+\item{statistic, }{Statistic used to compute Bayesian p-value.
 Either "deviance", or else a function taking in data, expected value, and
 if applicable to the family, disperion (residual variance for \code{gaussian},
-and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).}
+and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
+If x is of class \code{mediate_b}, \code{statistic} should be
+a named list with names equal to "m" and "y" for the mediator
+and the outcome models respectively.}
 
 \item{mc_error}{The number of posterior draws will ensure that with
 99\% probability the estimated Bayesian p-value will be within

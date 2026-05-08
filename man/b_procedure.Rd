@@ -20,7 +20,7 @@ A \code{b_procedure} object is a named list with the following components
 \code{print.b_procedure}.}
 \item{CI_level}{Numeric scalar giving the credible interval level as
 provided by the user.}
-\item {sampling_design}{Character; Used by \code{independence_b}.}
+\item{sampling_design}{Character; Used by \code{independence_b}.}
 \item{prior}{Character string describing the prior used.}
 \item{results}{A tibble containing posterior summaries with
 columns:
@@ -57,7 +57,7 @@ direction.
 \item{plot}{A \code{ggplot} object associated with the procedure.}
 \item{object_fit}{If applicable, the underlying fitted model object
 (e.g., \code{aov_b}).}
-\item{notes} character vector
+\item{notes}{character vector}
 }
 }
 \section{S3 methods}{

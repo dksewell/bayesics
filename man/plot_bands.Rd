@@ -6,31 +6,37 @@
 \alias{plot_bands.aov_b}
 \title{Plot credible and prediction bands}
 \usage{
-plot_bands(x, return_as_list, ...)
+plot_bands(
+  x,
+  type,
+  combine_pred_cred,
+  CI_level,
+  PI_level,
+  backtransformation,
+  return_as_list,
+  ...
+)
 
 \method{plot_bands}{lm_b}(
   x,
   type = c("cred band", "pred band"),
-  variable,
-  exemplar_covariates,
   combine_pred_cred = TRUE,
-  variable_seq_length = 30,
   CI_level = 0.95,
   PI_level = 0.95,
   backtransformation = function(x) {
      x
  },
   return_as_list = TRUE,
+  variable,
+  variable_seq_length = 30,
+  exemplar_covariates,
   ...
 )
 
 \method{plot_bands}{aov_b}(
   x,
   type = c("cred band", "pred band"),
-  variable,
-  exemplar_covariates,
   combine_pred_cred = TRUE,
-  variable_seq_length = 30,
   CI_level = 0.95,
   PI_level = 0.95,
   backtransformation = function(x) {
@@ -43,25 +49,13 @@ plot_bands(x, return_as_list, ...)
 \arguments{
 \item{x}{object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}}
 
-\item{return_as_list}{logical.  If TRUE, a list of ggplots will be returned,
-rather than a single plot produced by the patchwork package.}
-
-\item{...}{arguments passed on to plot_bands}
-
 \item{type}{character. Select "cred band", and/or "pred band".
 NOTE: the credible and prediction bands only work for numeric
 variables.}
 
-\item{variable}{character. If type = "pdp" , which variable should be plotted?}
-
-\item{exemplar_covariates}{data.frame or tibble with exactly one row.
-Used to fix other covariates while varying the variable of interest for the plot.}
-
 \item{combine_pred_cred}{logical. If type includes both "cred band" and "pred band",
 should the credible band be superimposed on the prediction band or
 plotted separately?}
-
-\item{variable_seq_length}{integer. Number of points used to draw pdp.}
 
 \item{CI_level}{Posterior probability covered by credible interval}
 
@@ -71,6 +65,18 @@ plotted separately?}
 the response variable was used, \code{backtransformation}
 should be the inverse of this transformation function.  E.g.,
 if you fit lm_b(log(y) ~ x), then set \code{backtransformation=exp}.}
+
+\item{return_as_list}{logical.  If TRUE, a list of ggplots will be returned,
+rather than a single plot produced by the patchwork package.}
+
+\item{...}{arguments passed on to plot_bands}
+
+\item{variable}{character. If type = "pdp" , which variable should be plotted?}
+
+\item{variable_seq_length}{integer. Number of points used to draw pdp.}
+
+\item{exemplar_covariates}{data.frame or tibble with exactly one row.
+Used to fix other covariates while varying the variable of interest for the plot.}
 }
 \description{
 Plot credible and prediction bands

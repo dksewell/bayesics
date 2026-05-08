@@ -6,25 +6,30 @@
 #' @param type character. Select "cred band", and/or "pred band".  
 #'  NOTE: the credible and prediction bands only work for numeric 
 #'  variables.
-#' @param variable character. If type = "pdp" , which variable should be plotted?
-#' @param exemplar_covariates data.frame or tibble with exactly one row.  
-#' Used to fix other covariates while varying the variable of interest for the plot.
 #' @param combine_pred_cred logical. If type includes both "cred band" and "pred band", 
 #' should the credible band be superimposed on the prediction band or 
 #' plotted separately?
-#' @param variable_seq_length integer. Number of points used to draw pdp.
-#' @param return_as_list logical.  If TRUE, a list of ggplots will be returned, 
-#' rather than a single plot produced by the patchwork package.
 #' @param CI_level Posterior probability covered by credible interval
 #' @param PI_level Posterior probability covered by prediction interval
 #' @param backtransformation function.  If a transformation of 
 #' the response variable was used, \code{backtransformation} 
 #' should be the inverse of this transformation function.  E.g., 
 #' if you fit lm_b(log(y) ~ x), then set \code{backtransformation=exp}. 
+#' @param return_as_list logical.  If TRUE, a list of ggplots will be returned, 
+#' rather than a single plot produced by the patchwork package.
+#' @param variable character. If type = "pdp" , which variable should be plotted?
+#' @param variable_seq_length integer. Number of points used to draw pdp.
+#' @param exemplar_covariates data.frame or tibble with exactly one row.  
+#' Used to fix other covariates while varying the variable of interest for the plot.
 #' @param ... arguments passed on to plot_bands
 #' 
 #' @export
 plot_bands = function(x,
+                      type,
+                      combine_pred_cred,
+                      CI_level,
+                      PI_level,
+                      backtransformation,
                       return_as_list,
                       ...){
   UseMethod("plot_bands")
@@ -36,14 +41,14 @@ plot_bands = function(x,
 plot_bands.lm_b = function(x,
                            type = c("cred band",
                                     "pred band"),
-                           variable,
-                           exemplar_covariates,
                            combine_pred_cred = TRUE,
-                           variable_seq_length = 30,
                            CI_level = 0.95,
                            PI_level = 0.95,
                            backtransformation = function(x){x},
                            return_as_list = TRUE,
+                           variable,
+                           variable_seq_length = 30,
+                           exemplar_covariates,
                            ...){
   
   type = match.arg(type,
@@ -348,10 +353,7 @@ plot_bands.lm_b = function(x,
 plot_bands.aov_b = function(x,
                             type = c("cred band",
                                      "pred band"),
-                            variable,
-                            exemplar_covariates,
                             combine_pred_cred = TRUE,
-                            variable_seq_length = 30,
                             CI_level = 0.95,
                             PI_level = 0.95,
                             backtransformation = function(x){x},
@@ -393,13 +395,13 @@ plot_bands.aov_b = function(x,
                  y = .data[[all.vars(x$formula)[1]]])) +
       geom_violin(alpha = 0.2) +
       geom_errorbar(data = newdata,
-                    aes(x = .data[[all.vars(x$formula)[2]]],
+                    aes(x = .data$group,
                         y = .data$`Post Mean`,
                         ymin = .data$PI_lower,
                         ymax = .data$PI_upper),
                     color = "lightsteelblue3") +
       geom_point(data = newdata,
-                 aes(x = .data[[all.vars(x$formula)[2]]],
+                 aes(x = .data$group,
                      y = .data$`Post Mean`),
                  size = 3)
     
@@ -423,13 +425,13 @@ plot_bands.aov_b = function(x,
     plot_list[[plot_name_v]] =
       plot_list[[plot_name_v]] +
       geom_errorbar(data = newdata,
-                    aes(x = .data[[all.vars(x$formula)[2]]],
+                    aes(x = .data$group,
                         y = .data$`Post Mean`,
                         ymin = .data$CI_lower,
                         ymax = .data$CI_upper),
                     color = "steelblue4") +
       geom_point(data = newdata,
-                 aes(x = .data[[all.vars(x$formula)[2]]],
+                 aes(x = .data$group,
                      y = .data$`Post Mean`),
                  size = 3)
     
@@ -464,4 +466,5 @@ plot_bands.aov_b = function(x,
     )
   }
 }
+
 

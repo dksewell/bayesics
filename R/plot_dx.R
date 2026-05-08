@@ -2,13 +2,15 @@
 #' 
 #' @title Diagnostic plots for Bayesian regression objects
 #' 
-#' @param x object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}
-#' @param statistic, statistic_m, statistic_y Statistic used to compute 
-#' Bayesian p-value (\code{statistic_m} and \code{statistic_y} used for the 
-#' mediator and outcome model for a \code{mediate_b} object). 
+#' @param x object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, or
+#' \code{mediate_b}
+#' @param statistic, Statistic used to compute Bayesian p-value.
 #' Either "deviance", or else a function taking in data, expected value, and 
 #' if applicable to the family, disperion (residual variance for \code{gaussian},
 #' and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
+#' If x is of class \code{mediate_b}, \code{statistic} should be 
+#' a named list with names equal to "m" and "y" for the mediator 
+#' and the outcome models respectively.
 #' @param mc_error The number of posterior draws will ensure that with 
 #' 99% probability the estimated Bayesian p-value will be within 
 #' \eqn{\pm} \code{mc_error} of the actual Bayesian p-value.
@@ -176,8 +178,8 @@ plot_dx.aov_b = function(x,
 #' @rdname plot_dx
 #' @exportS3Method plot_dx mediate_b
 plot_dx.mediate_b = function(x,
-                             statistic_m = "deviance",
-                             statistic_y = "deviance",
+                             statistic = list(m = "deviance",
+                                              y = "deviance"),
                              mc_error = 0.005,
                              seed = 1,
                              return_as_list = TRUE,
@@ -188,7 +190,7 @@ plot_dx.mediate_b = function(x,
   # Mediator model
   plot_list[[1]] = 
     plot_dx(x$model_m,
-            statistic = statistic_m,
+            statistic = statistic$m,
             mc_error = mc_error,
             seed = seed,
             return_as_list = TRUE)
@@ -202,7 +204,7 @@ plot_dx.mediate_b = function(x,
   # Outcome model
   plot_list[[2]] = 
     plot_dx(x$model_y,
-            statistic = statistic_y,
+            statistic = statistic$y,
             mc_error = mc_error,
             seed = seed,
             return_as_list = TRUE)

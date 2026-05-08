@@ -28,15 +28,19 @@
 #' 
 #' 
 #' @export
-get_posterior_draws = function(object,...){
+get_posterior_draws = function(object,
+                               n_draws,
+                               seed,
+                               ...){
   UseMethod("get_posterior_draws")
 }
 
-#' @rdname credint
+#' @rdname get_posterior_draws
 #' @exportS3Method get_posterior_draws lm_b 
 get_posterior_draws.lm_b = function(object, 
                                     n_draws = 1e4,
-                                    seed = 1){
+                                    seed = 1,
+                                    ...){
   set.seed(seed)
   
   if("posterior_covariance" %in% names(object)){ # Handles lm, glm\IS, np_glm\bootstrapping
@@ -108,11 +112,12 @@ get_posterior_draws.lm_b = function(object,
 
 
 
-#' @rdname credint
+#' @rdname get_posterior_draws
 #' @exportS3Method get_posterior_draws aov_b 
 get_posterior_draws.aov_b = function(object,
                                      n_draws = 1e4,
-                                     seed = 1){
+                                     seed = 1,
+                                     ...){
   set.seed(seed)
   
   G = length(object$posterior_parameters$nu_g)

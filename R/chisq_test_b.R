@@ -65,9 +65,9 @@
 #' 
 #' # Fixed marginals
 #' independence_b(round(N * dep_probs),
-#'                sampling_design = "rows")
+#'                sampling_design = "fixed rows")
 #' independence_b(round(N * dep_probs),
-#'                sampling_design = "cols")
+#'                sampling_design = "fixed col")
 #' }
 #' 
 #' 
@@ -160,8 +160,9 @@ independence_b = function(x,
     results$results = 
       expand.grid(Row = paste("Row",1:nR),
                   Col = paste("Col",1:nC)) |> 
-      mutate(Quantity = 
-               paste(Row,Col,
+      dplyr::mutate(Quantity = 
+               paste(.data$Row,
+                     .data$Col,
                      sep = ", "),
              .keep = "unused")
     
@@ -446,7 +447,8 @@ independence_b = function(x,
         expand.grid(Col = paste("Col",1:nR),
                     Row = paste("Row",1:nC)) |> 
         mutate(Quantity = 
-                 paste(Row,Col,
+                 paste(.data$Row,
+                       .data$Col,
                        sep = ", "),
                .keep = "unused")
     }else{
@@ -454,7 +456,8 @@ independence_b = function(x,
         expand.grid(Row = paste("Row",1:nR),
                     Col = paste("Col",1:nC)) |> 
         mutate(Quantity = 
-                 paste(Row,Col,
+                 paste(.data$Row,
+                       .data$Col,
                        sep = ", "),
                .keep = "unused")
     }

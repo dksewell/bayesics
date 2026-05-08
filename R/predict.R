@@ -96,7 +96,6 @@
 #' 
 #' }
 #' 
-
 #' @rdname predict
 #' @exportS3Method predict lm_b
 predict.lm_b = function(object,
@@ -523,8 +522,8 @@ predict.lm_b = function(object,
   if(object$family$family == "binomial"){
     newdata = 
       newdata |>
-      dplyr::mutate(across(c(CI_lower,
-                             CI_upper),
+      dplyr::mutate(across(c(.data$CI_lower,
+                             .data$CI_upper),
                            ~ ifelse(.x < 0, 0,
                                     ifelse(.x > 1,
                                            1,
@@ -532,8 +531,8 @@ predict.lm_b = function(object,
     if("PI_lower" %in% names(newdata)){
       newdata = 
         newdata |>
-        dplyr::mutate(across(c(PI_lower,
-                               PI_upper),
+        dplyr::mutate(across(c(.data$PI_lower,
+                               .data$PI_upper),
                              ~ ifelse(.x < 0, 0,
                                       ifelse(.x > 1,
                                              1,
@@ -544,14 +543,14 @@ predict.lm_b = function(object,
   if(object$family$family %in% c("poisson","negbinom")){
     newdata = 
       newdata |>
-      dplyr::mutate(across(c(CI_lower,
-                             CI_upper),
+      dplyr::mutate(across(c(.data$CI_lower,
+                             .data$CI_upper),
                            ~ ifelse(.x < 0, 0,.x)))
     if("PI_lower" %in% names(newdata)){
       newdata = 
         newdata |>
-        dplyr::mutate(across(c(PI_lower,
-                               PI_upper),
+        dplyr::mutate(across(c(.data$PI_lower,
+                               .data$PI_upper),
                              ~ ifelse(.x < 0, 0,.x)))
     }
   }
