@@ -159,7 +159,8 @@ sign_test_b = function(x,
     paste0("Prior on the probability x > y: Beta(",
            prior_shapes[1],
            ", ",
-           prior_shapes[2])
+           prior_shapes[2],
+           ")")
   
   # Posterior results
   results$results = 
