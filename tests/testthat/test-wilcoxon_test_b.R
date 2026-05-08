@@ -15,24 +15,25 @@ test_that("Test Wilcoxon signed rank analysis",{
       fita <- 
         wilcoxon_test_b(test_data_small$x - test_data_small$y)
     )
+    expect_no_error(fita)
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
     expect_no_error(
       fitb <- 
         wilcoxon_test_b(test_data_small$x,
                         test_data_small$y,
                         paired = TRUE)
     )
+    expect_no_error(fitb)
+    expect_s3_class(plot(fitb),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
     
     ## Test output
-    expect_equal(fita[c(1:5)],
-                 fitb[c(1:5)],
+    expect_equal(fita$results,
+                 fitb$results,
                  tolerance = 0.05)
-    expect_s3_class(fita$posterior_distribution,
-                    c("tbl_df", "tbl", "data.frame"))
-    expect_type(fita$posterior_mean,"double")
-    expect_type(fita$CI,"double")
-    expect_type(fita$Pr_less_than_p,"double")
-    expect_type(fita$Pr_in_ROPE,"double")
-    expect_type(fita$BF_for_phi_gr_onehalf_vs_phi_less_onehalf,"double")
     
     ## Test priors
     expect_no_error(
@@ -68,23 +69,19 @@ test_that("Test Wilcoxon signed rank analysis",{
     fitc <- 
       wilcoxon_test_b(test_data_big$x - test_data_big$y)
   )
+  expect_no_error(fitc)
+  expect_s3_class(plot(fitc),
+                  c("patchwork","ggplot2::ggplot","ggplot",
+                    "ggplot2::gg","S7_object","gg"))
   expect_no_error(
     fitd <- 
       wilcoxon_test_b(test_data_big$x,
                       test_data_big$y,
                       paired = TRUE)
   )
-  
-  ## Test output
-  expect_equal(fitc[c(1:5)],
-               fitd[c(1:5)],
+  expect_equal(fitc$results,
+               fitd$results,
                tolerance = 0.05)
-  expect_type(fitc$posterior_parameters,"double")
-  expect_type(fitc$posterior_mean,"double")
-  expect_type(fitc$CI,"double")
-  expect_type(fitc$Pr_less_than_p,"double")
-  expect_type(fitc$Pr_in_ROPE,"double")
-  expect_type(fitc$BF_for_phi_gr_onehalf_vs_phi_less_onehalf,"double")
   
   ## Test priors
   expect_no_error(
@@ -124,14 +121,8 @@ test_that("Test Wilcoxon rank sum analysis",{
       fita <-
         wilcoxon_test_b(x,y)
     )
-    expect_s3_class(fita$posterior_distribution,
-                    c("tbl_df", "tbl", "data.frame"))
-    expect_type(fita$posterior_mean,"double")
-    expect_type(fita$CI,"double")
-    expect_type(fita$Pr_less_than_p,"double")
-    expect_type(fita$Pr_in_ROPE,"double")
-    expect_type(fita$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf,"double")
-    expect_s3_class(fita$prob_plot,
+    expect_no_error(fita)
+    expect_s3_class(plot(fita),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
     
@@ -174,13 +165,8 @@ test_that("Test Wilcoxon rank sum analysis",{
     fitb <-
       wilcoxon_test_b(x,y)
   )
-  expect_type(fitb$posterior_parameters,"double")
-  expect_type(fitb$posterior_mean,"double")
-  expect_type(fitb$CI,"double")
-  expect_type(fitb$Pr_less_than_p,"double")
-  expect_type(fitb$Pr_in_ROPE,"double")
-  expect_type(fitb$BF_for_Omegax_gr_onehalf_vs_Omegax_less_onehalf,"double")
-  expect_s3_class(fitb$prob_plot,
+  expect_no_error(fitb)
+  expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   

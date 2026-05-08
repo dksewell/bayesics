@@ -19,9 +19,9 @@ mediate_b(
 )
 }
 \arguments{
-\item{model_m}{a fitted model object of class lm_b for mediator.}
+\item{model_m}{a fitted model object of class \code{lm_b} or \code{glm_b} for mediator.}
 
-\item{model_y}{a fitted model object of class lm_b for outcome.}
+\item{model_y}{a fitted model object of class \code{lm_b} or \code{glm_b} for outcome.}
 
 \item{treat}{a character string indicating the name of the
 treatment variable used in the models.  NOTE: Treatment variable must be

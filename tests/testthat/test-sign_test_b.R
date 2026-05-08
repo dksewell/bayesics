@@ -6,19 +6,18 @@ test_that("Test sign_test_b",{
     fita <-
       sign_test_b(x = rnorm(50))
   )
-  expect_no_error(
-    sign_test_b(x = rnorm(50,1),
-                y = rnorm(50,0))
-  )
+  expect_no_error(fita)
+  expect_s3_class(plot(fita),
+                  c("patchwork","ggplot2::ggplot","ggplot",
+                    "ggplot2::gg","S7_object","gg"))
   
-  # Test output
-  expect_type(fita$posterior_mean,"double")
-  expect_type(fita$CI,"double")
-  expect_type(fita$Pr_less_than_p,"double")
-  expect_type(fita$ROPE,"double")
-  expect_type(fita$ROPE_bounds,"double")
-  expect_type(fita$posterior_parameters,"double")
-  expect_s3_class(fita$prop_plot,
+  expect_no_error(
+    fitb <-
+      sign_test_b(x = rnorm(50,1),
+                  y = rnorm(50,0))
+  )
+  expect_no_error(fitb)
+  expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   
@@ -45,10 +44,10 @@ test_that("Test sign_test_b",{
                   y = y,
                   prior_shapes = c(2,2))
   )
-  expect_equal(fitb[c(1:5,7)],
-               fitc[c(1:5,7)])
-  expect_true(!isTRUE(all.equal(fitb[c(1:5,7)],
-                                fitd[c(1:5,7)])))
+  expect_equal(fitb$results,
+               fitc$results)
+  expect_true(!isTRUE(all.equal(fitb$results,
+                                fitd$results)))
   
   # Test ROPE
   expect_no_error(
@@ -69,10 +68,10 @@ test_that("Test sign_test_b",{
                   y = y,
                   ROPE = c(0.4,0.6))
   )
-  expect_lt(fite$ROPE,
-            fitf$ROPE)
-  expect_equal(fite[c(1:5,7)],
-               fitg[c(1:5,7)])
+  expect_gt(fite$results$ROPE_lower_bound,
+            fitf$results$ROPE_lower_bound)
+  expect_equal(fite$results,
+               fitg$results)
   
   # Test changing reference probability
   expect_no_error(
@@ -81,8 +80,8 @@ test_that("Test sign_test_b",{
                   y = y,
                   p0 = 0.7)
   )
-  expect_lt(fite$Pr_less_than_p,
-            fith$Pr_less_than_p)
+  expect_lt(fite$pdir$pdir,
+            fith$pdir$pdir)
   expect_error(
     sign_test_b(x = rnorm(50,1),
                 p0 = 0.71,
