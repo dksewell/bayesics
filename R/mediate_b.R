@@ -26,8 +26,8 @@
 #' “A General Approach to Causal Mediation Analysis.” Psychological Methods, 
 #' vol. 15, no. 4, 2010, pp. 309–34, https://doi.org/10.1037/a0020761.
 #' 
-#' @param model_m a fitted model object of class lm_b for mediator.
-#' @param model_y a fitted model object of class lm_b for outcome.
+#' @param model_m a fitted model object of class \code{lm_b} or \code{glm_b} for mediator.
+#' @param model_y a fitted model object of class \code{lm_b} or \code{glm_b} for outcome.
 #' @param treat a character string indicating the name of the 
 #' treatment variable used in the models.  NOTE: Treatment variable must be
 #' numeric (even if it's 1's and 0's).
@@ -147,21 +147,15 @@ mediate_b = function(model_m,
   alpha_ci = 1 - CI_level
   
   # Get mc_error
-  if("lm_b" %in% class(model_y)){
-    y =
-      model.response(model.frame(terms(model_y),
-                                 model_y$data))
-    mc_error = mc_error * 4 * sd(y)
-  }
-  if( ("glm_b" %in% class(model_y)) &&
-      (model_y$family$family != "binomial") ){
-    y =
-      model.response(model.frame(terms(model_y),
-                                 model_y$data))
-    mc_error = mc_error * 4 * sd(log(y + 1))
-  }
-  
-  
+  y =
+    model.response(model.frame(terms(model_y),
+                               model_y$data))
+  mc_error =
+    ifelse("glm_b" %in% class(model_y),
+           ifelse(model_y$family$family != "binomial",
+                  mc_error * 4 * sd(log(y + 1)),
+                  mc_error),
+           mc_error * 4 * sd(y))
   
   
   if(!all.equal(model_m$data,model_y$data)){
@@ -183,8 +177,8 @@ mediate_b = function(model_m,
   
   tl = attr(model_y$terms,"term.labels")
   simple = 
-    ("lm_b" %in% class(model_m)) &
-    ("lm_b" %in% class(model_y)) & 
+    !("glm_b" %in% class(model_m)) &
+    !("glm_b" %in% class(model_y)) & 
     !any(grepl(paste0(":",mediator),tl) | 
            grepl(paste0(mediator,":"),tl))
   
