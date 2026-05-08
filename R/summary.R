@@ -83,11 +83,11 @@ summary.lm_b = function(object,
       if("posterior_draws" %in% names(object)){ # Handles np_glm bootstrapping, bma_inference
         
         summ$Lower = 
-          object$posterior_draws[,1:p] |> 
+          object$posterior_draws[,1:nrow(summ)] |> 
           as.matrix() |> 
           apply(2,quantile,prob = alpha / 2)
         summ$Upper = 
-          object$posterior_draws[,1:p] |> 
+          object$posterior_draws[,1:nrow(summ)] |> 
           as.matrix() |> 
           apply(2,quantile,prob = 1.0 - alpha / 2)
         
