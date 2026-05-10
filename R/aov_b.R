@@ -65,7 +65,7 @@
 #'  than 1GB of memory, compute_bayes_factor will automatically be set to 
 #'  FALSE.  This setting can be overridden by setting \code{compute_bayes_factor="force"}.
 #' 
-#' @returns Object of class "aov_b" with the following elements:
+#' @returns Object of class \code{c("aov_b","lm_b")}.
 #' \itemize{
 #'  \item \code{summary} - tibble giving the summary of the model parameters
 #'  \item \code{BF_for_different_vs_same_means} - Bayes factor in favor of the full 
@@ -516,6 +516,7 @@ aov_b = function(formula,
     
     # Return model info
     ret$family = gaussian()
+    ret$xlevels = list(group = levels(data$group))
     ret$model_type = "parametric"
     
     return(structure(ret,
@@ -810,6 +811,7 @@ aov_b = function(formula,
     
     # Return model info
     ret$family = gaussian()
+    ret$xlevels = list(group = levels(data$group))
     ret$model_type = "parametric"
     
     
