@@ -201,7 +201,8 @@ np_glm_b = function(formula,
     
     if( ((family$family == "poisson") & (family$link == "log")) | 
         ((family$family == "binomial") & (family$link == "logit")) | 
-        ((family$family == "negbinom") & (family$link == "log")) ){
+        ((family$family == "negbinom") & (family$link == "log")) |
+        (family$family == "gaussian")){
       
       if(family$family == "gaussian"){
         s_y = sd(y)
