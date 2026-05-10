@@ -30,6 +30,9 @@
 #' 
 #' @returns Object of class \code{lm_b_bma} and \code{\link[=lm_b-class]{lm_b}}.
 #' 
+#' @references 
+#' 
+#' Feldkircher, M. and S. Zeugner (2015): Bayesian Model Averaging Employing Fixed and Flexible Priors: The BMS Package for R, Journal of Statistical Software 68(4).
 #' 
 #' @examples
 #' \donttest{

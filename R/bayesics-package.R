@@ -1,0 +1,106 @@
+#' bayesics: Bayesian Analyses for One- and Two-Sample Inference and Regression Methods
+#'
+#' The \pkg{bayesics} package meant to act as a Bayesian analog to 
+#' many of the procedures implemented in the \pkg{stats} package.
+# #' \pkg{\link[stats]{stats-package}}. 
+#' It includes methods for one- 
+#' and two-sample inference including 2-way contingency table analyses, 
+#' parametric and non-parametric regression, Bayesian model averaging, 
+#' and mediation analysis.
+#'
+#' @details
+#' 
+#' 
+#' The design of \pkg{bayesics} emphasizes inference and model assessment,
+#' rather than algorithmic tuning or sampling diagnostics. Most modeling
+#' functions provide familiar generic functions such as \code{print()},
+#' \code{summary()}, \code{plot()}, and \code{predict()}, while introducing
+#' Bayesian analogues to classical generics. In particular, 
+#' \pkg{bayesics} defines new generics for regression-based inference, 
+#' including \code{\link{credint}()} (replacing 
+#' \code{\link[stats]{confint}}) and \code{\link{get_posterior_draws}()}.
+#' 
+#' The central aim of the package is principled Bayesian inference and
+#' interpretation. Standard reported quantities include posterior point and
+#' interval estimates, probabilities that estimands fall within a region of
+#' practical equivalence (ROPE), and probabilities of direction. 
+#' Interpretations always follow Bayes factors to ensure clarity. 
+#' 
+#' Estimation methods relying on MCMC require knowledge of not just chain 
+#' convergence, but also assessing whether sufficient accuracy is obtained 
+#' for the point estimates and critically the credible interval bounds. 
+#' \code{bayesics} avoids the use of MCMC and instead relies on either 
+#' closed-form solutions or independent posterior draws.  For example, 
+#' Bayes factors are computed analytically using either the Savage-Dickey 
+#' ratio or via Chib's method. (Additionally, fractional Bayes factors 
+#' are also implemented- again, analytically- for linear models.) 
+#' when posterior draws are required to perform inference,  
+#' the number of posterior draws is automatically selected in 
+#' order to ensure sufficiently accurate results (through the user-specified 
+#' argument \code{mc_error}).  This entirely eliminates any need for users 
+#' to perform algorithmic assessments.  
+#' 
+#' Model assessments, however, are always critical, and towards this 
+#' \code{bayesics} provides \code{\link{bayes_pvalue}()}, a function designed 
+#' to assess both linear and generalized linear models through Bayesian 
+#' p-values.  While the deviance is the default, any test statistic can 
+#' be incorporated.  
+#' 
+#' When model diagnostics fail, non-parametric methods may be utilized 
+#' instead.  \code{bayesics} provides the function \code{\link{np_glm_b}} which
+#' implements the loss-likelihood bootstrap, a general Bayes inferential 
+#' method (Lyddon et al., 2019). 
+#' 
+#' Besides parametric and non-parametric regression techniques, 
+#' non-regression methods are also implemented, such as tests of 
+#' correlation or comparing two samples of count data, giving Bayesian 
+#' equivalents to well-used functions such as \code{\link{cor_test_b}} 
+#' (replacing \code{cor.test}), \code{\link{t_test_b}} (replacing 
+#' \code{t.test}), and many others.
+#' 
+#' 
+#' @author
+#' Daniel K. Sewell
+#' 
+#' @references 
+#' 
+#' Barch DH, Chechile RA (2023). DFBA: Distribution-Free Bayesian Analysis. doi:10.32614/CRAN.package.DFBA
+#' 
+#' Chechile, R. A. (2018) A Bayesian analysis for the Wilcoxon signed-rank statistic. Communications in Statistics - Theory and Methods, https://doi.org/10.1080/03610926.2017.1388402
+#' 
+#' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction Using Distribution_Free Statistics. Cambridge: MIT Press.
+#' 
+#' Chechile, R.A. (2020). A Bayesian analysis for the Mann-Whitney statistic. Communications in Statistics – Theory and Methods 49(3): 670-696. https://doi.org/10.1080/03610926.2018.1549247.
+#' 
+#' Chechile, R.A., & Barch, D.H. (2021). A distribution-free, Bayesian goodness-of-fit method for assessing similar scientific prediction equations. Journal of Mathematical Psychology. https://doi.org/10.1016/j.jmp.2021.102638
+#' 
+#' James M. Dickey. "The Weighted Likelihood Ratio, Linear Hypotheses on Normal Location Parameters." Ann. Math. Statist. 42 (1) 204 - 223, February, 1971. https://doi.org/10.1214/aoms/1177693507
+#' 
+#' Charles R. Doss, James M. Flegal, Galin L. Jones, Ronald C. Neath "Markov chain Monte Carlo estimation of quantiles," Electronic Journal of Statistics, Electron. J. Statist. 8(2), 2448-2478, (2014)
+#' 
+#' Feldkircher, M. and S. Zeugner (2015): Bayesian Model Averaging Employing Fixed and Flexible Priors: The BMS Package for R, Journal of Statistical Software 68(4).
+#' 
+#' Gunel, Erdogan &  Dickey, James (1974). Bayes factors for independence in contingency tables, Biometrika, 61(3), Pages 545–557, https://doi.org/10.1093/biomet/61.3.545
+#' 
+#' Imai, Kosuke, et al. 
+#' “A General Approach to Causal Mediation Analysis.” Psychological Methods, 
+#' vol. 15, no. 4, 2010, pp. 309–34, https://doi.org/10.1037/a0020761.
+#' 
+#' Kass, R. E., & Raftery, A. E. (1995). Bayes Factors. Journal of the American Statistical Association, 90(430), 773–795.
+#' 
+#' Kruschke JK. Rejecting or Accepting Parameter Values in Bayesian Estimation. Advances in Methods and Practices in Psychological Science. 2018;1(2):270-280. doi:10.1177/2515245918771304
+#' 
+#' Lindley, D. V., & Phillips, L. D. (1976). Inference for a Bernoulli process (a Bayesian view). The American Statistician, 30, 112-119.
+#'
+#' S P Lyddon, C C Holmes, S G Walker, General Bayesian updating and the loss-likelihood bootstrap, Biometrika, Volume 106, Issue 2, June 2019, Pages 465–478, https://doi.org/10.1093/biomet/asz006
+#' 
+#' O’Hagan, Anthony. “Fractional Bayes Factors for Model Comparison.” Journal of the Royal Statistical Society. Series B (Methodological), vol. 57, no. 1, 1995, pp. 99–138. https://doi.org/10.1111/j.2517-6161.1995.tb02017.x
+#'
+#' Qing Y, Thall PF, Yuan Y. A Bayesian piecewise exponential phase II design for monitoring a time-to-event endpoint. Pharm Stat. 2023 Jan;22(1):34-44. doi: 10.1002/pst.2256. Epub 2022
+#' 
+#' Tim Salimans. David A. Knowles. "Fixed-Form Variational Posterior Approximation through Stochastic Linear Regression." Bayesian Anal. 8 (4) 837 - 882, December 2013. https://doi.org/10.1214/13-BA858
+#'
+#'
+#'
+#' @keywords internal
+"_PACKAGE"

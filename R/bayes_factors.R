@@ -194,8 +194,8 @@ bayes_factors.lm_b = function(object,
                                          "Strong",
                                          "Decisive"))) |> 
                     paste(ifelse(.data$`BF favoring alternative` > 1,
-                                 " (in favor of keeping in the model)",
-                                 " (in favor of exluding from the model")))
+                                 "(in favor of keeping in the model)",
+                                 "(in favor of exluding from the model)")))
   results$bf_max = NULL
   
   return(results)
@@ -351,8 +351,8 @@ bayes_factors.glm_b = function(object,
                                          "Strong",
                                          "Decisive"))) |> 
                     paste(ifelse(.data$`BF favoring alternative` > 1,
-                                 " (in favor of keeping in the model)",
-                                 " (in favor of exluding from the model")))
+                                 "(in favor of keeping in the model)",
+                                 "(in favor of exluding from the model)")))
   results$bf_max = NULL
   
   return(results)
@@ -395,8 +395,8 @@ bayes_factors.survfit_b = function(object,
   
   favor_or_against = 
     ifelse(BF > 1,
-           " (in favor of the ",
-           " (against the ")
+           "(in favor of the ",
+           "(against the ")
   
   Interpretation = 
     ifelse(bf_max <= 3.2,

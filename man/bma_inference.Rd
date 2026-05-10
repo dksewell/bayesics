@@ -92,3 +92,6 @@ plot(fit)
 }
 
 }
+\references{
+Feldkircher, M. and S. Zeugner (2015): Bayesian Model Averaging Employing Fixed and Flexible Priors: The BMS Package for R, Journal of Statistical Software 68(4).
+}
