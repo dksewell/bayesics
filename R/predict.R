@@ -593,14 +593,14 @@ predict.aov_b = function(object,
                                              object$posterior_parameters$a_g / 
                                              object$posterior_parameters$nu_g)),
            PI_lower = 
-             extraDistr::qlst(alpha_ci / 2.0, 
+             extraDistr::qlst(alpha_pi / 2.0, 
                               df = object$posterior_parameters$a_g,
                               mu = object$posterior_parameters$mu_g,
                               sigma = sqrt(object$posterior_parameters$b_g / 
                                              object$posterior_parameters$a_g * 
                                              (1.0 + 1.0 / object$posterior_parameters$nu_g))),
            PI_upper = 
-             extraDistr::qlst(1.0 - alpha_ci / 2.0, 
+             extraDistr::qlst(1.0 - alpha_pi / 2.0, 
                               df = object$posterior_parameters$a_g,
                               mu = object$posterior_parameters$mu_g,
                               sigma = sqrt(object$posterior_parameters$b_g / 
