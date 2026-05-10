@@ -31,7 +31,11 @@
 
 #' @rdname coef
 #' @export
-coef.lm_b = function(object, ...){
+coef.lm_b = function(object, ...){4
+  
+  if(!inherits(object, "lm_b"))
+    stop("`object` must be an object of class \"lm_b\"", call. = FALSE)
+  
   ret = object$summary$`Post Mean`[1:(nrow(object$summary) -
                                         (object$family$family == "negbinom") )]
   names(ret) = object$summary$Variable[1:(nrow(object$summary) -
@@ -44,6 +48,9 @@ coef.lm_b = function(object, ...){
 #' @rdname coef
 #' @export
 coef.aov_b = function(object, ...){
+  if(!inherits(object, "aov_b"))
+    stop("`object` must be an object of class \"aov_b\"", call. = FALSE)
+  
   ret = 
     object$posterior_parameters$mu_g
   

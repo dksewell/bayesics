@@ -84,15 +84,38 @@ independence_b = function(x,
                           CI_level = 0.95,
                           seed = 1,
                           mc_error = 0.002){
+  
+  ## ---- x: contingency table ----
+  
+  if (missing(x))
+    stop("`x` must be supplied", call. = FALSE)
+  
+  if (!(is.matrix(x) || inherits(x, "table")))
+    stop("`x` must be a matrix or table of counts", call. = FALSE)
+  
+  x <- as.matrix(x)
+  
+  if (!is.numeric(x))
+    stop("`x` must be numeric", call. = FALSE)
+  
+  if (any(x < 0))
+    stop("`x` must contain non-negative counts", call. = FALSE)
+  
+  if (any(x %% 1 != 0))
+    stop("`x` must contain integer counts", call. = FALSE)
+  
+  if (any(apply(x, 1, sum) == 0) || any(apply(x, 2, sum) == 0)) {
+    stop("All rows and columns of `x` must have positive total counts",
+         call. = FALSE)
+  }
+  
   set.seed(seed)
   alpha_ci = 1.0 - CI_level
   
   sampling_design = 
     match.arg(sampling_design)
   
-  if( !("matrix" %in% class(x)) & 
-      !("table" %in% class(x)) )
-    stop("x must be a table or a matrix.")
+  
   nR = nrow(x)
   nC = ncol(x)
   x = matrix(x,nR,nC)

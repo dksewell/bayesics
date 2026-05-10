@@ -99,11 +99,58 @@ cor_test_b.default = function(x,
                               plot = TRUE,
                               ...){
   
-  if(length(x) != length(y))
-    stop("x and y must be of the same length")
-  if( !("numeric" %in% class(x)) | 
-      !("numeric" %in% class(y)) )
-    stop("x and y must be numeric vectors")
+  ## ---- x and y ----
+  
+  if (missing(x) || missing(y))
+    stop("Both `x` and `y` must be supplied", call. = FALSE)
+  
+  if (!is.numeric(x) || !is.numeric(y))
+    stop("`x` and `y` must be numeric vectors", call. = FALSE)
+  
+  if (!is.atomic(x) || !is.atomic(y))
+    stop("`x` and `y` must be numeric vectors", call. = FALSE)
+  
+  if (length(x) != length(y))
+    stop("`x` and `y` must have the same length", call. = FALSE)
+  
+  if (length(x) < 2L)
+    stop("`x` and `y` must have length at least 2", call. = FALSE)
+  ## ---- tau ----
+
+  if (!is.numeric(tau) || length(tau) != 1)
+    stop("`tau` must be a numeric scalar", call. = FALSE)
+  
+  if (tau < -1 || tau > 1)
+    stop("`tau` must be between -1 and 1", call. = FALSE)
+
+  
+    
+  ## ---- prior / prior_shapes ----
+  
+  if (!missing(prior_shapes)) {
+    
+    if (!is.numeric(prior_shapes) || length(prior_shapes) != 2)
+      stop("`prior_shapes` must be a numeric vector of length 2",
+           call. = FALSE)
+    
+    if (any(prior_shapes <= 0))
+      stop("All values of `prior_shapes` must be positive",
+           call. = FALSE)
+    
+  }
+  
+  ## ---- CI_level ----
+  
+  if (!is.numeric(CI_level) || length(CI_level) != 1)
+    stop("`CI_level` must be a numeric scalar", call. = FALSE)
+  
+  if (CI_level <= 0 || CI_level >= 1)
+    stop("`CI_level` must be between 0 and 1", call. = FALSE)
+  
+  ## ---- plot ----
+  
+  if (!is.logical(plot) || length(plot) != 1)
+    stop("`plot` must be TRUE or FALSE", call. = FALSE)
   
   
   ## Get ROPE

@@ -79,6 +79,73 @@ bma_inference = function(formula,
                          compute_residuals = TRUE,
                          ...){
   
+  # formula
+  if (!rlang::is_formula(formula))
+    stop("`formula` must be a formula", call. = FALSE)
+  
+  # data
+  if (!inherits(data, "data.frame"))
+    stop("`data` must be a data.frame or tibble", call. = FALSE)
+  
+  if (nrow(data) == 0L)
+    stop("`data` must contain at least one row", call. = FALSE)
+  
+  # zellner_g
+  if (!is.numeric(zellner_g) ||
+      length(zellner_g) != 1 ||
+      zellner_g <= 0)
+    stop("`zellner_g` must be a positive numeric scalar", call. = FALSE)
+  
+  # CI_level
+  if (!is.numeric(CI_level) ||
+      length(CI_level) != 1)
+    stop("`CI_level` must be a numeric scalar", call. = FALSE)
+  
+  if (CI_level <= 0 || CI_level >= 1)
+    stop("`CI_level` must be between 0 and 1", call. = FALSE)
+  
+  # ROPE (optional)
+  if (!missing(ROPE)) {
+    if (!is.numeric(ROPE))
+      stop("`ROPE` must be numeric", call. = FALSE)
+    
+    if (any(ROPE <= 0))
+      stop("All values of `ROPE` must be positive", call. = FALSE)
+  }
+  
+  # mcmc_draws
+  if (!is.numeric(mcmc_draws) ||
+      length(mcmc_draws) != 1 ||
+      mcmc_draws <= 0 ||
+      mcmc_draws %% 1 != 0)
+    stop("`mcmc_draws` must be a positive integer", call. = FALSE)
+  
+  # n_models
+  if (!is.numeric(n_models) ||
+      length(n_models) != 1 ||
+      n_models <= 0 ||
+      n_models %% 1 != 0)
+    stop("`n_models` must be a positive integer", call. = FALSE)
+  
+  # mc_error
+  if (!is.numeric(mc_error) ||
+      length(mc_error) != 1 ||
+      mc_error <= 0)
+    stop("`mc_error` must be a positive numeric scalar", call. = FALSE)
+  
+  # seed
+  if (!is.numeric(seed) ||
+      length(seed) != 1 ||
+      seed %% 1 != 0)
+    stop("`seed` must be a single integer value", call. = FALSE)
+  
+  # compute_residuals
+  if (!is.logical(compute_residuals) ||
+      length(compute_residuals) != 1)
+    stop("`compute_residuals` must be TRUE or FALSE", call. = FALSE)
+  
+  
+  
   alpha = 1.0 - CI_level
   
   

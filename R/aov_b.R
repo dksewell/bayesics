@@ -143,6 +143,77 @@ aov_b = function(formula,
                  mc_error = 0.002,
                  compute_bayes_factor = TRUE){
   
+  # Check arguments
+  # formula
+  if (!rlang::is_formula(formula))
+    stop("`formula` must be a formula", call. = FALSE)
+  
+  # data
+  if (!inherits(data, "data.frame"))
+    stop("`data` must be a data.frame or tibble", call. = FALSE)
+  
+  # heteroscedastic
+  if (!is.logical(heteroscedastic) || length(heteroscedastic) != 1)
+    stop("`heteroscedastic` must be TRUE or FALSE", call. = FALSE)
+  
+  # prior_mean_mu (optional)
+  if (!missing(prior_mean_mu)) {
+    if (!is.numeric(prior_mean_mu) || length(prior_mean_mu) != 1)
+      stop("`prior_mean_mu` must be a numeric scalar", call. = FALSE)
+  }
+  
+  # prior_mean_nu
+  if (!is.numeric(prior_mean_nu) || length(prior_mean_nu) != 1)
+    stop("`prior_mean_nu` must be a numeric scalar", call. = FALSE)
+  
+  # prior_var_shape
+  if (!is.numeric(prior_var_shape) || length(prior_var_shape) != 1)
+    stop("`prior_var_shape` must be a numeric scalar", call. = FALSE)
+  
+  # prior_var_rate
+  if (!is.numeric(prior_var_rate) || length(prior_var_rate) != 1)
+    stop("`prior_var_rate` must be a numeric scalar", call. = FALSE)
+  
+  # CI_level
+  if (!is.numeric(CI_level) || length(CI_level) != 1)
+    stop("`CI_level` must be a numeric scalar", call. = FALSE)
+  
+  if (CI_level <= 0 || CI_level >= 1)
+    stop("`CI_level` must be between 0 and 1", call. = FALSE)
+  
+  # ROPE (optional)
+  if (!missing(ROPE)) {
+    if (!is.numeric(ROPE) || length(ROPE) != 1)
+      stop("`ROPE` must be a numeric scalar", call. = FALSE)
+    
+    if (ROPE <= 0)
+      stop("`ROPE` must be positive", call. = FALSE)
+  }
+  
+  # contrasts
+  if (!missing(contrasts)){
+    if (!is.numeric(contrasts))
+      stop("`contrasts` must be a vector or a matrix", call. = FALSE)
+  }
+  
+  # improper
+  if (!is.logical(improper) || length(improper) != 1)
+    stop("`improper` must be TRUE or FALSE", call. = FALSE)
+  
+  # seed
+  if (!is.numeric(seed) || length(seed) != 1 || seed %% 1 != 0)
+    stop("`seed` must be a single integer value", call. = FALSE)
+  
+  # mc_error
+  if (!is.numeric(mc_error) || length(mc_error) != 1 || mc_error <= 0)
+    stop("`mc_error` must be a positive numeric scalar", call. = FALSE)
+  
+  # compute_bayes_factor
+  if (!is.logical(compute_bayes_factor) || length(compute_bayes_factor) != 1)
+    stop("`compute_bayes_factor` must be TRUE or FALSE", call. = FALSE)
+  
+  
+  
   # Set alpha lv
   a = 1 - CI_level
   

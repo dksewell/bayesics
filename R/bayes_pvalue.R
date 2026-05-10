@@ -78,9 +78,44 @@ bayes_pvalue.lm_b = function(object,
                              seed = 1,
                              ...){
   
+  # object
+  if (!inherits(object, "lm_b"))
+    stop("`object` must be an object of class \"lm_b\"",
+         call. = FALSE)
+  
   # Check to see if a parametric fit is used
   if(object$model_type != "parametric")
     stop("Object should be a parametric fit in order to obtain posterior predicted values.")
+  
+  # statistic
+  if (is.character(statistic)) {
+    statistic <- match.arg(statistic, choices = "deviance")
+  } else if (!is.function(statistic)) {
+    stop(
+      "`statistic` must be either \"deviance\" or a function",
+      call. = FALSE
+    )
+  }
+  
+  # mc_error
+  if (!is.numeric(mc_error) ||
+      length(mc_error) != 1 ||
+      mc_error <= 0)
+    stop(
+      "`mc_error` must be a positive numeric scalar",
+      call. = FALSE
+    )
+  
+  # seed
+  if (!is.numeric(seed) ||
+      length(seed) != 1 ||
+      seed %% 1 != 0)
+    stop(
+      "`seed` must be a single integer value",
+      call. = FALSE
+    )
+  
+  
   
   # Get number of posterior draws required (see details)
   n_draws = 
@@ -236,6 +271,39 @@ bayes_pvalue.aov_b = function(object,
                               mc_error = 0.005,
                               seed = 1,
                               ...){
+  
+  # object
+  if (!inherits(object, "aov_b"))
+    stop("`object` must be an object of class \"aov_b\"",
+         call. = FALSE)
+  
+  # statistic
+  if (is.character(statistic)) {
+    statistic <- match.arg(statistic, choices = "deviance")
+  } else if (!is.function(statistic)) {
+    stop(
+      "`statistic` must be either \"deviance\" or a function",
+      call. = FALSE
+    )
+  }
+  
+  # mc_error
+  if (!is.numeric(mc_error) ||
+      length(mc_error) != 1 ||
+      mc_error <= 0)
+    stop(
+      "`mc_error` must be a positive numeric scalar",
+      call. = FALSE
+    )
+  
+  # seed
+  if (!is.numeric(seed) ||
+      length(seed) != 1 ||
+      seed %% 1 != 0)
+    stop(
+      "`seed` must be a single integer value",
+      call. = FALSE
+    )
   
   # Get number of posterior draws required (see details)
   n_draws = 

@@ -75,6 +75,134 @@ case_control_b = function(cases,
                           seed = 1,
                           mc_error = 0.005){
   
+  ## ---- construct 2x2 table x ----
+  
+  if (missing(x)) {
+    
+    if (missing(cases))
+      stop("Either `x` or `cases` must be supplied", call. = FALSE)
+    
+    # cases supplied; interpret its type
+    if (is.matrix(cases) || inherits(cases, "table")) {
+      x <- as.matrix(cases)
+      
+    } else if (is.numeric(cases)) {
+      
+      if (length(cases) != 2)
+        stop("`cases` must be a numeric vector of length 2", call. = FALSE)
+      
+      if (missing(controls))
+        stop("Both `cases` and `controls` must be supplied", call. = FALSE)
+      
+      if (!is.numeric(controls) || length(controls) != 2)
+        stop("`controls` must be a numeric vector of length 2", call. = FALSE)
+      
+      x <- cbind(cases, controls)
+      
+    } else {
+      stop(
+        "`cases` must be a numeric vector of length 2, a matrix, or a table",
+        call. = FALSE
+      )
+    }
+    
+  } else {
+    
+    # x supplied explicitly
+    if (!(is.matrix(x) || inherits(x, "table")))
+      stop("`x` must be a 2x2 matrix or table", call. = FALSE)
+    
+    x <- as.matrix(x)
+  }
+  
+  
+  ## ---- validate canonical x ----
+  
+  if (!is.numeric(x))
+    stop("`x` must be numeric", call. = FALSE)
+  
+  if (!all(dim(x) == c(2L, 2L)))
+    stop("`x` must be a 2x2 matrix", call. = FALSE)
+  
+  if (any(x < 0))
+    stop("`x` must contain non-negative counts", call. = FALSE)
+  
+  if (any(x %% 1 != 0))
+    stop("`x` must contain integer counts", call. = FALSE)
+  
+  
+  ## ---- large_sample_approx ----
+  
+  if (!missing(large_sample_approx)) {
+    if (!is.logical(large_sample_approx) ||
+        length(large_sample_approx) != 1)
+      stop("`large_sample_approx` must be TRUE or FALSE",
+           call. = FALSE)
+  }
+  
+  ## ---- ROPE ----
+  
+  if (!missing(ROPE)) {
+    
+    if (!is.numeric(ROPE))
+      stop("`ROPE` must be numeric",
+           call. = FALSE)
+    
+    if (!(length(ROPE) %in% c(1L, 2L)))
+      stop("`ROPE` must be a numeric value or a numeric vector of length 2",
+           call. = FALSE)
+    
+    if (any(ROPE <= 0))
+      stop("All values of `ROPE` must be positive",
+           call. = FALSE)
+    
+    if ( (length(ROPE) == 2) &&
+         (ROPE[1] >= ROPE[2]) )
+      stop("The first element of `ROPE` must be smaller than its second element.",
+           call. = FALSE)
+  }
+  
+  ## ---- prior_mean ----
+  
+  if (!is.numeric(prior_mean) || length(prior_mean) != 1)
+    stop("`prior_mean` must be a numeric scalar",
+         call. = FALSE)
+  
+  ## ---- prior_sd ----
+  
+  if (!is.numeric(prior_sd) || length(prior_sd) != 1 || prior_sd <= 0)
+    stop("`prior_sd` must be a positive numeric scalar",
+         call. = FALSE)
+  
+  ## ---- plot ----
+  
+  if (!is.logical(plot) || length(plot) != 1)
+    stop("`plot` must be TRUE or FALSE",
+         call. = FALSE)
+  
+  ## ---- CI_level ----
+  
+  if (!is.numeric(CI_level) || length(CI_level) != 1)
+    stop("`CI_level` must be a numeric scalar",
+         call. = FALSE)
+  
+  if (CI_level <= 0 || CI_level >= 1)
+    stop("`CI_level` must be between 0 and 1",
+         call. = FALSE)
+  
+  ## ---- seed ----
+  
+  if (!is.numeric(seed) || length(seed) != 1 || seed %% 1 != 0)
+    stop("`seed` must be a single integer value",
+         call. = FALSE)
+  
+  ## ---- mc_error ----
+  
+  if (!is.numeric(mc_error) || length(mc_error) != 1 || mc_error <= 0)
+    stop("`mc_error` must be a positive numeric scalar",
+         call. = FALSE)
+  
+  
   alpha_ci = 1.0 - CI_level
   
   # Get 2x2 table, and do checks along the way

@@ -45,6 +45,17 @@ credint.lm_b = function(object,
                         CI_level = 0.95,
                         ...){
   
+  if(!inherits(object, "lm_b"))
+    stop("`object` must be an object of class \"lm_b\"", call. = FALSE)
+  
+  # CI_level
+  if (!is.numeric(CI_level) || length(CI_level) != 1)
+    stop("`CI_level` must be a numeric scalar", call. = FALSE)
+  
+  if (CI_level <= 0 || CI_level >= 1)
+    stop("`CI_level` must be between 0 and 1", call. = FALSE)
+  
+  
   alpha = 1 - CI_level
   p = 
     length(setdiff(object$summary$Variable,
@@ -110,15 +121,25 @@ credint.lm_b = function(object,
 #' @exportS3Method credint aov_b
 credint.aov_b = function(object,
                          CI_level = 0.95,
-                         which = "means",
+                         which = c("means","pairwise"),
                          ...){
+  
+  # object
+  if(!inherits(object, "aov_b"))
+    stop("`object` must be an object of class \"aov_b\"", call. = FALSE)
+  
+  # CI_level
+  if (!is.numeric(CI_level) || length(CI_level) != 1)
+    stop("`CI_level` must be a numeric scalar", call. = FALSE)
+  
+  if (CI_level <= 0 || CI_level >= 1)
+    stop("`CI_level` must be between 0 and 1", call. = FALSE)
+  
   
   alpha = 1 - CI_level
   
   which = 
-    c("means","pairwise")[pmatch(tolower(which),
-                                 c("means","pairwise"),
-                                 duplicates.ok = FALSE)]
+    match.arg(which)
   
   if( !(which %in% c("means","pairwise")) )
     stop("The 'which' argument must be either 'means' or 'pairwise'")

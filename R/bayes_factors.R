@@ -79,9 +79,16 @@ bayes_factors = function(object,...){
 bayes_factors.lm_b = function(object,
                               by = "coefficient",
                               ...){
+  
+  # object
+  if (!inherits(object, "lm_b"))
+    stop("`object` must be an object of class \"lm_b\"", call. = FALSE)
+  
+  # improper prior check
   if(is.na(object$hyperparameters[1])) 
     stop("Cannot compute Bayes factors with an improper prior.")
   
+  # by
   by = match.arg(tolower(by),
                  c("coefficient",
                    "variable"))
@@ -211,9 +218,17 @@ bayes_factors.lm_b = function(object,
 bayes_factors.glm_b = function(object,
                                by = "coefficient",
                                ...){
+  
+  
+  # object
+  if (!inherits(object, "glm_b"))
+    stop("`object` must be an object of class \"glm_b\"", call. = FALSE)
+  
+  # improper prior check
   if(is.na(object$hyperparameters[1])) 
     stop("Cannot compute Bayes factors with an improper prior.")
   
+  # by
   by = match.arg(tolower(by),
                  c("coefficient",
                    "variable"))
@@ -368,6 +383,24 @@ bayes_factors.glm_b = function(object,
 bayes_factors.survfit_b = function(object,
                                    object2,
                                    ...){
+  
+  
+  # object
+  if (!inherits(object, "survfit_b"))
+    stop("`object` must be an object of class \"survfit_b\"", call. = FALSE)
+  
+  # object2
+  if (missing(object2))
+    stop("`object2` must be supplied for \"survfit_b\" objects", call. = FALSE)
+  
+  if (!inherits(object2, "survfit_b"))
+    stop("`object2` must be an object of class \"survfit_b\"", call. = FALSE)
+  
+  # prevent accidental self-comparison
+  if (identical(object, object2))
+    stop("`object` and `object2` must be different survfit_b objects",
+         call. = FALSE)
+  
   
   # Make quick checks
   if(object$single_group_analysis)
