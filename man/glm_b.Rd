@@ -92,36 +92,7 @@ large sample size, in which case the normal approximation sans IS should
 probably work.)}
 }
 \value{
-glm_b() returns an object of class "glm_b", which behaves as a list with
-the following elements:
-\itemize{
-\item \code{summary} - tibble giving results for regression coefficients
-\item \code{posterior_draws} - (if sampling algorithm is used) matrix with each row
-representing an independent posterior draw of the unknown parameters
-\item \code{df} Inf
-\item \code{posterior_covariance} - Posterior covariance matrix for the
-model parameters
-\item \code{ROPE} - region of practical equivalence given in terms of \eqn{\pm}\code{ROPE}
-\item \code{hyperparameters} - list giving the user input or default hyperparameters used
-\item \code{trials} - Number of trials
-\item \code{fitted} - posterior mean of the individuals' means
-\item \code{residuals} - Pearson residuals
-\item If \code{algorithm = "IS"}, the following:
-\itemize{
-\item \code{proposal_draws} - draws from
-the importance sampling proposal distribution (i.e., multivariate
-t centered at the posterior mode with precision equal to the
-negative hessian, and degrees of freedom set to the user input \code{proposal_df}.
-\item \code{importance_sampling_weights} - importance sampling
-weights that match the rows of the returned \code{proposal_draws}.
-\item \code{effective_sample_size} - ESS estimated as the
-reciprocal of the sum of the squared normalized importance weights
-}
-\item \code{formula}, \code{data}, \code{family}, \code{prior}, \code{algorithm}, \code{CI_level}, \code{mc_error} - input by user
-\item \code{terms} - the terms object used
-\item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
-\item \code{model_type} - "parametric"
-}
+Object of class \code{glm_b} and \code{\link[=lm_b-class]{lm_b}}.
 
 \strong{Importance sampling:}
 

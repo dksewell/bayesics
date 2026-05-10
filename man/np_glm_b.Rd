@@ -71,24 +71,7 @@ posterior draws will ensure that with 99\% probability the bounds of the
 credible intervals will be within \eqn{\pm} \code{mc_error}.}
 }
 \value{
-np_glm_b() returns an object of class "np_glm_b", which behaves as
-a list with the following elements:
-\itemize{
-\item \code{summary} - a tibble giving results for regression coefficients.
-\item \code{posterior_covariance} - Posterior covariance matrix for the
-model parameters (unless \code{n_draws}\eqn{>0})
-\item \code{df} - Inf
-\item \code{posterior_draws} - Posterior draws from the loss-likelihood
-bootstrap (if \code{n_draws}\eqn{>0}))
-\item \code{fitted} - posterior mean of the individuals' means
-\item \code{residuals} - Pearson residuals
-\item \code{ROPE} - region of practical equivalence given in terms of \eqn{\pm}\code{ROPE}
-\item \code{trials} - Number of trials
-\item \code{formula}, \code{data}, \code{family}, \code{CI_level}, \code{mc_error} - input by user
-\item \code{terms} - the terms object used
-\item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
-\item \code{model_type} - "nonparametric"
-}
+Object of class \code{np_glm_b} and \code{\link[=lm_b-class]{lm_b}}.
 }
 \description{
 np_glm_b uses general Bayesian inference with loss-likelihood bootstrap.

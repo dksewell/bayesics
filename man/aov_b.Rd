@@ -67,39 +67,7 @@ than 1GB of memory, compute_bayes_factor will automatically be set to
 FALSE.  This setting can be overridden by setting \code{compute_bayes_factor="force"}.}
 }
 \value{
-Object of class "aov_b" with the following elements:
-\itemize{
-\item \code{summary} - tibble giving the summary of the model parameters
-\item \code{BF_for_different_vs_same_means} - Bayes factor in favor of the full
-model (each group has their own mean) vs. the null model (all groups have
-the same mean).
-\item \code{pairwise_summary} - tibble giving the summary comparing all
-factor level means
-\item \code{contrasts} (if provided) - list with named elements L (the contrasts provided
-by the user) and summary.
-\item \code{posterior_draws} - mcmc object (see coda package) giving the posterior draws
-\item \code{posterior_parameters} - list with...
-\itemize{
-\item \code{mu_g} - the post. means of the group means
-\item \code{nu_g} - the post. scalars of the precision
-\item \code{a_g} - (twice) the post. shape of the inv. gamma for the group variances
-\item \code{b_g} - (twice) the post. rate of the inv. gamma for the group variances.
-}
-\item \code{hyperparameters} - list with...
-\itemize{
-\item \code{mu} - the prior mean of the group means
-\item \code{nu} - the prior scalar of the precision
-\item \code{a} - (twice) the prior shape of the inv. gamma for the group variances
-\item \code{b} - (twice) the prior rate of the inv. gamma for the group variances.
-}
-\item \code{formula}, \code{data}, \code{CI_level}, \code{mc_error} - input by user
-\item \code{fitted} - Posterior mean of \eqn{\mu_g := \mathbb{E}(y_{gi})}
-\item \code{residuals} - Posterior mean of the residuals
-\item \code{standardized_residuals} - Estimated residuals divided by the
-group standard deviation
-\item \code{family} - (only Gaussian is currently implemented)
-\item \code{model_type} - "parametric"
-}
+Object of class \code{aov_b} and \code{\link[=lm_b-class]{lm_b}}.
 }
 \description{
 Analysis of Variance using Bayesian methods

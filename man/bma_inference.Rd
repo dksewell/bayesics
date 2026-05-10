@@ -51,24 +51,7 @@ and small \code{mc_error}.}
 \item{...}{Other arguments for \code{\link[BMS]{bms}}.}
 }
 \value{
-A list with the following elements:
-\itemize{
-\item \code{summary} - Tibble with point and interval estimates
-\item \code{lm_b_fits} - A list of lm_b fits using zellner's g prior for
-all the top models from \code{\link[BMS]{bms}}
-\item \code{bms_fit} - A list of class \code{\link[BMS]{bma-class}}
-\item \code{hyperparameters} - A named list with the user-specified zellner's g value.
-\item \code{posterior_draws} - matrix of posterior draws of the regression parameters,
-marginalizing out the model
-\item \code{residuals} - posterior mean of the residuals
-\item \code{standardized_residuals} - posterior mean of the standardized residuals
-\item \code{sigma_sq} - Vector providing the posterior mean and credible interval for the residual variance
-\item \code{formula}, \code{data}, \code{CI_level} - as provided as inputs
-\item \code{family} - (only Gaussian is currently implemented)
-\item \code{terms} - the terms object used
-\item \code{xlevels} - (only where relevant) a record of the levels of the factors used in fitting
-\item \code{model_type} - "parametric"
-}
+Object of class \code{lm_b_bma} and \code{\link[=lm_b-class]{lm_b}}.
 }
 \description{
 Estimates and CIs from BMA

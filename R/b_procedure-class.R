@@ -64,12 +64,12 @@
 #' \code{\link{plot.b_procedure}}
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' cc_fit <- case_control_b(matrix(c(8,47,1,26),2,2))
 #' cc_fit
 #' plot(cc_fit)
 #' }
 #'
-#' @name b_procedure
+#' @name b_procedure-class
 #' @docType class
 NULL
