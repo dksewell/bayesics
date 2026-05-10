@@ -159,7 +159,7 @@
 #' 
 #' 
 #' @section S3 methods:
-#' Methods are available for \code{*IC} (\code{\link[=AIC.lm_b]{AIC}}, 
+#' The following methods are available for \code{lm_b} class objects: \code{*IC} (\code{\link[=AIC.lm_b]{AIC}}, 
 #' \code{\link[=BIC.lm_b]{BIC}}, \code{\link[=DIC.lm_b]{DIC}}, 
 #' \code{\link[=WAIC.lm_b]{WAIC}}), \code{\link{bayes_factors}}, \code{\link{bayes_pvalue}}, 
 #' \code{\link{coef}}, \code{\link{credint}}, \code{\link{get_posterior_draws}}, 

@@ -352,6 +352,25 @@ t_test_b = function(x,
         )
       
       
+      # Get BF
+      results$BF = 
+        list(
+          description = "Bayes factor in favor of unequal group means",
+          BF = ret$BF_for_different_vs_same_means
+        )
+      bf_max = max(results$BF$BF,
+                   1.0 / results$BF$BF)
+      results$BF$interpretation =
+        ifelse(bf_max <= 3.2,
+               "Not worth more than a bare mention",
+               ifelse(bf_max <= 10,
+                      "Substantial",
+                      ifelse(bf_max <= 100,
+                             "Strong",
+                             "Decisive")))
+      
+      
+      
       if(plot){
         post_means = 
           ret$summary |> 

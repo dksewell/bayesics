@@ -385,7 +385,7 @@ print.b_procedure = function(x, ...){
   
   ## Bayes factor
   if(!is.null(x$BF)){
-    cat(paste0("\n\n\n",
+    cat(paste0("\n\n",
                x$BF$description,
                ": ",
                format(signif(x$BF$BF, 3), 

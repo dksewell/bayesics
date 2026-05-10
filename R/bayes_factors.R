@@ -14,7 +14,8 @@
 #' Currently implemented for \code{lm_b} or \code{glm_b} objects.  Note 
 #' that for \code{glm_b} objects, if importance sampling was used, 
 #' the model will be refit using fixed form variational Bayes to get 
-#' the multivariate posterior density.
+#' the multivariate posterior density.  The Bayes factor is 
+#' then computed using the Savage-Dickey ratio.
 #' 
 #' Interpretation is taken from Kass and Raftery.
 #' 

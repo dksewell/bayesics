@@ -56,8 +56,8 @@
 #' }
 #'
 #' @section S3 methods:
-#' Methods are available for \code{print()} and \code{plot()},
-#' depending on which components are present.
+#' The following methods are available for \code{lm_b} class objects: 
+#' \code{print()} and \code{plot()}.
 #'
 #' @seealso
 #' \code{\link{print.b_procedure}},
