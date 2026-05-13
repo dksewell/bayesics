@@ -84,7 +84,7 @@ credint.lm_b = function(object,
                  upper = x[UB]))
       }
       CI_bounds = 
-        apply(object$proposal_draws[,1:p],2,
+        apply(object$proposal_draws[,1:p,drop=FALSE],2,
               CI_from_weighted_sample,
               w = object$importance_sampling_weights)
       summ$Lower = 
@@ -94,10 +94,10 @@ credint.lm_b = function(object,
     }else{
       if("posterior_draws" %in% names(object)){ # Handles np_glm bootstrapping, bma_inference
         summ$Lower = 
-          object$posterior_draws[,1:p] |> 
+          object$posterior_draws[,1:p,drop=FALSE] |> 
           apply(2,stats::quantile,probs = alpha/2)
         summ$Upper =
-          object$posterior_draws[,1:p] |> 
+          object$posterior_draws[,1:p,drop=FALSE] |> 
           apply(2,stats::quantile,probs = 1.0 - alpha/2)
       }
     }
