@@ -5,172 +5,58 @@
 #' @details
 #' An object of class \code{lm_b} contains at least the following:
 #'
-#' \itemize{
-#'   \item \code{summary} - Tibble giving the summary of the model parameters 
-#'   with the minimum of:
-#'      \itemize{
-#'        \item \code{Variable} - character
-#'        \item \code{Post Mean} - Numeric
-#'        \item \code{Lower} - Numeric
-#'        \item \code{Upper} - Numeric
-#'        \item \code{Prob Dir} - Numeric
+#' \describe{
+#'   \item{summary}{Tibble giving the summary of the model parameters of 
+#'   having a minimum of:
+#'      \describe{
+#'        \item \code{Variable}: character
+#'        \item \code{Post Mean}: Numeric
+#'        \item \code{Lower}: Numeric
+#'        \item \code{Upper}: Numeric
+#'        \item \code{Prob Dir}: Numeric
 #'      }
-#'      Additional elements of \code{summary} may include:
-#'      \itemize{
-#'        \item \code{ROPE} - Numeric
-#'        \item \code{ROPE bounds} - character
-#'      }
-#'   \item \code{formula}
-#'   \item \code{data} - A tibble containing the data used in the analysis.
-#'   \item \code{CI_level} - Numeric scalar giving the credible interval level as 
-#'   provided by the user.
-#'   \item \code{fitted} - Vector of fitted values
-#'   \item \code{residuals} - Vector of Pearson residuals
-#'   \item \code{family}
-#'   \item \code{xlevels} - Named list, giving the levels for each factor 
-#'   covariate.
-#'   \item \code{model_type} - Character, either "parametric" or "nonparametric".
+#'      
+#'   }
+#'   \item{formula}{}
+#'   \item{data}{A tibble containing the data used in the analysis.}
+#'   \item{CI_level}{Numeric scalar giving the credible interval level as 
+#'   provided by the user.}
+#'   \item{fitted}{Vector of fitted values}
+#'   \item{residuals}{Vector of Pearson residuals}
+#'   \item{family}{}
+#'   \item{xlevels}{Named list, giving the levels for each factor covariate.}
+#'   \item{model_type}{ Character, either "parametric" or "nonparametric".}
 #' }
-#' 
-#' 
-#' \strong{aov_b}
-#' 
-#' Objects from \code{\link{aov_b}} have the following additional elements:
-#' \itemize{
-#'    \item \code{BF_for_different_vs_same_means} - Bayes factor in favor of the full 
-#'  model (each group has their own mean) vs. the null model (all groups have 
-#'  the same mean).
-#'    \item \code{pairwise_summary} - Tibble giving the summary comparing all 
-#'  factor level means
-#'    \item \code{contrasts} - (If provided) List with named elements L (the contrasts provided 
-#'  by the user) and summary.
-#'    \item \code{posterior_draws} - Matrix giving the posterior draws
-#'    \item \code{posterior_parameters} - List with the following:
-#'      \itemize{
-#'        \item \code{mu_g} - The posterior means of the group means
-#'        \item \code{nu_g} - The posterior scalars of the precision
-#'        \item \code{a_g} - Twice the posterior shape of the inverse gamma 
-#'        for the group variances
-#'        \item \code{b_g} - Twice the posterior rate of the inverse gamma 
-#'        for the group variances
-#'      }
-#'    \item{hyperparameters} - List with the following
-#'      \itemize{
-#'        \item \code{mu} - The prior mean of the group means
-#'        \item \code{nu} - The prior scalar of the precision
-#'        \item \code{a} - Twice the prior shape of the inverse gamma for 
-#'        the group variances
-#'        \item \code{b} - Twice the prior rate of the inverse gamma for the 
-#'        group variances
-#'      }
-#'    \item \code{mc_error}
-#'    \item \code{standardized_residuals} - Estimated residuals standardized by the 
-#'    standard deviation of the observation
-#' }
-#' 
-#' 
-#' \strong{glm_b}
-#' 
-#' Objects from \code{\link{glm_b}} have the following additional elements:
-#' \itemize{
-#'    \item \code{posterior_covariance} - If algorithm is either \code{"VB"} or 
-#'    \code{"LSA"}, posterior covariance matrix for the model parameters.
-#'    \item \code{df} - Degrees of freedom for \code{posterior_covariance}.
-#'    \item \code{hyperparameters} - List giving the user input or default 
-#'    hyperparameters used
-#'    \item \code{algorithm} - Character providing the estimation algorithm 
-#'    specified by the user.
-#'    \item \code{prior} - Character providing the prior specified by the user.
-#'    \item \code{ROPE} - Numeric giving the region of practical equivalence, 
-#'    i.e., \eqn{0\pm}\code{ROPE}.
-#'    \item \code{trials} - Number of trials
-#'    \item \code{terms} - Model terms.
-#'    \item \code{proposal_draws} - If algorithm is \code{"IS"}, the matrix 
-#'    of proposal draws from the large sample approximation of the posterior 
-#'    (see \code{link{aov_b}})
-#'    \item \code{importance_sampling_weights} - If algorithm is \code{"IS"}, 
-#'  importance sampling weights that match the rows of the returned 
-#'  \code{proposal_draws}.
-#'    \item \code{effective_sample_size} - If algorithm is \code{"IS"}, 
-#'    the ESS, estimated as the reciprocal of the sum of the squared 
-#'    normalized importance weights.
-#' }
-#' 
-#' 
-#' \strong{lm_b}
 #' 
 #' Objects from \code{\link{lm_b}} have the following additional elements:
-#' \itemize{
-#'    \item \code{posterior_parameters} - List giving the posterior parameters.
-#'    \item \code{hyperparameters} - List giving the user input (or default) 
-#'    hyperparameters used
-#'    \item \code{sigma_sq} - Vector providing the posterior mean and credible 
-#'    interval for the residual variance.
-#'    \item \code{standardized_residuals} - Estimated residuals standardized 
-#'    by the standard deviation of the observation
-#'    \item \code{prior} - Character providing the prior specified by the user.
-#'    \item \code{ROPE} - Numeric giving the region of practical equivalence, 
-#'    i.e., \eqn{0\pm}\code{ROPE}.
-#'    \item \code{posterior_covariance} - Posterior covariance matrix for the 
-#'    model parameters.
-#'    \item \code{df} - Degrees of freedom for \code{posterior_covariance}.
-#'    \item \code{weights} - Numeric weights for each observation.
-#'    \item \code{terms} - Model terms.
+#' \describe{
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
+#'    \item{}{}
 #' }
-#' 
-#' 
-#' \strong{lm_b_bma}
-#' 
-#' Objects from \code{\link{lm_b_bma}} have the following additional elements:
-#' \itemize{
-#'    \item \code{lm_b_fits} - A list of lm_b fits using zellner's g prior for
-#'  all the top models from \code{\link[BMS]{bms}}
-#'    \item \code{bms_fit} - A list of class \code{\link[BMS]{bma-class}}
-#'    \item \code{hyperparameters} - A named list with the user-specified 
-#'    zellner's g value.
-#'    \item \code{posterior_draws} - Matrix of posterior draws of the 
-#'    regression parameters, marginalizing out the model.
-#'    \item \code{standardized_residuals} - Estimated residuals standardized 
-#'    by the standard deviation of the observation
-#'    \item \code{sigma_sq} - Vector providing the posterior mean and credible 
-#'    interval for the residual variance.
-#'    \item \code{ROPE} - Numeric giving the region of practical equivalence, 
-#'    i.e., \eqn{0\pm}\code{ROPE}.
-#'    \item \code{terms} - Model terms.
-#' }
-#' 
-#' 
-#' \strong{np_glm_b}
-#' 
-#' Objects from \code{\link{aov_b}} have the following additional elements:
-#' \itemize{
-#'    \item \code{posterior_covariance} - Posterior covariance matrix for 
-#'    the model parameters (unless \code{n_draws}\eqn{>0})
-#'    \item \code{df} - Degrees of freedom for \code{posterior_covariance}.
-#'    \item \code{ROPE} - Numeric giving the region of practical equivalence, 
-#'    i.e., \eqn{0\pm}\code{ROPE}.
-#'    \item \code{trials} - Number of trials
-#'    \item \code{posterior_draws} - Posterior draws from the loss-likelihood 
-#'    bootstrap (if \code{n_draws}\eqn{>0}))
-#'    \item \code{terms} - Model terms.
-#' }
-#' 
-#' 
 #' 
 #' 
 #' @section S3 methods:
-#' The following methods are available for \code{lm_b} class objects: \code{*IC} (\code{\link[=AIC.lm_b]{AIC}}, 
-#' \code{\link[=BIC.lm_b]{BIC}}, \code{\link[=DIC.lm_b]{DIC}}, 
-#' \code{\link[=WAIC.lm_b]{WAIC}}), \code{\link{bayes_factors}}, \code{\link{bayes_pvalue}}, 
-#' \code{\link{coef}}, \code{\link{credint}}, \code{\link{get_posterior_draws}}, 
-#' \code{\link{logLik}}, \code{\link{plot}}, \code{\link{plot_bands}}, 
-#' \code{\link{plot_dx}}, \code{\link{predict}}, \code{\link[=print.lm_b]{print}}, 
-#' \code{\link[=summary.lm_b]{summary}}, and \code{\link[=vcov.lm_b]{vcov}}.
+#' Methods are available for \code{print()} and \code{plot()},
+#' depending on which components are present.
 #'
+#' @seealso
+#' \code{\link{print.b_procedure}},
+#' \code{\link{plot.b_procedure}}
 #'
 #' @examples
-#' \donttest{
-#' class(lm_b(rnorm(10) ~ 1))
+#' \dontrun{
+#' cc_fit <- case_control_b(matrix(c(8,47,1,26),2,2))
+#' cc_fit
+#' plot(cc_fit)
 #' }
 #'
 #' @name lm_b-class

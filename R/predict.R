@@ -116,7 +116,10 @@ predict.lm_b = function(object,
   }
   
   if(!is.null(object$xlevels)){
-    for(j in names(object$xlevels)){
+    response_name = as.character(response(object$terms))
+    
+    for(j in setdiff(names(object$xlevels),
+                     response_name)){
       if(!("factor" %in% class(newdata[[j]]))){
         newdata[[j]] = 
           factor(newdata[[j]],
