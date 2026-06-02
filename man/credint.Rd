@@ -10,7 +10,7 @@ credint(object, ...)
 
 \method{credint}{lm_b}(object, CI_level = 0.95, ...)
 
-\method{credint}{aov_b}(object, CI_level = 0.95, which = "means", ...)
+\method{credint}{aov_b}(object, CI_level = 0.95, which = c("means", "pairwise"), ...)
 }
 \arguments{
 \item{object}{a fitted model object from \code{bayesics}}

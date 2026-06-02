@@ -116,7 +116,9 @@ predict.lm_b = function(object,
   }
   
   if(!is.null(object$xlevels)){
-    response_name = as.character(response(object$terms))
+    response_name = 
+      as.character(attr(object$terms, "variables"))[attr(object$terms, "response") + 1]
+    
     
     for(j in setdiff(names(object$xlevels),
                      response_name)){
