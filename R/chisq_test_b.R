@@ -286,9 +286,13 @@ independence_b = function(x,
     #   round()
     
     ### Get all posterior draws needed
-    p_draws = 
-      extraDistr::rdirichlet(n_draws,c(posterior_shapes)) |> 
-      array(c(n_draws,nR,nC))
+    if(n_draws > 500){
+      p_draws = 
+        extraDistr::rdirichlet(n_draws,c(posterior_shapes)) |> 
+        array(c(n_draws,nR,nC))
+    }else{
+      n_draws = 500
+    }
     p_product = 
       future.apply::future_lapply(1:n_draws,
                                   function(n){
