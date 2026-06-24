@@ -2,7 +2,7 @@
 % Please edit documentation in R/poisson_test_b.R
 \name{poisson_test_b}
 \alias{poisson_test_b}
-\title{Poisson tests}
+\title{Poisson Procedures}
 \usage{
 poisson_test_b(
   x,

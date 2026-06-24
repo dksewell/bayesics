@@ -1,6 +1,6 @@
 #' Bayesian Linear Models
 #' 
-#' lm_b is used to fit linear models.  It can be used to carry out 
+#' \code{lm_b} is used to fit linear models.  It can be used to carry out 
 #' regression, single stratum analysis of variance and analysis of 
 #' covariance (although aov_b may provide a more convenient 
 #' interface for ANOVA.)
@@ -9,7 +9,7 @@
 #' @param data A data frame in which the variables specified in the formula 
 #' will be found. If missing, the variables are searched for in the standard way.  
 #' However, it is strongly recommended that you use this argument so that other 
-#' generics for bayesics objects work correctly.
+#' generics for \code{bayesics} objects work correctly.
 #' @param weights an optional vector of weights to be used in the fitting process. 
 #' Should be NULL or a numeric vector. If non-NULL, it is assumed that the 
 #' variance of \eqn{y_i} can be written as \eqn{Var(y_i) = \sigma^2/w_i}. While the 

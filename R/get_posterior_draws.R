@@ -1,6 +1,6 @@
 #' @name get_posterior_draws
 #' 
-#' @title Get posterior samples from lm_b object
+#' @title Get Posterior Samples from \code{lm_b} Object
 #' 
 #' @param object Object of class lm_b
 #' @param n_draws integer.  Number of posterior draws to obtain.

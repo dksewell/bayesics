@@ -1,4 +1,4 @@
-#' Non-parametric linear models
+#' Non-parametric Linear Models
 #' 
 #' np_glm_b uses general Bayesian inference with loss-likelihood bootstrap. 
 #' This is, as implemented here, a Bayesian non-parametric linear models 

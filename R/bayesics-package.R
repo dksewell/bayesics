@@ -1,4 +1,4 @@
-#' bayesics: Bayesian Analyses for One- and Two-Sample Inference and Regression Methods
+#' \code{bayesics}: Bayesian Analyses for One- and Two-Sample Inference and Regression Methods
 #'
 #' The \pkg{bayesics} package meant to act as a Bayesian analog to 
 #' many of the procedures implemented in the \pkg{stats} package.

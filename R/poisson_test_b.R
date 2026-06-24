@@ -1,4 +1,4 @@
-#' Poisson tests
+#' Poisson Procedures
 #' 
 #' @description
 #' Make inference on one or two populations using Poisson distributed count data

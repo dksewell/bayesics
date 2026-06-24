@@ -4,7 +4,7 @@
 \alias{bayes_pvalue}
 \alias{bayes_pvalue.lm_b}
 \alias{bayes_pvalue.aov_b}
-\title{Bayesian p-values for regression models}
+\title{Bayesian P-values for Regression Models}
 \usage{
 bayes_pvalue(object, statistic, mc_error, seed, ...)
 
@@ -17,8 +17,9 @@ bayes_pvalue(object, statistic, mc_error, seed, ...)
 
 \item{statistic}{Statistic used to compute Bayesian p-value.
 Either "deviance", or else a function taking in data, expected value, and
-if applicable to the family, disperion (residual variance for \code{gaussian},
-and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).}
+if applicable to the family, dispersion (residual variance for
+\code{gaussian} and \eqn{\phi} for \code{negbinom}, where
+\eqn{Var(y) = \mu + \mu^2/\phi}).}
 
 \item{mc_error}{The number of posterior draws will ensure that with
 99\% probability the estimated Bayesian p-value will be within
@@ -38,7 +39,7 @@ See details.
 }
 }
 \description{
-Bayesian p-values for regression models
+Bayesian P-values for Regression Models
 }
 \details{
 \strong{Overview:}

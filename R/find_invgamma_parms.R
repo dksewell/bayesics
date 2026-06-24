@@ -1,4 +1,4 @@
-#' Find parameters for Inverse gamma prior based on prior mean and one quantile
+#' Find Parameters for Inverse Gamma Prior Based on Prior Mean and One Quantile
 #' 
 #' @details
 #' Either provide the lower and upper quantiles that contain \code{probability} 

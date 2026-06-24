@@ -2,7 +2,7 @@
 % Please edit documentation in R/survfit_b.R
 \name{survfit_b}
 \alias{survfit_b}
-\title{Create survival curves}
+\title{Create Survival Curves}
 \usage{
 survfit_b(formula, data, prior_shape, prior_rate, max_n_time_bins, n_time_bins)
 }

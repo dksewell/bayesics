@@ -1,6 +1,6 @@
-#' Fractional Bayes factors
+#' Fractional Bayes Factors
 #' 
-#' Compute fractional Bayes factors for lm_b objects
+#' Compute fractional Bayes factors for \code{lm_b} objects
 #' 
 #' @details
 #' Fractional Bayes factors, devised by O'Hagan, are a way to use flat, 

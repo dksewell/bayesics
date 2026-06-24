@@ -3,7 +3,7 @@
 \name{prop_test_b}
 \alias{prop_test_b}
 \alias{binom_test_b}
-\title{Bayesian test of Equal or Given Proportions}
+\title{Binomial Procedures}
 \usage{
 prop_test_b(
   n_successes,

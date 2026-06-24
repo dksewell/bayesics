@@ -7,7 +7,7 @@
 \alias{print.mediate_b}
 \alias{print.survfit_b}
 \alias{print.b_procedure}
-\title{Print bayesics objects.}
+\title{Print \code{bayesics} Objects.}
 \usage{
 \method{print}{aov_b}(x, ...)
 
@@ -28,7 +28,7 @@
 None
 }
 \description{
-Print bayesics objects.
+Print \code{bayesics} Objects.
 }
 \examples{
 \donttest{

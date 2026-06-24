@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_invgamma_parms.R
 \name{find_invgamma_parms}
 \alias{find_invgamma_parms}
-\title{Find parameters for Inverse gamma prior based on prior mean and one quantile}
+\title{Find Parameters for Inverse Gamma Prior Based on Prior Mean and One Quantile}
 \usage{
 find_invgamma_parms(
   lower_quantile,
@@ -32,7 +32,7 @@ coefficient of determination (\eqn{R^2}) falls within these lower and upper boun
 twice the shape and rate of the inverse gamma distribution.
 }
 \description{
-Find parameters for Inverse gamma prior based on prior mean and one quantile
+Find Parameters for Inverse Gamma Prior Based on Prior Mean and One Quantile
 }
 \details{
 Either provide the lower and upper quantiles that contain \code{probability}

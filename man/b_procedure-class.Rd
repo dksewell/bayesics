@@ -3,7 +3,7 @@
 \docType{class}
 \name{b_procedure-class}
 \alias{b_procedure-class}
-\title{b_procedure objects}
+\title{\code{b_procedure} Objects}
 \description{
 Objects of class \code{b_procedure} represent the result of a Bayesian
 procedure, including the data, prior specification, posterior summaries,

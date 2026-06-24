@@ -1,11 +1,11 @@
-#' Predict method for lm_b model fits
+#' Predict Method for \class{lm_b} Model Fits
 #' 
 #' 
-#' @param object Object of class \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}
+#' @param object Object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}
 #' @param newdata An optional data.frame in which to look for variables with which 
 #' to predict. 
 #' @param trials Integer vector giving the number of trials for each 
-#' observation if family = binomial().
+#' observation if \code{family = binomial()}.
 #' @param CI_level Posterior probability covered by credible interval
 #' @param PI_level Posterior probability covered by prediction interval
 #' @param seed integer.  Always set your seed!!!

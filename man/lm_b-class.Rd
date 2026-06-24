@@ -3,9 +3,9 @@
 \docType{class}
 \name{lm_b-class}
 \alias{lm_b-class}
-\title{lm_b objects}
+\title{\code{lm_b} Objects}
 \description{
-Objects of class \code{lm_b}
+Objects of Class \code{lm_b}
 }
 \details{
 An object of class \code{lm_b} contains at least the following:

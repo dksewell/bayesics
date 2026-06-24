@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_beta_parms.R
 \name{find_beta_parms}
 \alias{find_beta_parms}
-\title{Find parameters for Beta prior based on prior mean and one quantile}
+\title{Find Parameters for Beta Prior Based on Prior Mean and One Quantile}
 \usage{
 find_beta_parms(
   mean,
@@ -28,7 +28,7 @@ being less than or equal to quantile}
 Vector of beta shape parameters
 }
 \description{
-Find parameters for Beta prior based on prior mean and one quantile
+Find Parameters for Beta Prior Based on Prior Mean and One Quantile
 }
 \examples{
 find_beta_parms(2/5,0.68,0.9)

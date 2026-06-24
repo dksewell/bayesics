@@ -2,7 +2,7 @@
 % Please edit documentation in R/negbinom.R
 \name{negbinom}
 \alias{negbinom}
-\title{Negative-binomial family}
+\title{Negative-Binomial Family}
 \usage{
 negbinom()
 }

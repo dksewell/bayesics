@@ -6,7 +6,7 @@
 \alias{plot.mediate_b}
 \alias{plot.survfit_b}
 \alias{plot.b_procedure}
-\title{Plots bayesics objects.}
+\title{Plots \code{bayesics} Objects.}
 \usage{
 \method{plot}{lm_b}(
   x,
@@ -34,7 +34,7 @@
 \method{plot}{b_procedure}(x, ...)
 }
 \arguments{
-\item{x}{A bayesics object}
+\item{x}{A \code{bayesics} object}
 
 \item{type}{character. Select any of "diagnostics",
 "cred band", and/or "pred band".  If plotting a
@@ -86,7 +86,7 @@ of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.}
 If \code{return_as_list=TRUE}, a list of requested ggplots.
 }
 \description{
-Plots bayesics objects.
+Plots \code{bayesics} Objects.
 }
 \examples{
 \donttest{

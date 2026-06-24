@@ -1,4 +1,4 @@
-#' Bayesian model averaging 
+#' Bayesian Model Averaging 
 #' 
 #' Estimates and CIs from BMA
 #' 

@@ -1,4 +1,4 @@
-#' Create survival curves
+#' Create Survival Curves
 #' 
 #' Use the semi-parametric piecewise exponential survival model 
 #' to fit a survival curve to one or more samples

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sign_test_b.R
 \name{sign_test_b}
 \alias{sign_test_b}
-\title{Paired sign test}
+\title{Paired Sign Test}
 \usage{
 sign_test_b(
   x,

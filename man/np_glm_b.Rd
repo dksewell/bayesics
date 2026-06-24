@@ -2,7 +2,7 @@
 % Please edit documentation in R/np_glm_b.R
 \name{np_glm_b}
 \alias{np_glm_b}
-\title{Non-parametric linear models}
+\title{Non-parametric Linear Models}
 \usage{
 np_glm_b(
   formula,

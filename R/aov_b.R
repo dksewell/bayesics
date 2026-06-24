@@ -1,4 +1,4 @@
-#' Analysis of Variance using Bayesian methods
+#' Analysis of Variance Using Bayesian Methods
 #' 
 #' @details
 #' 

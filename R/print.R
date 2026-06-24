@@ -1,6 +1,6 @@
 #' @name print
 #' 
-#' @title Print bayesics objects.
+#' @title Print \code{bayesics} Objects.
 #' 
 #' @param x an object used to select a method.
 #' @param ... optional arguments.

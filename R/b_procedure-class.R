@@ -1,4 +1,4 @@
-#' b_procedure objects
+#' \code{b_procedure} Objects
 #'
 #' Objects of class \code{b_procedure} represent the result of a Bayesian
 #' procedure, including the data, prior specification, posterior summaries, 

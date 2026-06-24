@@ -5,7 +5,7 @@
 \alias{bayes_factors.lm_b}
 \alias{bayes_factors.glm_b}
 \alias{bayes_factors.survfit_b}
-\title{Bayes factors for lm_b, glm_b, and survfit_b}
+\title{Bayes Factors for \code{lm_b}, \code{glm_b}, and \code{survfit_b} Objects}
 \usage{
 bayes_factors(object, ...)
 

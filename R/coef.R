@@ -1,6 +1,6 @@
 #' @name coef
 #' 
-#' @title Coefficient extraction for bayesics objects
+#' @title Coefficient Extraction for \code{bayesics} Objects
 #' 
 #' @param object bayesics object
 #' @param ... optional arguments.

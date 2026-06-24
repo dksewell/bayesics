@@ -1,4 +1,4 @@
-#' Paired sign test
+#' Paired Sign Test
 #' 
 #' Sign test for paired data.
 #' 

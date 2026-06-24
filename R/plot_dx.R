@@ -1,6 +1,6 @@
 #' @rdname plot_dx
 #' 
-#' @title Diagnostic plots for Bayesian regression objects
+#' @title Diagnostic Plots for Bayesian Regression Objects
 #' 
 #' @param x object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, or
 #' \code{mediate_b}

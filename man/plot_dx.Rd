@@ -5,7 +5,7 @@
 \alias{plot_dx.lm_b}
 \alias{plot_dx.aov_b}
 \alias{plot_dx.mediate_b}
-\title{Diagnostic plots for Bayesian regression objects}
+\title{Diagnostic Plots for Bayesian Regression Objects}
 \usage{
 plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 
@@ -60,5 +60,5 @@ rather than a single plot produced by the patchwork package.}
 \item{...}{arguments passed on to plot_dx}
 }
 \description{
-Diagnostic plots for Bayesian regression objects
+Diagnostic Plots for Bayesian Regression Objects
 }

@@ -4,10 +4,10 @@
 #' @aliases DIC
 #' @aliases WAIC
 #' 
-#' @title Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.  
-#' (Lower is better.)  
+#' @title Compute AIC, BIC, DIC, or WAIC for \code{aov_b} or \code{lm_b} Objects.  
+#' (Lower is Better.)  
 #' 
-#' @param object aov_b, lm_b, or glm_b object
+#' @param object \code{aov_b}, \code{lm_b}, or \code{glm_b} object
 #' @param seed integer.  Always set your seed!!!
 #' @param mc_error The number of posterior draws will ensure that 
 #' with 99% probability the posterior mean of the deviance for DIC will be 

@@ -12,8 +12,8 @@
 \alias{DIC.aov_b}
 \alias{WAIC.lm_b}
 \alias{WAIC.aov_b}
-\title{Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.
-(Lower is better.)}
+\title{Compute AIC, BIC, DIC, or WAIC for \code{aov_b} or \code{lm_b} Objects.
+(Lower is Better.)}
 \usage{
 DIC(object, ...)
 
@@ -30,7 +30,7 @@ DIC(object, ...)
 \method{WAIC}{aov_b}(object, ...)
 }
 \arguments{
-\item{object}{aov_b, lm_b, or glm_b object}
+\item{object}{\code{aov_b}, \code{lm_b}, or \code{glm_b} object}
 
 \item{...}{Passed to methods.}
 
@@ -47,8 +47,8 @@ will be used in final calculation).}
 Numeric (or in the case of DIC, a numeric vector)
 }
 \description{
-Compute AIC, BIC, DIC, or WAIC for aov_b or lm_b objects.
-(Lower is better.)
+Compute AIC, BIC, DIC, or WAIC for \code{aov_b} or \code{lm_b} Objects.
+(Lower is Better.)
 }
 \details{
 AIC and BIC are constructed using the posterior mean. DIC

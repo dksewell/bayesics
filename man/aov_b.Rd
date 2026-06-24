@@ -2,7 +2,7 @@
 % Please edit documentation in R/aov_b.R
 \name{aov_b}
 \alias{aov_b}
-\title{Analysis of Variance using Bayesian methods}
+\title{Analysis of Variance Using Bayesian Methods}
 \usage{
 aov_b(
   formula,
@@ -70,7 +70,7 @@ FALSE.  This setting can be overridden by setting \code{compute_bayes_factor="fo
 Object of class \code{aov_b} and \code{\link[=lm_b-class]{lm_b}}.
 }
 \description{
-Analysis of Variance using Bayesian methods
+Analysis of Variance Using Bayesian Methods
 }
 \details{
 \strong{MODEL:}

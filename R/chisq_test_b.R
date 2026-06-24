@@ -1,7 +1,7 @@
 #' @name chisq_test_b
 #' @aliases independence_b
 #' 
-#' @title Test of independence for 2-way contingency tables
+#' @title Test of Independence for 2-way Contingency Tables
 #' 
 #' @param x Either a table or a matrix of counts
 #' @param sampling_design Either "multinomial", "fixed rows", or "fixed columns"

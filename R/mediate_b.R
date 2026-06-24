@@ -1,8 +1,7 @@
-#' Mediation using Bayesian methods
+#' Mediation using Bayesian Methods
 #' 
 #' 
-#' Mediation analysis done in the framework of Imai et al. (2010).  Currently 
-#' only applicable to linear models.
+#' Mediation analysis done in the framework of Imai et al. (2010).
 #' 
 #' @details
 #' The model is the same as that of Imai et al. (2010):

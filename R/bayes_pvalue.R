@@ -1,12 +1,13 @@
 #' @rdname bayes_pvalue
 #' 
-#' @title Bayesian p-values for regression models
+#' @title Bayesian P-values for Regression Models
 #' 
 #' @param object object of class \code{lm_b} or \code{aov_b}
 #' @param statistic Statistic used to compute Bayesian p-value.  
 #' Either "deviance", or else a function taking in data, expected value, and 
-#' if applicable to the family, disperion (residual variance for \code{gaussian},
-#' and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
+#' if applicable to the family, dispersion (residual variance for 
+#' \code{gaussian} and \eqn{\phi} for \code{negbinom}, where 
+#' \eqn{Var(y) = \mu + \mu^2/\phi}).
 #' @param mc_error The number of posterior draws will ensure that with 
 #' 99% probability the estimated Bayesian p-value will be within 
 #' \eqn{\pm} \code{mc_error} of the actual Bayesian p-value.

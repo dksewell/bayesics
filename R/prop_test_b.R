@@ -1,4 +1,4 @@
-#' Bayesian test of Equal or Given Proportions
+#' Binomial Procedures
 #' @aliases binom_test_b
 #' @aliases prop_test_b
 #' 

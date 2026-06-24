@@ -4,7 +4,7 @@
 \alias{get_posterior_draws}
 \alias{get_posterior_draws.lm_b}
 \alias{get_posterior_draws.aov_b}
-\title{Get posterior samples from lm_b object}
+\title{Get Posterior Samples from \code{lm_b} Object}
 \usage{
 get_posterior_draws(object, n_draws, seed, ...)
 
@@ -25,7 +25,7 @@ get_posterior_draws(object, n_draws, seed, ...)
 matrix of posterior draws
 }
 \description{
-Get posterior samples from lm_b object
+Get Posterior Samples from \code{lm_b} Object
 }
 \examples{
 \donttest{

@@ -4,7 +4,7 @@
 \alias{coef}
 \alias{coef.lm_b}
 \alias{coef.aov_b}
-\title{Coefficient extraction for bayesics objects}
+\title{Coefficient Extraction for \code{bayesics} Objects}
 \usage{
 \method{coef}{lm_b}(object, ...)
 
@@ -19,7 +19,7 @@
 vector of coefficients
 }
 \description{
-Coefficient extraction for bayesics objects
+Coefficient Extraction for \code{bayesics} Objects
 }
 \examples{
 \donttest{

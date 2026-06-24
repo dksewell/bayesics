@@ -2,7 +2,7 @@
 % Please edit documentation in R/frac_bayes_factors.R
 \name{frac_bayes_factors}
 \alias{frac_bayes_factors}
-\title{Fractional Bayes factors}
+\title{Fractional Bayes Factors}
 \usage{
 frac_bayes_factors(object1, object2, fractional_proportion)
 }
@@ -16,7 +16,7 @@ prior in turn used to compute the marginal likelihood.  By default,
 O'Hagan's recommendation of \eqn{max(log(n),ncol(X) + 1) / n)} is used.}
 }
 \description{
-Compute fractional Bayes factors for lm_b objects
+Compute fractional Bayes factors for \code{lm_b} objects
 }
 \details{
 Fractional Bayes factors, devised by O'Hagan, are a way to use flat,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bma_inference.R
 \name{bma_inference}
 \alias{bma_inference}
-\title{Bayesian model averaging}
+\title{Bayesian Model Averaging}
 \usage{
 bma_inference(
   formula,

@@ -3,7 +3,7 @@
 \name{predict.lm_b}
 \alias{predict.lm_b}
 \alias{predict.aov_b}
-\title{Predict method for lm_b model fits}
+\title{Predict Method for \class{lm_b} Model Fits}
 \usage{
 \method{predict}{lm_b}(
   object,
@@ -19,13 +19,13 @@
 \method{predict}{aov_b}(object, CI_level = 0.95, PI_level = 0.95, ...)
 }
 \arguments{
-\item{object}{Object of class \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}}
+\item{object}{Object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}}
 
 \item{newdata}{An optional data.frame in which to look for variables with which
 to predict.}
 
 \item{trials}{Integer vector giving the number of trials for each
-observation if family = binomial().}
+observation if \code{family = binomial()}.}
 
 \item{CI_level}{Posterior probability covered by credible interval}
 
@@ -44,7 +44,7 @@ tibble with estimate (posterior mean), prediction intervals, and credible interv
 for the mean.
 }
 \description{
-Predict method for lm_b model fits
+Predict Method for \class{lm_b} Model Fits
 }
 \examples{
 \donttest{

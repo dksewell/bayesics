@@ -3,7 +3,7 @@
 \name{heteroscedasticity_test}
 \alias{heteroscedasticity_test}
 \alias{var_test_b}
-\title{Test for heteroscedasticity in AOV models}
+\title{Test for Heteroscedasticity in AOV Models}
 \usage{
 heteroscedasticity_test(hetero_model, homo_model)
 }

@@ -1,8 +1,8 @@
 #' @name plot
 #' 
-#' @title Plots bayesics objects.
+#' @title Plots \code{bayesics} Objects.
 #' 
-#' @param x A bayesics object
+#' @param x A \code{bayesics} object
 #' @param type character. Select any of "diagnostics", 
 #' "cred band", and/or "pred band".  If plotting a 
 #' \code{mediate_b} object, the valid values for \code{type} 

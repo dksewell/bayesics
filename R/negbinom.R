@@ -1,4 +1,4 @@
-#' Negative-binomial family
+#' Negative-Binomial Family
 #' 
 #' The \code{negbinom()} is an additional family to be considered 
 #' alongside others documented under \code{stats::family}.

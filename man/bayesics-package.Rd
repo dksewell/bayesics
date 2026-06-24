@@ -4,7 +4,7 @@
 \name{bayesics-package}
 \alias{bayesics}
 \alias{bayesics-package}
-\title{bayesics: Bayesian Analyses for One- and Two-Sample Inference and Regression Methods}
+\title{\code{bayesics}: Bayesian Analyses for One- and Two-Sample Inference and Regression Methods}
 \description{
 The \pkg{bayesics} package meant to act as a Bayesian analog to
 many of the procedures implemented in the \pkg{stats} package.

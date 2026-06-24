@@ -3,7 +3,7 @@
 \name{chisq_test_b}
 \alias{chisq_test_b}
 \alias{independence_b}
-\title{Test of independence for 2-way contingency tables}
+\title{Test of Independence for 2-way Contingency Tables}
 \usage{
 independence_b(
   x,
@@ -44,7 +44,7 @@ used.}
 An object of class \code{\link{b_procedure}}.
 }
 \description{
-Test of independence for 2-way contingency tables
+Test of Independence for 2-way Contingency Tables
 }
 \details{
 For a 2-way contingency table with R rows and C columns, evaluate
