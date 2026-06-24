@@ -1,3 +1,8 @@
+# avoid the automatic warning from future
+suppressWarnings({
+  future.apply::future_sapply(1:2,sum)
+})
+
 
 test_that("Binary treatment, GLM response mediation",{
   
@@ -216,6 +221,7 @@ test_that("Continuous treatment, GLM response mediation",{
   
 })
 
+
 test_that("Simple case mediation",{
   
   set.seed(2025)
@@ -289,7 +295,7 @@ test_that("Simple case mediation",{
   expect_s3_class(plot(m3),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "dx"),
+  expect_s3_class(plot(m3,type = "diagnostics"),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
   expect_s3_class(plot(m3,type = "acme"),

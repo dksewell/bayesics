@@ -1,5 +1,10 @@
 go_fast_for_cran_checks = TRUE
 
+# avoid the automatic warning from future
+suppressWarnings({
+  future.apply::future_sapply(1:2,sum)
+})
+
 test_that("Test lm_b with conjugate prior",{
   
   # Generate some data
@@ -565,7 +570,7 @@ test_that("Test lm_b with zellner's g prior",{
   
 })
 
-
+  
 test_that("Test lm_b with improper prior",{
   
   
@@ -871,7 +876,6 @@ test_that("Test lm_b with improper prior",{
   }
   
 })
-
 
 
 test_that("Test lm_b with weights",{
@@ -1414,3 +1418,4 @@ test_that("Test complicated terms in lm_b formula",{
   
   
 })
+

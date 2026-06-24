@@ -1,4 +1,10 @@
 
+# avoid the automatic warning from future
+suppressWarnings({
+  future.apply::future_sapply(1:2,sum)
+})
+
+
 test_that("Test t_test_b",{
   
   # Test inputs

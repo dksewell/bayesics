@@ -1,6 +1,11 @@
 
 go_fast_for_cran_checks = TRUE
 
+# avoid the automatic warning from future
+suppressWarnings({
+  future.apply::future_sapply(1:2,sum)
+})
+
 
 # Proper, heteroscedastic -------------------------------------------------
 

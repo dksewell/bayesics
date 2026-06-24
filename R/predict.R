@@ -222,14 +222,14 @@ predict.lm_b = function(object,
           dplyr::mutate(PI_lower = 
                           extraDistr::qlst(alpha_pi / 2.0,
                                            df = object$posterior_parameters$a_tilde,
-                                           mu = .data$`Post Mean`,
+                                           mu = newdata$`Post Mean`,
                                            sigma = sqrt(yhats_sds^2 +
                                                           object$posterior_parameters$b_tilde / 
                                                           object$posterior_parameters$a_tilde) ),
                         PI_upper = 
                           extraDistr::qlst(1.0 - alpha_pi / 2.0,
                                            df = object$posterior_parameters$a_tilde,
-                                           mu = .data$`Post Mean`,
+                                           mu = newdata$`Post Mean`,
                                            sigma = sqrt(yhats_sds^2 +
                                                           object$posterior_parameters$b_tilde / 
                                                           object$posterior_parameters$a_tilde) )
@@ -527,8 +527,8 @@ predict.lm_b = function(object,
   if(object$family$family == "binomial"){
     newdata = 
       newdata |>
-      dplyr::mutate(across(c(.data$CI_lower,
-                             .data$CI_upper),
+      dplyr::mutate(across(c(dplyr::all_of("CI_lower"),
+                             dplyr::all_of("CI_upper")),
                            ~ ifelse(.x < 0, 0,
                                     ifelse(.x > 1,
                                            1,
@@ -536,8 +536,8 @@ predict.lm_b = function(object,
     if("PI_lower" %in% names(newdata)){
       newdata = 
         newdata |>
-        dplyr::mutate(across(c(.data$PI_lower,
-                               .data$PI_upper),
+        dplyr::mutate(across(c(dplyr::all_of("PI_lower"),
+                               dplyr::all_of("PI_upper")),
                              ~ ifelse(.x < 0, 0,
                                       ifelse(.x > 1,
                                              1,
@@ -548,14 +548,14 @@ predict.lm_b = function(object,
   if(object$family$family %in% c("poisson","negbinom")){
     newdata = 
       newdata |>
-      dplyr::mutate(across(c(.data$CI_lower,
-                             .data$CI_upper),
+      dplyr::mutate(across(c(dplyr::all_of("CI_lower"),
+                             dplyr::all_of("CI_upper")),
                            ~ ifelse(.x < 0, 0,.x)))
     if("PI_lower" %in% names(newdata)){
       newdata = 
         newdata |>
-        dplyr::mutate(across(c(.data$PI_lower,
-                               .data$PI_upper),
+        dplyr::mutate(across(c(dplyr::all_of("PI_lower"),
+                               dplyr::all_of("PI_upper")),
                              ~ ifelse(.x < 0, 0,.x)))
     }
   }
