@@ -52,7 +52,7 @@ will be within \eqn{\pm} \code{mc_error}. (Ignored for a single population
 rate.)}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 Make inference on one or two populations using Poisson distributed count data

@@ -45,7 +45,7 @@
 #' @param plot logical.  Should a plot be shown?
 #' @param seed Always set your seed! (Unused for \eqn{\geq} 20 observations.)
 #' 
-#' @returns An object of class \code{\link{b_procedure}}.
+#' @returns An object of class \code{\link{b_procedure-class}}.
 #' 
 #' @references 
 #' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction to Distribution-Free Methods. Cambridge: MIT Press.

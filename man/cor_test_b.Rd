@@ -61,7 +61,7 @@ interval.}
 \item{data}{ADD description!}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 Test for Association/Correlation Between Paired Samples via Kendall's tau

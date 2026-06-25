@@ -1,4 +1,4 @@
-#' Predict Method for \class{lm_b} Model Fits
+#' Predict Method for \code{lm_b} Model Fits
 #' 
 #' 
 #' @param object Object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}

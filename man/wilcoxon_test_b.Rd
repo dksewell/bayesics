@@ -54,7 +54,7 @@ beta distribution that will act as the prior on the population proportions.}
 \item{seed}{Always set your seed! (Unused for \eqn{\geq} 20 observations.)}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 Bayesian Wilcoxon Rank Sum (aka Mann-Whitney U) and Signed Rank Analyses

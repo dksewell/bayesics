@@ -34,7 +34,7 @@
 #' credible interval for \eqn{p}.
 #' @param plot logical.  Should a plot be shown?
 #' 
-#' @returns An object of class \code{\link{b_procedure}}.
+#' @returns An object of class \code{\link{b_procedure-class}}.
 #' 
 #' @examples
 #' \donttest{

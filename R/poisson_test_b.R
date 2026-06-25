@@ -45,7 +45,7 @@
 #' then a Jeffrey's prior will be used, i.e., \eqn{\Gamma(0.5,0)} (improper), 
 #' while if \code{prior = "flat"}, \eqn{\Gamma(0.001,0.001)} will be used.  
 #' 
-#' @returns An object of class \code{\link{b_procedure}}.
+#' @returns An object of class \code{\link{b_procedure-class}}.
 #' 
 #' @examples
 #' \donttest{

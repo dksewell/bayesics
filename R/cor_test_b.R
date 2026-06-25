@@ -44,7 +44,7 @@ cor_test_b = function(x, ...){
 #' @param plot logical. Should a plot be shown?
 #' @param ... optional arguments.
 #' 
-#' @returns An object of class \code{\link{b_procedure}}.
+#' @returns An object of class \code{\link{b_procedure-class}}.
 #' 
 #' @references 
 #' Chechile, R.A. (2020). Bayesian Statistics for Experimental Scientists: A General Introduction Using Distribution_Free Statistics. Cambridge: MIT Press.

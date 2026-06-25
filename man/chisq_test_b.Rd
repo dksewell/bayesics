@@ -41,7 +41,7 @@ probabilities are between 0.11 and 0.89, the more relaxed value of 0.01 is
 used.}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 Test of Independence for 2-way Contingency Tables

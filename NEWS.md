@@ -2,10 +2,13 @@
 
 * Major restructuring of the S3 structure in bayesics.  
 
-All regression objects now inherit the lm_b class, and methods now rely heavily on those, better enabling expandability of the bayesics functionality.  Objects have been standardized so in most cases generics will work similarly on any object with the same estimation algorithm. Added `plot_dx`, `plot_bands` functions, as well as get_posterior_draws function for `aov_b`, `glm_b`, and `np_glm_b` objects.
+All regression objects now inherit the `lm_b` class, and methods now rely heavily on those, better enabling expandability of the bayesics functionality.  Objects have been standardized so in most cases generics will work similarly on any object with the same estimation algorithm. Added `plot_dx`, `plot_bands` functions, as well as get_posterior_draws function for `aov_b`, `glm_b`, and `np_glm_b` objects.
 
 All 1 and 2 sample procedures now fall under the newly created `b_procedure` class.  This new class has a single print and plot functionality.  All objects returned as a `b_procedure` have similar structure.  These methods include `case_control_b`, `cor_test_b`, `independence_b`, `poisson_test_b`, `prop_test_b`, `sign_test_b`, `t_test_b`, and `wilcoxon_test_b`.
 
+* Additional functions have been created: `bayes_pvalues`, `get_posterior_draws`.
+
+* Numerous bugs in edge cases have been resolved.
 
 
 # bayesics 2.1.1

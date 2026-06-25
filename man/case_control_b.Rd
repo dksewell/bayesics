@@ -55,7 +55,7 @@ credible interval.}
 (ignored if \code{large_sample_approx = TRUE}.)}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 Bayesian analysis of a case-control study (without covariates).

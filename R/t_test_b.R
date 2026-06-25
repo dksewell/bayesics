@@ -36,7 +36,7 @@
 #' @param seed integer.  Always set your seed!!!
 #' @param plot logical. Should the resulting inverse gamma distribution be plotted?
 #' 
-#' @returns An object of class \code{\link{b_procedure}}.
+#' @returns An object of class \code{\link{b_procedure-class}}.
 #' 
 #' 
 #' @examples

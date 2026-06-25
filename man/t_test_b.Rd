@@ -69,7 +69,7 @@ probability the bounds of the credible intervals will be within \eqn{\pm}
 trimmed range of y. (Ignored for single population inference.)}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 One and two sample t-tests on vectors of data

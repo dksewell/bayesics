@@ -57,7 +57,7 @@ probability the bounds of the credible intervals of \eqn{p_1 - p_2} will be
 within \eqn{\pm} \code{mc_error}. (Ignored for a single population proportion.)}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 \code{prop_test_b} either makes inference on a single population

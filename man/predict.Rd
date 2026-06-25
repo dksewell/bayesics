@@ -3,7 +3,7 @@
 \name{predict.lm_b}
 \alias{predict.lm_b}
 \alias{predict.aov_b}
-\title{Predict Method for \class{lm_b} Model Fits}
+\title{Predict Method for \code{lm_b} Model Fits}
 \usage{
 \method{predict}{lm_b}(
   object,
@@ -44,7 +44,7 @@ tibble with estimate (posterior mean), prediction intervals, and credible interv
 for the mean.
 }
 \description{
-Predict Method for \class{lm_b} Model Fits
+Predict Method for \code{lm_b} Model Fits
 }
 \examples{
 \donttest{

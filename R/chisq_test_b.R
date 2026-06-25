@@ -30,7 +30,7 @@
 #' \code{"fixed columns"}
 #' }
 #' 
-#' @return An object of class \code{\link{b_procedure}}.
+#' @return An object of class \code{\link{b_procedure-class}}.
 #' 
 #' 
 #' @references 

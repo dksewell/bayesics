@@ -41,7 +41,7 @@ credible interval for \eqn{p}.}
 \item{plot}{logical.  Should a plot be shown?}
 }
 \value{
-An object of class \code{\link{b_procedure}}.
+An object of class \code{\link{b_procedure-class}}.
 }
 \description{
 Sign test for paired data.
