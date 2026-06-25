@@ -218,7 +218,7 @@ bayes_pvalue.lm_b = function(object,
   
   # Evaulate T(y,theta) and T(y_pred,theta)
   ## Get test statistic
-  if(isTRUE(statistic == "deviance")){
+  if(isTRUE(is.character(statistic) && (statistic == "deviance") )){
     
     statistic <- function(y, mu, dispersion = NULL) {
       switch(object$family$family,
@@ -234,20 +234,35 @@ bayes_pvalue.lm_b = function(object,
   
   
   ## Compute posterior draws of test statistic
-  T_pred = 
-    sapply(1:n_draws,
-           function(draw){
-             statistic(y_pred[,draw],
-                       mu_draws[,draw],
-                       phi[,draw])
-           })
-  T_obs = 
-    sapply(1:n_draws,
-           function(draw){
-             statistic(y,
-                       mu_draws[,draw],
-                       phi[,draw])
-           })
+  if(is.null(phi)){
+    T_pred = 
+      sapply(1:n_draws,
+             function(draw){
+               statistic(y_pred[,draw],
+                         mu_draws[,draw])
+             })
+    T_obs = 
+      sapply(1:n_draws,
+             function(draw){
+               statistic(y,
+                         mu_draws[,draw])
+             })
+  }else{
+    T_pred = 
+      sapply(1:n_draws,
+             function(draw){
+               statistic(y_pred[,draw],
+                         mu_draws[,draw],
+                         phi[,draw])
+             })
+    T_obs = 
+      sapply(1:n_draws,
+             function(draw){
+               statistic(y,
+                         mu_draws[,draw],
+                         phi[,draw])
+             })
+  }
   
   # Return bayesian p-value
   return(

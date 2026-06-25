@@ -162,6 +162,24 @@ test_that("Test glm_b for binomial data fitting with VB",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu){
+                       sum((y - mu)^2/sqrt(mu * (1.0 - mu)))
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  
 
 
 
@@ -416,7 +434,24 @@ test_that("Test glm_b for binomial data fitting with IS",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
-
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu){
+                       sum((y - mu)^2/sqrt(mu * (1.0 - mu)))
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  
 
 
   # Test plot
@@ -646,6 +681,23 @@ test_that("Test glm_b for binomial data fitting with LSA",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu){
+                       sum((y - mu)^2/sqrt(mu * (1.0 - mu)))
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
 
@@ -1006,6 +1058,23 @@ test_that("Test glm_b for poisson data fitting with VB",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu){
+                       sum((y - mu)^2/mu)
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
   # Test plot
@@ -1251,6 +1320,23 @@ test_that("Test glm_b for poisson data fitting with IS",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu){
+                       sum((y - mu)^2/mu)
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
   # Test plot
@@ -1497,6 +1583,23 @@ test_that("Test glm_b for poisson data fitting with LSA",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu){
+                       sum((y - mu)^2/mu)
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
   # Test plot
@@ -1742,6 +1845,23 @@ test_that("Test glm_b for nbinom data fitting with VB",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       sum((y - mu)^2/(mu + mu^2 / dispersion))
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
   # Test plot
@@ -1996,6 +2116,23 @@ test_that("Test glm_b for nbinom data fitting with IS",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       sum((y - mu)^2/(mu + mu^2 / dispersion))
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
   # Test plot
@@ -2242,6 +2379,23 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       sum((y - mu)^2/(mu + mu^2 / dispersion))
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
 
 
   # Test plot

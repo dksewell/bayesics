@@ -178,6 +178,23 @@ test_that("Test lm_b with conjugate prior",{
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  
   
   # Test plot
   if(!go_fast_for_cran_checks){
@@ -501,6 +518,25 @@ test_that("Test lm_b with zellner's g prior",{
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
   
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
+  
   
   # Test plot
   if(!go_fast_for_cran_checks){
@@ -737,6 +773,25 @@ test_that("Test lm_b with improper prior",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  
   
   
   # Test plot
@@ -1094,6 +1149,24 @@ test_that("Test complicated terms in lm_b formula",{
                  "statistic_posterior_draws"))
   expect_type(bpvals[[1]],"double")
   expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  
+  # Check custom Bayesian p-value
+  expect_no_error(
+    bpvals_custom <-
+      bayes_pvalue(fita,
+                   mc_error = 0.05,
+                   statistic = 
+                     function(y,mu,dispersion){
+                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                     }
+      )
+  )
+  expect_named(bpvals_custom,
+               c("bpvalue",
+                 "statistic_posterior_draws"))
+  expect_type(bpvals_custom[[1]],"double")
+  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  
   
   
   ## Test plot
