@@ -498,7 +498,7 @@ predict.lm_b = function(object,
                          nrow(yhat_draws),
                          ncol(yhat_draws)),
                   2,
-                  sqrt(object$posterior_draws$s2),
+                  sqrt(object$posterior_draws[,"s2"]),
                   "*")
             
           
