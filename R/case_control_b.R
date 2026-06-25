@@ -328,7 +328,7 @@ case_control_b = function(cases,
                    posterior_parameters["mean"],
                    posterior_parameters["sd"])
       )
-    results$pdir$pdir_description = 
+    results$pdir$description = 
       paste0("Probability that the odds ratio is ",
              ifelse(results$pdir$pdir > 0.5,
                     "less",
