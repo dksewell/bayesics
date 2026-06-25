@@ -76,3 +76,45 @@ The Monte Carlo error is implemented in such a way so as to obtain as few
 posterior samples as necessary to ensure a small probability of incorrectly
 determining an inadequate fit when the fit is good and vice versa.
 }
+\examples{
+\donttest{
+# Create some data
+set.seed(2026)
+N = 500
+test_data = 
+  data.frame(x1 = rnorm(N),
+             x2 = rnorm(N),
+             x3 = letters[1:5])
+test_data$outcome = 
+  rnorm(N,-1 + test_data$x1 + 2 * (test_data$x3 \%in\% c("d","e")) )
+
+# Fit a linear regression model
+fit = 
+  lm_b(outcome ~ x1 + x2 + x3,
+       data = test_data)
+
+# Compute the Bayesian p-value based on the deviance
+bp_deviance = 
+  bayes_pvalue(fit)
+bp_deviance$bpvalue # We want a value near 0.5, say in (0.05,0.95).
+plot(T_y_observed ~ T_y_predicted,
+     data = bp_deviance$statistic_posterior_draws,
+     xlab = expression(T(y[pred],theta)),
+     ylab = expression(T(y[obs],theta)),
+     pch = 16,
+     cex = 0.1,
+     col = gray(0.5,0.25))
+abline(0,1,
+       lwd = 2)
+
+# Use a custom test statistic
+bp_sw = 
+  bayes_pvalue(fit,
+               statistic = 
+                 function(y,mu,dispersion){
+                   shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                 }
+  )
+bp_sw$bpvalue
+} 
+}
