@@ -3,7 +3,7 @@
 #' @title Print \code{bayesics} Objects.
 #' 
 #' @param x an object used to select a method.
-#' @param ... optional arguments.
+#' @param ... optional arguments passed to `tibble::print.tbl_df`
 #' 
 #' @returns None
 #' 
@@ -42,7 +42,7 @@ print.aov_b = function(x, ...){
     
     cat("\n\n----------\n\n")
   }
-  print(x$summary)
+  print(x$summary,...)
   cat("\n----------\n")
   cat(paste0("(Note: Lower and upper bounds are for the ",
              100 * x$CI_level,
@@ -74,7 +74,7 @@ print.lm_b = function(x, ...){
   cat("\n----------\n\n")
   print(x$formula)
   cat("\n----------\n\n")
-  print(x$summary)
+  print(x$summary,...)
   cat("\n----------\n")
   cat(paste0("(Note: Lower and upper bounds are for the ",
              100 * x$CI_level,
@@ -93,7 +93,7 @@ print.mediate_b = function(x, ...){
   cat("\nOutcome model:\n")
   print(x$model_y$formula)
   cat("\n----------\n\n")
-  print(x$summary)
+  print(x$summary,...)
   cat("\n----------\n")
   cat(paste0("(Note: Lower and upper bounds are for the ",
                100 * x$CI_level,
@@ -135,7 +135,7 @@ print.survfit_b = function(x, ...){
                    Rate = 
                      format(signif(x$posterior_parameters[,2], 3))
     ) |> 
-      print()
+      print(...)
     
   }else{
     
@@ -166,7 +166,7 @@ print.survfit_b = function(x, ...){
                      Rate = 
                        format(signif(x[[g]]$posterior_parameters[,2], 3))
       ) |> 
-        print()
+        print(...)
       
       cat("\n----------\n\n")
       
