@@ -117,7 +117,7 @@ bayes_pvalue = function(object,
 #' @rdname bayes_pvalue
 #' @exportS3Method bayes_pvalue lm_b 
 bayes_pvalue.lm_b = function(object,
-                             statistic = "deviance",
+                             statistic,
                              mc_error = 0.005,
                              seed = 1,
                              ...){
@@ -132,14 +132,27 @@ bayes_pvalue.lm_b = function(object,
     stop("Object should be a parametric fit in order to obtain posterior predicted values.")
   
   # statistic
-  if (is.character(statistic)) {
-    statistic <- match.arg(statistic, choices = "deviance")
-  } else if (!is.function(statistic)) {
-    stop(
-      "`statistic` must be either \"deviance\" or a function",
-      call. = FALSE
-    )
+  if(!missing(statistic) && class(statistic) != "function")
+    stop("Is statistic is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
+  if(missing(statistic)){
+    
+    statistic <- function(y, mu, dispersion = NULL) {
+      switch(object$family$family,
+             gaussian   = shapiro.test((y - mu) / sqrt(dispersion))$statistic,
+             binomial   = -2.0 * sum(dbinom(y,object$trials,mu/object$trials,log=T)),
+             poisson    = -2.0 * sum(dpois(y,mu,log=T)),
+             negbinom   = -2.0 * sum(dnbinom(y,mu = mu,size = dispersion,log=T)),
+             stop("Unsupported family")
+      )
+    }
+    
+    if(object$family$family == "gaussian"){
+      
+    }else{
+      
+    }
   }
+  
   
   # mc_error
   if (!is.numeric(mc_error) ||
@@ -158,6 +171,8 @@ bayes_pvalue.lm_b = function(object,
       "`seed` must be a single integer value",
       call. = FALSE
     )
+  
+  
   
   
   
@@ -260,21 +275,6 @@ bayes_pvalue.lm_b = function(object,
   
   
   # Evaulate T(y,theta) and T(y_pred,theta)
-  ## Get test statistic
-  if(isTRUE(is.character(statistic) && (statistic == "deviance") )){
-    
-    statistic <- function(y, mu, dispersion = NULL) {
-      switch(object$family$family,
-             gaussian   = -2.0 * sum(dnorm(y,mu,sqrt(dispersion),log=T)),
-             binomial   = -2.0 * sum(dbinom(y,object$trials,mu/object$trials,log=T)),
-             poisson    = -2.0 * sum(dpois(y,mu,log=T)),
-             negbinom   = -2.0 * sum(dnbinom(y,mu = mu,size = dispersion,log=T)),
-             stop("Unsupported family")
-      )
-    }
-    
-  }
-  
   
   ## Compute posterior draws of test statistic
   if(is.null(phi)){
@@ -326,7 +326,7 @@ bayes_pvalue.lm_b = function(object,
 #' @rdname bayes_pvalue
 #' @exportS3Method bayes_pvalue aov_b 
 bayes_pvalue.aov_b = function(object,
-                              statistic = "deviance",
+                              statistic,
                               mc_error = 0.005,
                               seed = 1,
                               ...){
@@ -337,13 +337,12 @@ bayes_pvalue.aov_b = function(object,
          call. = FALSE)
   
   # statistic
-  if (is.character(statistic)) {
-    statistic <- match.arg(statistic, choices = "deviance")
-  } else if (!is.function(statistic)) {
-    stop(
-      "`statistic` must be either \"deviance\" or a function",
-      call. = FALSE
-    )
+  if(!missing(statistic) && class(statistic) != "function")
+    stop("Is statistic is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
+  if(missing(statistic)){
+    statistic <- function(y, mu, dispersion = NULL) {
+      shapiro.test((y - mu) / sqrt(dispersion))$statistic
+    }
   }
   
   # mc_error
@@ -414,15 +413,6 @@ bayes_pvalue.aov_b = function(object,
   
   
   # Evaulate T(y,theta) and T(y_pred,theta)
-  ## Get test statistic
-  if(isTRUE(statistic == "deviance")){
-    
-    statistic <- function(y, mu, s2) {
-      -2.0 * sum(dnorm(y,mu,sqrt(s2),log=TRUE))
-    }
-    
-  }
-  
   
   ## Compute posterior draws of test statistic
   T_pred = 

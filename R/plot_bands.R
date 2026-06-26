@@ -104,7 +104,7 @@ plot_bands.lm_b = function(x,
   # Get unique values and x sequences for plots
   x_unique = 
     lapply(variable,
-           function(v) unique(x$data[[v]]))
+           function(v) na.omit(unique(x$data[[v]])))
   x_seq = 
     lapply(x_unique,
            function(xvals){

@@ -62,7 +62,7 @@ plot.lm_b = function(x,
                      type = c("diagnostics",
                               "cred band",
                               "pred band"),
-                     statistic = "deviance",
+                     statistic,
                      mc_error = 0.005,
                      seed = 1,
                      variable,
@@ -94,12 +94,20 @@ plot.lm_b = function(x,
     stop("No valid plotting type given.")
   
   if("diagnostics" %in% type){
-    plot_list[[1]] = 
-      plot_dx(x = x,
-              statistic = statistic,
-              mc_error = mc_error,
-              seed = seed,
-              return_as_list = TRUE)
+    if(missing(statistic)){
+      plot_list[[1]] = 
+        plot_dx(x = x,
+                mc_error = mc_error,
+                seed = seed,
+                return_as_list = TRUE)
+    }else{
+      plot_list[[1]] = 
+        plot_dx(x = x,
+                statistic = statistic,
+                mc_error = mc_error,
+                seed = seed,
+                return_as_list = TRUE)
+    }
   }
   
   if(length(intersect(type,
@@ -179,7 +187,11 @@ plot.lm_b = function(x,
 #' @export
 plot.mediate_b = function(x,
                           type = c("diagnostics","acme","ade"),
+                          statistic = list(m = NULL,
+                                           y = NULL),
                           return_as_list = FALSE,
+                          seed = 1,
+                          mc_error = 0.005,
                           ...){
   
   type = match.arg(type,several.ok = TRUE)
@@ -189,10 +201,9 @@ plot.mediate_b = function(x,
   if("diagnostics" %in% type){
     plot_list = 
       plot_dx(x,
-              statistic_m = "deviance",
-              statistic_y = "deviance",
-              mc_error = 0.005,
-              seed = 1,
+              statistic = statistic,
+              mc_error = mc_error,
+              seed = seed,
       )
   }else{
     plot_list = list()

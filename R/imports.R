@@ -4,7 +4,7 @@
 #' @importFrom extraDistr rinvgamma pinvgamma dinvgamma qinvgamma qlst plst dlst rlst rdirichlet pbbinom
 #' @importFrom future.apply future_sapply future_lapply
 #' @importFrom future plan multisession sequential
-#' @importFrom tibble tibble as_tibble
+#' @importFrom tibble tibble as_tibble print.tbl_df
 #' @importFrom mvtnorm dmvt rmvt dmvnorm rmvnorm
 #' @importFrom janitor clean_names
 #' @importFrom patchwork wrap_plots
@@ -17,6 +17,6 @@
 #' @importFrom survival Surv
 #' @importFrom BMS bms
 #' @importFrom stringr str_extract
-#' @importFrom stats AIC BIC as.formula binomial coef cov dbeta dbinom delete.response density dgamma dlnorm dnbinom dnorm dpois gaussian glm lm model.frame model.matrix model.offset model.response na.omit optim optimize pbeta pgamma pnorm poisson predict qbeta qgamma qlnorm qnorm quantile rbeta rbinom resid rgamma rnbinom rnorm rpois sd sigma terms var vcov weighted.mean logLik
+#' @importFrom stats AIC BIC as.formula binomial coef cov dbeta dbinom delete.response density dgamma dlnorm dnbinom dnorm dpois gaussian glm lm model.frame model.matrix model.offset model.response na.omit optim optimize pbeta pgamma pnorm poisson predict qbeta qgamma qlnorm qnorm quantile rbeta rbinom resid rgamma rnbinom rnorm rpois sd sigma terms var vcov weighted.mean logLik shapiro.test
 NULL
 

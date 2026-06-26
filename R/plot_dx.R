@@ -34,7 +34,7 @@ plot_dx = function(x,
 #' @rdname plot_dx
 #' @exportS3Method plot_dx lm_b
 plot_dx.lm_b = function(x,
-                        statistic = "deviance",
+                        statistic,
                         mc_error = 0.005,
                         seed = 1,
                         return_as_list = TRUE,
@@ -69,11 +69,18 @@ plot_dx.lm_b = function(x,
       ggtitle("QQ norm plot")
   }
   
-  bpval = 
-    bayes_pvalue(x,
-                 statistic = statistic,
-                 mc_error = mc_error,
-                 seed = seed)
+  if(missing(statistic)){
+    bpval = 
+      bayes_pvalue(x,
+                   mc_error = mc_error,
+                   seed = seed)
+  }else{
+    bpval = 
+      bayes_pvalue(x,
+                   statistic = statistic,
+                   mc_error = mc_error,
+                   seed = seed)
+  }
   
   
   plot_list$bpvals = 
@@ -141,11 +148,18 @@ plot_dx.aov_b = function(x,
       ggtitle("QQ norm plot")
   }
   
-  bpval = 
-    bayes_pvalue(x,
-                 statistic = statistic,
-                 mc_error = mc_error,
-                 seed = seed)
+  if(missing(statistic)){
+    bpval = 
+      bayes_pvalue(x,
+                   mc_error = mc_error,
+                   seed = seed)
+  }else{
+    bpval = 
+      bayes_pvalue(x,
+                   statistic = statistic,
+                   mc_error = mc_error,
+                   seed = seed)
+  }
   
   
   plot_list$bpvals = 
@@ -178,14 +192,44 @@ plot_dx.aov_b = function(x,
 #' @rdname plot_dx
 #' @exportS3Method plot_dx mediate_b
 plot_dx.mediate_b = function(x,
-                             statistic = list(m = "deviance",
-                                              y = "deviance"),
+                             statistic = list(m = NULL,
+                                              y = NULL),
                              mc_error = 0.005,
                              seed = 1,
                              return_as_list = TRUE,
                              ...){
   
   plot_list = list()
+  
+  if(!is.null(statistic$m) && class(statistic$m) != "function")
+    stop("Is statistic for the mediator model is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
+  
+  if(!is.null(statistic$y) && class(statistic$y) != "function")
+    stop("Is statistic for the outcome model is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
+  
+  if(is.null(statistic$m)){
+    statistic$m <- function(y, mu, dispersion = NULL) {
+      switch(x$model_m$family$family,
+             gaussian   = shapiro.test((y - mu) / sqrt(dispersion))$statistic,
+             binomial   = -2.0 * sum(dbinom(y,x$model_m$trials,mu/x$model_m$trials,log=T)),
+             poisson    = -2.0 * sum(dpois(y,mu,log=T)),
+             negbinom   = -2.0 * sum(dnbinom(y,mu = mu,size = dispersion,log=T)),
+             stop("Unsupported family")
+      )
+    }
+  }
+  
+  if(is.null(statistic$y)){
+    statistic$y <- function(y, mu, dispersion = NULL) {
+      switch(x$model_y$family$family,
+             gaussian   = shapiro.test((y - mu) / sqrt(dispersion))$statistic,
+             binomial   = -2.0 * sum(dbinom(y,x$model_y$trials,mu/x$model_y$trials,log=T)),
+             poisson    = -2.0 * sum(dpois(y,mu,log=T)),
+             negbinom   = -2.0 * sum(dnbinom(y,mu = mu,size = dispersion,log=T)),
+             stop("Unsupported family")
+      )
+    }
+  }
   
   # Mediator model
   plot_list[[1]] = 
