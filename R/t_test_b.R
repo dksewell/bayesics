@@ -372,72 +372,81 @@ t_test_b = function(x,
       
       
       if(plot){
-        post_means = 
-          ret$summary |> 
-          dplyr::filter(grepl("Mean : ",ret$summary$Variable)) |> 
-          dplyr::pull(.data$`Post Mean`)
-        post_sds = 
-          sqrt(ret$summary |> 
-                 dplyr::filter(grepl("Var : ",ret$summary$Variable)) |> 
-                 dplyr::pull(.data$`Post Mean`))
         results$plot = 
           tibble::tibble(x = 
                            seq(
                              min(
-                               qnorm(0.005,
-                                     post_means,
-                                     post_sds)
+                               extraDistr::qlst(0.005,
+                                                df = ret$posterior_parameters$a_g,
+                                                mu = ret$posterior_parameters$mu_g,
+                                                sigma = sqrt(ret$posterior_parameters$b_g / 
+                                                               ret$posterior_parameters$nu_g / 
+                                                               ret$posterior_parameters$a_g))
                              ),
                              max(
-                               qnorm(0.995,
-                                     ret$summary |> 
-                                       dplyr::filter(grepl("Mean : ",ret$summary$Variable)) |> 
-                                       dplyr::pull(.data$`Post Mean`),
-                                     sqrt(ret$summary |> 
-                                            dplyr::filter(grepl("Var : ",ret$summary$Variable)) |> 
-                                            dplyr::pull(.data$`Post Mean`)))
+                               extraDistr::qlst(0.995,
+                                                df = ret$posterior_parameters$a_g,
+                                                mu = ret$posterior_parameters$mu_g,
+                                                sigma = sqrt(ret$posterior_parameters$b_g / 
+                                                               ret$posterior_parameters$nu_g / 
+                                                               ret$posterior_parameters$a_g))
                              ),
                              l = 50)) |> 
           ggplot(aes(x=x)) +
           stat_function(fun = 
                           function(x){
-                            dnorm(x,
-                                  post_means[1],
-                                  post_sds[1])
+                            extraDistr::dlst(x,
+                                             df = ret$posterior_parameters$a_g[1],
+                                             mu = ret$posterior_parameters$mu_g[1],
+                                             sigma = sqrt(ret$posterior_parameters$b_g[1] / 
+                                                            ret$posterior_parameters$nu_g[1] / 
+                                                            ret$posterior_parameters$a_g[1]))
                           },
                         aes(color = "Posterior (Pop1)"),
                         linewidth = 2) +
           stat_function(fun = 
                           function(x){
-                            dnorm(x,
-                                  post_means[2],
-                                  post_sds[1 + heteroscedastic])
+                            extraDistr::dlst(x,
+                                             df = ret$posterior_parameters$a_g[1 + heteroscedastic],
+                                             mu = ret$posterior_parameters$mu_g[2],
+                                             sigma = sqrt(ret$posterior_parameters$b_g[1 + heteroscedastic] / 
+                                                            ret$posterior_parameters$nu_g[2] / 
+                                                            ret$posterior_parameters$a_g[1 + heteroscedastic]))
                           },
                         aes(color = "Posterior (Pop2)"),
                         linewidth = 2)
         if(improper){
           post_modes = 
-            dnorm(post_means,
-                  post_means,
-                  post_sds) |> 
+            extraDistr::dlst(0,
+                             df = ret$posterior_parameters$a_g,
+                             mu = 0,
+                             sigma = sqrt(ret$posterior_parameters$b_g / 
+                                            ret$posterior_parameters$nu_g / 
+                                            ret$posterior_parameters$a_g)) |> 
             max()
           results$plot = 
             results$plot +
-            geom_hline(yintercept = post_modes / 10,
-                       aes(color = "Prior"),
-                       linewidth = 2)
+            stat_function(fun = 
+                            function(x){
+                              post_modes / 10
+                            },
+                          aes(color = "Prior"),
+                          linewidth = 2) 
+          # geom_hline(yintercept = post_modes / 10,
+          #            aes(color = "Prior"),
+          #            linewidth = 2)
         }else{
           results$plot =
             results$plot  +
             stat_function(fun = 
                             function(x){
-                              dlst(x,
-                                   df = ret$hyperparameters$a,
-                                   mu = ret$hyperparameters$mu,
-                                   sigma = 
-                                     ret$hyperparameters$b / 
-                                     ret$hyperparameters$a / 
-                                     ret$hyperparameters$nu)
+                              extraDistr::dlst(x,
+                                               df = ret$hyperparameters$a,
+                                               mu = ret$hyperparameters$mu,
+                                               sigma = 
+                                                 ret$hyperparameters$b / 
+                                                 ret$hyperparameters$a / 
+                                                 ret$hyperparameters$nu)
                             },
                           aes(color = "Prior"),
                           linewidth = 2) 
@@ -453,6 +462,7 @@ t_test_b = function(x,
           labs(color = "Distribution") + 
           ggtitle("Population means")
       }
+      
       
       # attach aov_b object
       results$object_fit = ret
