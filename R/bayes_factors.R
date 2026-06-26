@@ -449,16 +449,19 @@ bayes_factors.survfit_b = function(object,
                                  paste0(favor_or_against,"the second model)"),
                           ))))
   
-  message("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques")
-  message("\n----------\n")
-  message(paste0("The Bayes factor equaled ",
-             format(signif(BF, 3)),
-             ".\nInterpretation: ",
-             Interpretation))
-  message("\n----------\n\n")
+  # message("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques")
+  # message("\n----------\n")
+  # message(paste0("The Bayes factor equaled ",
+  #            format(signif(BF, 3)),
+  #            ".\nInterpretation: ",
+  #            Interpretation))
+  # message("\n----------\n\n")
+  # 
+  # invisible(tibble::tibble(BF = BF,
+  #                          Interpretation = Interpretation))
   
-  invisible(tibble::tibble(BF = BF,
-                           Interpretation = Interpretation))
+  tibble::tibble(BF = BF,
+                 Interpretation = Interpretation)
 }
 
 
