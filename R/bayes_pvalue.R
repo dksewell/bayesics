@@ -203,7 +203,7 @@ bayes_pvalue.lm_b = function(object,
   os = model.offset(mframe)
   N = nrow(X)
   if(is.null(os)) os = numeric(N)
-  if(is.null(object$trials)) object$trials = rep(1.0,nrow(object$data))
+  if(is.null(object$trials)) object$trials = rep(1.0,nrow(X))
   if(is.null(object$weights)) # bma_inference does not take in weights currently.
     object$weights = rep(1.0,N)
   
