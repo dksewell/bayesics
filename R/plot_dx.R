@@ -96,7 +96,7 @@ plot_dx.lm_b = function(x,
     ylab(bquote(T(y[obs] * "," * beta))) +
     theme_classic() +
     scale_color_viridis_d() +
-    ggtitle(paste0("Bayesian p-value based on deviance = ",
+    ggtitle(paste0("Bayesian p-value = ",
                    round(bpval$bpvalue,3))) + 
     theme(legend.position = "none")
   
@@ -112,7 +112,7 @@ plot_dx.lm_b = function(x,
 #' @rdname plot_dx
 #' @exportS3Method plot_dx aov_b
 plot_dx.aov_b = function(x,
-                         statistic = "deviance",
+                         statistic,
                          mc_error = 0.005,
                          seed = 1,
                          return_as_list = TRUE,
@@ -175,7 +175,7 @@ plot_dx.aov_b = function(x,
     ylab(bquote(T(y[obs] * "," * beta))) +
     theme_classic() +
     scale_color_viridis_d() +
-    ggtitle(paste0("Bayesian p-value based on deviance = ",
+    ggtitle(paste0("Bayesian p-value = ",
                    round(bpval$bpvalue,3))) + 
     theme(legend.position = "none")
   
