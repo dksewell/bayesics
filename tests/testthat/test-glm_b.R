@@ -821,7 +821,11 @@ test_that("Test glm_b for binomial data with >1 trials",{
   )
   expect_lt(preds1$`Post Mean`,
             preds2$`Post Mean`)
-
+  
+  AIC(fita)
+  BIC(fita)
+  DIC(fita)
+  WAIC(fita)
 
   # Test IS fit
   expect_no_error(
@@ -857,9 +861,13 @@ test_that("Test glm_b for binomial data with >1 trials",{
   )
   expect_lt(preds1$`Post Mean`,
             preds2$`Post Mean`)
+  AIC(fita)
+  BIC(fita)
+  DIC(fita)
+  WAIC(fita)
+  
 
-
-  # Test VB fit
+  # Test LSA fit
   expect_no_error(
     fita <-
       glm_b(outcome ~ x1 + x2 + x3,
@@ -895,7 +903,11 @@ test_that("Test glm_b for binomial data with >1 trials",{
   )
   expect_lt(preds1$`Post Mean`,
             preds2$`Post Mean`)
-
+  AIC(fita)
+  BIC(fita)
+  DIC(fita)
+  WAIC(fita)
+  
 
 })
 
