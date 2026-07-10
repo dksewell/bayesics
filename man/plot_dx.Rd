@@ -9,27 +9,13 @@
 \usage{
 plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 
-\method{plot_dx}{lm_b}(
-  x,
-  statistic = "deviance",
-  mc_error = 0.005,
-  seed = 1,
-  return_as_list = TRUE,
-  ...
-)
+\method{plot_dx}{lm_b}(x, statistic, mc_error = 0.005, seed = 1, return_as_list = TRUE, ...)
 
-\method{plot_dx}{aov_b}(
-  x,
-  statistic = "deviance",
-  mc_error = 0.005,
-  seed = 1,
-  return_as_list = TRUE,
-  ...
-)
+\method{plot_dx}{aov_b}(x, statistic, mc_error = 0.005, seed = 1, return_as_list = TRUE, ...)
 
 \method{plot_dx}{mediate_b}(
   x,
-  statistic = list(m = "deviance", y = "deviance"),
+  statistic = list(m = NULL, y = NULL),
   mc_error = 0.005,
   seed = 1,
   return_as_list = TRUE,
@@ -41,9 +27,12 @@ plot_dx(x, statistic, mc_error, seed, return_as_list, ...)
 \code{mediate_b}}
 
 \item{statistic, }{Statistic used to compute Bayesian p-value.
-Either "deviance", or else a function taking in data, expected value, and
-if applicable to the family, disperion (residual variance for \code{gaussian},
-and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
+If missing, the default statistic will either be the Shapiro-Wilk
+test statistic if the family is \code{gaussian} or else the deviance.
+User specified functions are allowed, and must take in the response
+variable, its expected value, and if applicable to the family,
+dispersion (residual variance for \code{gaussian} and \eqn{\phi}
+for \code{negbinom}, where \eqn{Var(y) = \mu + \mu^2/\phi}).
 If x is of class \code{mediate_b}, \code{statistic} should be
 a named list with names equal to "m" and "y" for the mediator
 and the outcome models respectively.}

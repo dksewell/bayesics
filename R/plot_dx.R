@@ -204,10 +204,10 @@ plot_dx.mediate_b = function(x,
   
   plot_list = list()
   
-  if(!is.null(statistic$m) && class(statistic$m) != "function")
+  if(!is.null(statistic$m) && !("function" %in% class(statistic$m)))
     stop("Is statistic for the mediator model is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
   
-  if(!is.null(statistic$y) && class(statistic$y) != "function")
+  if(!is.null(statistic$y) && !("function" %in% class(statistic$y)))
     stop("Is statistic for the outcome model is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
   
   if(is.null(statistic$m)){

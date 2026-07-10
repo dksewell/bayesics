@@ -4,7 +4,7 @@
 #' @importFrom extraDistr rinvgamma pinvgamma dinvgamma qinvgamma qlst plst dlst rlst rdirichlet pbbinom
 #' @importFrom future.apply future_sapply future_lapply
 #' @importFrom future plan multisession sequential
-#' @importFrom tibble tibble as_tibble print.tbl_df
+#' @importFrom tibble tibble as_tibble
 #' @importFrom mvtnorm dmvt rmvt dmvnorm rmvnorm
 #' @importFrom janitor clean_names
 #' @importFrom patchwork wrap_plots

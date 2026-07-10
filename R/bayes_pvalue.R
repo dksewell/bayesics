@@ -134,7 +134,7 @@ bayes_pvalue.lm_b = function(object,
     stop("Object should be a parametric fit in order to obtain posterior predicted values.")
   
   # statistic
-  if(!missing(statistic) && class(statistic) != "function")
+  if(!missing(statistic) && !("function" %in% class(statistic)))
     stop("Is statistic is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
   if(missing(statistic)){
     
@@ -339,7 +339,7 @@ bayes_pvalue.aov_b = function(object,
          call. = FALSE)
   
   # statistic
-  if(!missing(statistic) && class(statistic) != "function")
+  if(!missing(statistic) && !("function" %in% class(statistic)))
     stop("Is statistic is provided, it must be a function that takes in y, E(y), and if applicable a dispersion parameter, in that order.")
   if(missing(statistic)){
     statistic <- function(y, mu, dispersion = NULL) {

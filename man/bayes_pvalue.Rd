@@ -8,18 +8,20 @@
 \usage{
 bayes_pvalue(object, statistic, mc_error, seed, ...)
 
-\method{bayes_pvalue}{lm_b}(object, statistic = "deviance", mc_error = 0.005, seed = 1, ...)
+\method{bayes_pvalue}{lm_b}(object, statistic, mc_error = 0.005, seed = 1, ...)
 
-\method{bayes_pvalue}{aov_b}(object, statistic = "deviance", mc_error = 0.005, seed = 1, ...)
+\method{bayes_pvalue}{aov_b}(object, statistic, mc_error = 0.005, seed = 1, ...)
 }
 \arguments{
 \item{object}{object of class \code{lm_b} or \code{aov_b}}
 
 \item{statistic}{Statistic used to compute Bayesian p-value.
-Either "deviance", or else a function taking in data, expected value, and
-if applicable to the family, dispersion (residual variance for
-\code{gaussian} and \eqn{\phi} for \code{negbinom}, where
-\eqn{Var(y) = \mu + \mu^2/\phi}).}
+If missing, the default statistic will either be the Shapiro-Wilk
+test statistic if the family is \code{gaussian} or else the deviance.
+User specified functions are allowed, and must take in the response
+variable, its expected value, and if applicable to the family,
+dispersion (residual variance for \code{gaussian} and \eqn{\phi}
+for \code{negbinom}, where \eqn{Var(y) = \mu + \mu^2/\phi}).}
 
 \item{mc_error}{The number of posterior draws will ensure that with
 99\% probability the estimated Bayesian p-value will be within
