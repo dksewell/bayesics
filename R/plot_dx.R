@@ -5,9 +5,12 @@
 #' @param x object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, or
 #' \code{mediate_b}
 #' @param statistic, Statistic used to compute Bayesian p-value.
-#' Either "deviance", or else a function taking in data, expected value, and 
-#' if applicable to the family, disperion (residual variance for \code{gaussian},
-#' and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
+#' If missing, the default statistic will either be the Shapiro-Wilk 
+#' test statistic if the family is \code{gaussian} or else the deviance.  
+#' User specified functions are allowed, and must take in the response 
+#' variable, its expected value, and if applicable to the family, 
+#' dispersion (residual variance for \code{gaussian} and \eqn{\phi} 
+#' for \code{negbinom}, where \eqn{Var(y) = \mu + \mu^2/\phi}).
 #' If x is of class \code{mediate_b}, \code{statistic} should be 
 #' a named list with names equal to "m" and "y" for the mediator 
 #' and the outcome models respectively.

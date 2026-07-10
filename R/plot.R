@@ -7,12 +7,16 @@
 #' "cred band", and/or "pred band".  If plotting a 
 #' \code{mediate_b} object, the valid values for \code{type} 
 #' are "diagnostics" (or "dx"), "acme", or "ade".
-#' @param statistic, statistic_m, statistic_y Statistic used to compute 
-#' Bayesian p-value (\code{statistic_m} and \code{statistic_y} used for the 
-#' mediator and outcome model for a \code{mediate_b} object). 
-#' Either "deviance", or else a function taking in data, expected value, and 
-#' if applicable to the family, disperion (residual variance for \code{gaussian},
-#' and \eqn{\phi} for \code{negbinom} where \eqn{Var(y) = \mu + \mu^2/\phi}).
+#' @param statistic, Statistic used to compute Bayesian p-value.
+#' If missing, the default statistic will either be the Shapiro-Wilk 
+#' test statistic if the family is \code{gaussian} or else the deviance.  
+#' User specified functions are allowed, and must take in the response 
+#' variable, its expected value, and if applicable to the family, 
+#' dispersion (residual variance for \code{gaussian} and \eqn{\phi} 
+#' for \code{negbinom}, where \eqn{Var(y) = \mu + \mu^2/\phi}).
+#' If x is of class \code{mediate_b}, \code{statistic} should be 
+#' a named list with names equal to "m" and "y" for the mediator 
+#' and the outcome models respectively.
 #' @param mc_error The number of posterior draws will ensure that with 
 #' 99% probability the estimated Bayesian p-value will be within 
 #' \eqn{\pm} \code{mc_error} of the actual Bayesian p-value.
