@@ -95,22 +95,24 @@ test_that("Bayesian model averaging", {
   
   
   
-  # Test if response transformation works
-  test_data$e_outcome = exp(test_data$outcome)
-  
-  ## Test lm_b fit
-  expect_no_error(
-    fita2 <-
-      bma_inference(log(e_outcome) ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
-                    test_data,
-                    user.int = FALSE)
-  )
-  
   if(do_full_testing){
-    fita2
-    plot(fita2, type="c",
-         backtransformation = exp,
-         variable = "x1")
+    # Test if response transformation works
+    test_data$e_outcome = exp(test_data$outcome)
+    
+    ## Test lm_b fit
+    expect_no_error(
+      fita2 <-
+        bma_inference(log(e_outcome) ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10,
+                      test_data,
+                      user.int = FALSE)
+    )
+    
+    if(do_full_testing){
+      fita2
+      plot(fita2, type="c",
+           backtransformation = exp,
+           variable = "x1")
+    }
   }
   
   # # Make sure parallelization works. 

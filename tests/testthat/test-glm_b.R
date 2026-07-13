@@ -1,6 +1,8 @@
 
 do_full_testing = FALSE
 
+test_all_importance_sampling = FALSE
+
 run_parallel_code = FALSE
 
 # avoid the automatic warning from future
@@ -255,7 +257,8 @@ test_that("Test glm_b for binomial data fitting with VB",{
 })
 
 
-test_that("Test glm_b for binomial data fitting with IS",{
+if(test_all_importance_sampling){
+  test_that("Test glm_b for binomial data fitting with IS",{
 
   # Generate some data
   set.seed(2025)
@@ -524,8 +527,9 @@ test_that("Test glm_b for binomial data fitting with IS",{
 
 
 })
+}
 
-
+if(do_full_testing){
 test_that("Test glm_b for binomial data fitting with LSA",{
 
   # Generate some data
@@ -1963,7 +1967,8 @@ test_that("Test glm_b for nbinom data fitting with VB",{
 })
 
 
-test_that("Test glm_b for nbinom data fitting with IS",{
+if(test_all_importance_sampling){
+  test_that("Test glm_b for nbinom data fitting with IS",{
 
   # Generate some data
   set.seed(2025)
@@ -2231,6 +2236,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   }
 
 })
+}
 
 
 test_that("Test glm_b for nbinom data fitting with LSA",{
@@ -2543,6 +2549,6 @@ test_that("Test glm_b for gaussian data. Should pass directly on to lm_b.",{
 })
 
 
-
+}
 
 

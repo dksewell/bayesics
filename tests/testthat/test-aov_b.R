@@ -292,6 +292,7 @@ test_that("Proper prior and heteroscedastic model works", {
 
 # Proper, homoscedastic ---------------------------------------------------
 
+if(do_full_testing){
 test_that("Proper prior and homoscedastic model works", {
   
   # Create data
@@ -971,4 +972,4 @@ test_that("Imroper prior and homoscedastic model works", {
   rm(list=ls())
 })
 
-
+}

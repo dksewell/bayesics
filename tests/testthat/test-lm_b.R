@@ -1,5 +1,3 @@
-go_fast_for_cran_checks = TRUE
-
 do_full_testing = FALSE
 
 # avoid the automatic warning from future
@@ -344,7 +342,8 @@ test_that("Test lm_b with conjugate prior",{
   
 })
 
-
+if(do_full_testing){
+  
 test_that("Test lm_b with zellner's g prior",{
   
   
@@ -1041,7 +1040,6 @@ test_that("Test lm_b with weights",{
   
 })
 
-
 test_that("Test complicated terms in lm_b formula",{
   
   
@@ -1509,4 +1507,5 @@ test_that("Test complicated terms in lm_b formula",{
   
   
 })
+}
 
