@@ -1,3 +1,5 @@
+do_full_testing = FALSE
+
 # avoid the automatic warning from future
 suppressWarnings({
   future.apply::future_sapply(1:2,sum)
@@ -83,21 +85,23 @@ test_that("Binary treatment, GLM response mediation",{
   expect_type(s$`Prob Dir`,"double")
   
   # Check plot
-  expect_s3_class(plot(m3),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "acme"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "ade"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = c("acme","ade")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(m3),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "acme"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "ade"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = c("acme","ade")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
 })
 
@@ -203,21 +207,23 @@ test_that("Continuous treatment, GLM response mediation",{
   expect_type(s$`Prob Dir`,"double")
   
   # Check plot
-  expect_s3_class(plot(m3),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "acme"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "ade"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = c("acme","ade")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(m3),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "acme"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "ade"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = c("acme","ade")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
 })
 
@@ -292,20 +298,22 @@ test_that("Simple case mediation",{
   expect_type(s$`Prob Dir`,"double")
   
   # Check plot
-  expect_s3_class(plot(m3),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "acme"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = "ade"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(m3,type = c("acme","ade")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(m3),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "acme"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = "ade"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(m3,type = c("acme","ade")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
 })

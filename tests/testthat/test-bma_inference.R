@@ -1,5 +1,5 @@
 
-go_fast_for_cran_checks = TRUE
+do_full_testing = FALSE
 
 test_that("Bayesian model averaging", {
   
@@ -64,7 +64,7 @@ test_that("Bayesian model averaging", {
             predict(fita,PI_level = 0.9)$PI_lower[1])
   
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fita,
                          "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -106,7 +106,7 @@ test_that("Bayesian model averaging", {
                     user.int = FALSE)
   )
   
-  if(FALSE){
+  if(do_full_testing){
     fita2
     plot(fita2, type="c",
          backtransformation = exp,

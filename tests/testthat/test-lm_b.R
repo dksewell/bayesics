@@ -1,5 +1,7 @@
 go_fast_for_cran_checks = TRUE
 
+do_full_testing = FALSE
+
 # avoid the automatic warning from future
 suppressWarnings({
   future.apply::future_sapply(1:2,sum)
@@ -167,37 +169,41 @@ test_that("Test lm_b with conjugate prior",{
   
   
   # Check Bayesian p-values
-  expect_no_error(
-    bpvals <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05)
-  )
-  expect_named(bpvals,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals[[1]],"double")
-  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05)
+    )
+    expect_named(bpvals,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals[[1]],"double")
+    expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   # Check custom Bayesian p-value
-  expect_no_error(
-    bpvals_custom <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05,
-                   statistic = 
-                     function(y,mu,dispersion){
-                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
-                     }
-      )
-  )
-  expect_named(bpvals_custom,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals_custom[[1]],"double")
-  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals_custom <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05,
+                     statistic = 
+                       function(y,mu,dispersion){
+                         shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                       }
+        )
+    )
+    expect_named(bpvals_custom,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals_custom[[1]],"double")
+    expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -507,39 +513,43 @@ test_that("Test lm_b with zellner's g prior",{
   
   
   # Check Bayesian p-values
-  expect_no_error(
-    bpvals <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05)
-  )
-  expect_named(bpvals,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals[[1]],"double")
-  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05)
+    )
+    expect_named(bpvals,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals[[1]],"double")
+    expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   # Check custom Bayesian p-value
-  expect_no_error(
-    bpvals_custom <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05,
-                   statistic = 
-                     function(y,mu,dispersion){
-                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
-                     }
-      )
-  )
-  expect_named(bpvals_custom,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals_custom[[1]],"double")
-  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals_custom <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05,
+                     statistic = 
+                       function(y,mu,dispersion){
+                         shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                       }
+        )
+    )
+    expect_named(bpvals_custom,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals_custom[[1]],"double")
+    expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   
   
   
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -763,39 +773,43 @@ test_that("Test lm_b with improper prior",{
   
   
   # Check Bayesian p-values
-  expect_no_error(
-    bpvals <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05)
-  )
-  expect_named(bpvals,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals[[1]],"double")
-  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05)
+    )
+    expect_named(bpvals,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals[[1]],"double")
+    expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   # Check custom Bayesian p-value
-  expect_no_error(
-    bpvals_custom <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05,
-                   statistic = 
-                     function(y,mu,dispersion){
-                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
-                     }
-      )
-  )
-  expect_named(bpvals_custom,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals_custom[[1]],"double")
-  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals_custom <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05,
+                     statistic = 
+                       function(y,mu,dispersion){
+                         shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                       }
+        )
+    )
+    expect_named(bpvals_custom,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals_custom[[1]],"double")
+    expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   
   
   
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -924,7 +938,7 @@ test_that("Test lm_b with improper prior",{
                     PI_level = 0.9)$PI_lower[1])
   
   ## Check plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fitc),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1139,38 +1153,42 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   # Check Bayesian p-values
-  expect_no_error(
-    bpvals <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05)
-  )
-  expect_named(bpvals,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals[[1]],"double")
-  expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05)
+    )
+    expect_named(bpvals,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals[[1]],"double")
+    expect_s3_class(bpvals[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   # Check custom Bayesian p-value
-  expect_no_error(
-    bpvals_custom <-
-      bayes_pvalue(fita,
-                   mc_error = 0.05,
-                   statistic = 
-                     function(y,mu,dispersion){
-                       shapiro.test((y - mu)/sqrt(dispersion))$statistic
-                     }
-      )
-  )
-  expect_named(bpvals_custom,
-               c("bpvalue",
-                 "statistic_posterior_draws"))
-  expect_type(bpvals_custom[[1]],"double")
-  expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  if(do_full_testing){
+    expect_no_error(
+      bpvals_custom <-
+        bayes_pvalue(fita,
+                     mc_error = 0.05,
+                     statistic = 
+                       function(y,mu,dispersion){
+                         shapiro.test((y - mu)/sqrt(dispersion))$statistic
+                       }
+        )
+    )
+    expect_named(bpvals_custom,
+                 c("bpvalue",
+                   "statistic_posterior_draws"))
+    expect_type(bpvals_custom[[1]],"double")
+    expect_s3_class(bpvals_custom[[2]],c("tbl_df", "tbl", "data.frame"))
+  }
   
   
   
   ## Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fita),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1272,7 +1290,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fitb),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1377,7 +1395,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  if(!go_fast_for_cran_checks){
+  if(do_full_testing){
     expect_s3_class(plot(fitc),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))

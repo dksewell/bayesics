@@ -1,5 +1,7 @@
 
-go_fast_for_cran_checks = TRUE
+do_full_testing = FALSE
+
+run_parallel_code = FALSE
 
 # avoid the automatic warning from future
 suppressWarnings({
@@ -184,7 +186,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
 
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
@@ -239,7 +241,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -455,7 +457,7 @@ test_that("Test glm_b for binomial data fitting with IS",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -508,7 +510,7 @@ test_that("Test glm_b for binomial data fitting with IS",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -702,7 +704,7 @@ test_that("Test glm_b for binomial data fitting with LSA",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -755,7 +757,7 @@ test_that("Test glm_b for binomial data fitting with LSA",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -1090,7 +1092,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1159,7 +1161,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
@@ -1352,7 +1354,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1419,7 +1421,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   }
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
@@ -1615,7 +1617,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1682,7 +1684,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
@@ -1877,7 +1879,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1946,7 +1948,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -2148,7 +2150,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -2215,7 +2217,7 @@ test_that("Test glm_b for nbinom data fitting with IS",{
   }
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -2411,7 +2413,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
 
 
   # Test plot
-  if(!go_fast_for_cran_checks){
+  if(!do_full_testing){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -2478,7 +2480,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
 
 
   # Check parallelization
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,

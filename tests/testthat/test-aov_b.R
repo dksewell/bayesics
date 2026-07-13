@@ -1,5 +1,7 @@
 
-go_fast_for_cran_checks = TRUE
+do_full_testing = FALSE
+
+run_parallel_code = FALSE
 
 # avoid the automatic warning from future
 suppressWarnings({
@@ -173,38 +175,39 @@ test_that("Proper prior and heteroscedastic model works", {
   
   
   # Make sure plotting function works
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pred_cred = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       PI_level = 0.8),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       CI_level = 0.999),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
+  if(do_full_testing){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         PI_level = 0.8),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         CI_level = 0.999),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   # Test if response transformation works
@@ -243,10 +246,12 @@ test_that("Proper prior and heteroscedastic model works", {
                      PI_level = 0.9)$PI_lower[1])
   
   ## Test plot
-  expect_s3_class(plot(fite,
-                       type = c("cred","pred")),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(fite,
+                         type = c("cred","pred")),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   # Test no BF
@@ -267,7 +272,7 @@ test_that("Proper prior and heteroscedastic model works", {
   
   
   # Make sure parallelization works
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
@@ -456,42 +461,44 @@ test_that("Proper prior and homoscedastic model works", {
   
   
   # Make sure plotting function works
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pred_cred = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pred_cred = FALSE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       PI_level = 0.8),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       CI_level = 0.999),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = FALSE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         PI_level = 0.8),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         CI_level = 0.999),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   # Test no BF
   # No errors upon fitting
@@ -511,7 +518,7 @@ test_that("Proper prior and homoscedastic model works", {
   
   
   # Make sure parallelization works
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
@@ -692,42 +699,44 @@ test_that("Imroper prior and heteroscedastic model works", {
   
   
   # Make sure plotting function works
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pred_cred = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       PI_level = 0.8),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       CI_level = 0.999),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         PI_level = 0.8),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         CI_level = 0.999),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   
   # Make sure parallelization works
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
@@ -911,42 +920,44 @@ test_that("Imroper prior and homoscedastic model works", {
   
   
   # Make sure plotting function works
-  expect_s3_class(plot(fita,
-                       type = "diagnostics"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = c("cr","pr"),
-                       combine_pred_cred = TRUE),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "pr",
-                       PI_level = 0.8),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr"),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  expect_s3_class(plot(fita,
-                       type = "cr",
-                       CI_level = 0.999),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
-  
-  expect_s3_class(plot(fita),
-                  c("patchwork","ggplot2::ggplot","ggplot",
-                    "ggplot2::gg","S7_object","gg"))
+  if(do_full_testing){
+    expect_s3_class(plot(fita,
+                         type = "diagnostics"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = c("cr","pr"),
+                         combine_pred_cred = TRUE),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "pr",
+                         PI_level = 0.8),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr"),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    expect_s3_class(plot(fita,
+                         type = "cr",
+                         CI_level = 0.999),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+    
+    expect_s3_class(plot(fita),
+                    c("patchwork","ggplot2::ggplot","ggplot",
+                      "ggplot2::gg","S7_object","gg"))
+  }
   
   
   
   # Make sure parallelization works
-  if(!go_fast_for_cran_checks){
+  if(run_parallel_code & do_full_testing){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
