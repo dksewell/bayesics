@@ -46,7 +46,7 @@ print.aov_b = function(x, ...){
   cat("\n----------\n")
   cat(paste0("(Note: Lower and upper bounds are for the ",
              100 * x$CI_level,
-             "% credible interval.)"))
+             "% credible interval.)\n"))
 }
 
 #' @rdname print
@@ -78,7 +78,7 @@ print.lm_b = function(x, ...){
   cat("\n----------\n")
   cat(paste0("(Note: Lower and upper bounds are for the ",
              100 * x$CI_level,
-             "% credible interval.)"))
+             "% credible interval.)\n"))
 }
 
 
@@ -97,7 +97,7 @@ print.mediate_b = function(x, ...){
   cat("\n----------\n")
   cat(paste0("(Note: Lower and upper bounds are for the ",
                100 * x$CI_level,
-               "% credible interval.)"))
+               "% credible interval.)\n"))
 }
 
 
@@ -174,7 +174,7 @@ print.survfit_b = function(x, ...){
     
   }
   
-  cat("Note: The time-to-event data follows a piecewise exponential model.  Each interval follows an exponential distribution, whose rate has a posterior of Gamma(<Shape>,<Rate>).")
+  cat("Note: The time-to-event data follows a piecewise exponential model.  Each interval follows an exponential distribution, whose rate has a posterior of Gamma(<Shape>,<Rate>).\n")
 }
 
 
