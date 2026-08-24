@@ -1,6 +1,6 @@
 #' @rdname plot_bands
 #' 
-#' @title Plot credible and prediction bands
+#' @title Plot Credible and Prediction Bands
 #' 
 #' @param x object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}
 #' @param type character. Select "cred band", and/or "pred band".  

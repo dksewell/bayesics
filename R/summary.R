@@ -1,6 +1,6 @@
 #' @name summary
 #' 
-#' @title Summary functions for bayesics objects
+#' @title Summary Functions for bayesics Objects
 #' 
 #' @param object bayesics object
 #' @param CI_level Posterior probability covered by credible interval
