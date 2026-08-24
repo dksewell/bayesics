@@ -204,7 +204,7 @@ bayes_factors.lm_b = function(object,
                                          "Decisive"))) |> 
                     paste(ifelse(.data$`BF favoring alternative` > 1,
                                  "(in favor of keeping in the model)",
-                                 "(in favor of exluding from the model)")))
+                                 "(in favor of excluding from the model)")))
   results$bf_max = NULL
   
   return(results)
@@ -369,7 +369,7 @@ bayes_factors.glm_b = function(object,
                                          "Decisive"))) |> 
                     paste(ifelse(.data$`BF favoring alternative` > 1,
                                  "(in favor of keeping in the model)",
-                                 "(in favor of exluding from the model)")))
+                                 "(in favor of excluding from the model)")))
   results$bf_max = NULL
   
   return(results)
