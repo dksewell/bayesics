@@ -1,3 +1,10 @@
+# bayesics 3.0.1
+
+* Fixed remaining two titles to be in title case
+* "Removed `AIC.lm_b` and `BIC.lm_b`, as it is superfluous with the logLik.lm_b function.
+* Added additional text to `summary.lm_b` (matching that given by `print.lm_b`).
+
+
 # bayesics 3.0.0
 
 * Major restructuring of the S3 structure in bayesics.  

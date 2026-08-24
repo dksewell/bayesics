@@ -6,8 +6,6 @@
 \alias{AIC}
 \alias{BIC}
 \alias{WAIC}
-\alias{BIC.lm_b}
-\alias{AIC.lm_b}
 \alias{DIC.lm_b}
 \alias{DIC.aov_b}
 \alias{WAIC.lm_b}
@@ -16,10 +14,6 @@
 (Lower is Better.)}
 \usage{
 DIC(object, ...)
-
-\method{BIC}{lm_b}(object, ...)
-
-\method{AIC}{lm_b}(object, ...)
 
 \method{DIC}{lm_b}(object, seed = 1, mc_error = 0.5, ...)
 

@@ -4,7 +4,7 @@
 \alias{plot_bands}
 \alias{plot_bands.lm_b}
 \alias{plot_bands.aov_b}
-\title{Plot credible and prediction bands}
+\title{Plot Credible and Prediction Bands}
 \usage{
 plot_bands(
   x,
@@ -79,5 +79,5 @@ rather than a single plot produced by the patchwork package.}
 Used to fix other covariates while varying the variable of interest for the plot.}
 }
 \description{
-Plot credible and prediction bands
+Plot Credible and Prediction Bands
 }

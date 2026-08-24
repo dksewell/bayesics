@@ -5,7 +5,7 @@
 \alias{summary.lm_b}
 \alias{summary.aov_b}
 \alias{summary.mediate_b}
-\title{Summary functions for bayesics objects}
+\title{Summary Functions for bayesics Objects}
 \usage{
 \method{summary}{lm_b}(
   object,
@@ -37,7 +37,7 @@ then the results will be exponentiated.}
 tibble with summary values
 }
 \description{
-Summary functions for bayesics objects
+Summary Functions for bayesics Objects
 }
 \examples{
 \donttest{
