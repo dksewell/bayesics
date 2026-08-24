@@ -86,6 +86,8 @@ logLik.lm_b <- function(object, ...){
       )
   }
   
+  attr(val,"nall") = nrow(object$data)
+  
   attr(val,"nobs") = nrow(object$data)
   s = 
     capture.output(out <- summary(object,

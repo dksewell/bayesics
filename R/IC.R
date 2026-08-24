@@ -58,36 +58,6 @@ WAIC = function(object, ...){
   UseMethod("WAIC")
 }
 
-#' @rdname IC
-#' @exportS3Method BIC lm_b
-BIC.lm_b = function(object, ...){
-  
-  ll = logLik(object)
-  
-  ret = 
-    -2.0 * ll + 
-    log(nrow(object$data)) * attr(ll,"df")
-  
-  attributes(ret) = NULL
-  
-  ret
-}
-
-
-#' @rdname IC
-#' @exportS3Method AIC lm_b
-AIC.lm_b = function(object, ...){
-  
-  ll = logLik(object)
-  
-  ret = 
-    -2.0 * ll + 
-    2.0 * attr(ll,"df")
-  
-  attributes(ret) = NULL
-  
-  ret
-}
 
 
 #' @rdname IC
