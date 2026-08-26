@@ -1,4 +1,3 @@
-do_full_testing = FALSE
 
 # avoid the automatic warning from future
 suppressWarnings({
@@ -167,7 +166,7 @@ test_that("Test lm_b with conjugate prior",{
   
   
   # Check Bayesian p-values
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals <-
         bayes_pvalue(fita,
@@ -181,7 +180,7 @@ test_that("Test lm_b with conjugate prior",{
   }
   
   # Check custom Bayesian p-value
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals_custom <-
         bayes_pvalue(fita,
@@ -201,7 +200,7 @@ test_that("Test lm_b with conjugate prior",{
   
   
   # Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -342,7 +341,7 @@ test_that("Test lm_b with conjugate prior",{
   
 })
 
-if(do_full_testing){
+if(run_slow_tests()){
   
 test_that("Test lm_b with zellner's g prior",{
   
@@ -512,7 +511,7 @@ test_that("Test lm_b with zellner's g prior",{
   
   
   # Check Bayesian p-values
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals <-
         bayes_pvalue(fita,
@@ -526,7 +525,7 @@ test_that("Test lm_b with zellner's g prior",{
   }
   
   # Check custom Bayesian p-value
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals_custom <-
         bayes_pvalue(fita,
@@ -548,7 +547,7 @@ test_that("Test lm_b with zellner's g prior",{
   
   
   # Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -772,7 +771,7 @@ test_that("Test lm_b with improper prior",{
   
   
   # Check Bayesian p-values
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals <-
         bayes_pvalue(fita,
@@ -786,7 +785,7 @@ test_that("Test lm_b with improper prior",{
   }
   
   # Check custom Bayesian p-value
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals_custom <-
         bayes_pvalue(fita,
@@ -808,7 +807,7 @@ test_that("Test lm_b with improper prior",{
   
   
   # Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -937,7 +936,7 @@ test_that("Test lm_b with improper prior",{
                     PI_level = 0.9)$PI_lower[1])
   
   ## Check plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fitc),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1151,7 +1150,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   # Check Bayesian p-values
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals <-
         bayes_pvalue(fita,
@@ -1165,7 +1164,7 @@ test_that("Test complicated terms in lm_b formula",{
   }
   
   # Check custom Bayesian p-value
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_no_error(
       bpvals_custom <-
         bayes_pvalue(fita,
@@ -1186,7 +1185,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1288,7 +1287,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fitb),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -1393,7 +1392,7 @@ test_that("Test complicated terms in lm_b formula",{
   
   
   ## Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fitc),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))

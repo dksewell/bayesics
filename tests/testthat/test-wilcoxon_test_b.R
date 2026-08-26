@@ -1,10 +1,9 @@
 
-go_fast_for_cran_checks = TRUE
 
 test_that("Test Wilcoxon signed rank analysis",{
   
   # Test small sample
-  if(!go_fast_for_cran_checks){
+  if(run_slow_tests()){
     N = 15
     test_data_small = 
       data.frame(x = rbeta(N,2,10),
@@ -110,7 +109,7 @@ test_that("Test Wilcoxon signed rank analysis",{
 test_that("Test Wilcoxon rank sum analysis",{
   
   # Small samples
-  if(!go_fast_for_cran_checks){
+  if(run_slow_tests()){
     set.seed(2025)
     N = 15
     x = rbeta(N,2,10)

@@ -1,4 +1,3 @@
-do_full_testing = FALSE
 
 # avoid the automatic warning from future
 suppressWarnings({
@@ -85,7 +84,7 @@ test_that("Binary treatment, GLM response mediation",{
   expect_type(s$`Prob Dir`,"double")
   
   # Check plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(m3),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -207,7 +206,7 @@ test_that("Continuous treatment, GLM response mediation",{
   expect_type(s$`Prob Dir`,"double")
   
   # Check plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(m3),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -298,7 +297,7 @@ test_that("Simple case mediation",{
   expect_type(s$`Prob Dir`,"double")
   
   # Check plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(m3),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))

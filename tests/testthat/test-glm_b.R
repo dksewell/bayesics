@@ -1,10 +1,4 @@
 
-do_full_testing = FALSE
-
-test_all_importance_sampling = FALSE
-
-run_parallel_code = FALSE
-
 # avoid the automatic warning from future
 suppressWarnings({
   future.apply::future_sapply(1:2,sum)
@@ -188,7 +182,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
 
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
@@ -243,7 +237,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -257,7 +251,7 @@ test_that("Test glm_b for binomial data fitting with VB",{
 })
 
 
-if(test_all_importance_sampling){
+if(run_is_tests()){
   test_that("Test glm_b for binomial data fitting with IS",{
 
   # Generate some data
@@ -460,7 +454,7 @@ if(test_all_importance_sampling){
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -513,7 +507,7 @@ if(test_all_importance_sampling){
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -529,7 +523,7 @@ if(test_all_importance_sampling){
 })
 }
 
-if(do_full_testing){
+if(run_slow_tests()){
 test_that("Test glm_b for binomial data fitting with LSA",{
 
   # Generate some data
@@ -708,7 +702,7 @@ test_that("Test glm_b for binomial data fitting with LSA",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -761,7 +755,7 @@ test_that("Test glm_b for binomial data fitting with LSA",{
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -1096,7 +1090,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1165,7 +1159,7 @@ test_that("Test glm_b for poisson data fitting with VB",{
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
@@ -1358,7 +1352,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1425,7 +1419,7 @@ test_that("Test glm_b for poisson data fitting with IS",{
   }
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
@@ -1621,7 +1615,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1688,7 +1682,7 @@ test_that("Test glm_b for poisson data fitting with LSA",{
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3 + offset(log(time)),
@@ -1883,7 +1877,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -1952,7 +1946,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -1967,7 +1961,7 @@ test_that("Test glm_b for nbinom data fitting with VB",{
 })
 
 
-if(test_all_importance_sampling){
+if(run_is_tests()){
   test_that("Test glm_b for nbinom data fitting with IS",{
 
   # Generate some data
@@ -2155,7 +2149,7 @@ if(test_all_importance_sampling){
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -2222,7 +2216,7 @@ if(test_all_importance_sampling){
   }
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,
@@ -2419,7 +2413,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
 
 
   # Test plot
-  if(!do_full_testing){
+  if(!run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -2486,7 +2480,7 @@ test_that("Test glm_b for nbinom data fitting with LSA",{
 
 
   # Check parallelization
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       glm_b(outcome ~ x1 + x2 + x3,

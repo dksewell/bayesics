@@ -1,7 +1,4 @@
 
-do_full_testing = FALSE
-
-run_parallel_code = FALSE
 
 # avoid the automatic warning from future
 suppressWarnings({
@@ -175,7 +172,7 @@ test_that("Proper prior and heteroscedastic model works", {
   
   
   # Make sure plotting function works
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -246,7 +243,7 @@ test_that("Proper prior and heteroscedastic model works", {
                      PI_level = 0.9)$PI_lower[1])
   
   ## Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fite,
                          type = c("cred","pred")),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -272,7 +269,7 @@ test_that("Proper prior and heteroscedastic model works", {
   
   
   # Make sure parallelization works
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
@@ -292,7 +289,7 @@ test_that("Proper prior and heteroscedastic model works", {
 
 # Proper, homoscedastic ---------------------------------------------------
 
-if(do_full_testing){
+if(run_slow_tests()){
 test_that("Proper prior and homoscedastic model works", {
   
   # Create data
@@ -462,7 +459,7 @@ test_that("Proper prior and homoscedastic model works", {
   
   
   # Make sure plotting function works
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -519,7 +516,7 @@ test_that("Proper prior and homoscedastic model works", {
   
   
   # Make sure parallelization works
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
@@ -700,7 +697,7 @@ test_that("Imroper prior and heteroscedastic model works", {
   
   
   # Make sure plotting function works
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -737,7 +734,7 @@ test_that("Imroper prior and heteroscedastic model works", {
   
   
   # Make sure parallelization works
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,
@@ -921,7 +918,7 @@ test_that("Imroper prior and homoscedastic model works", {
   
   
   # Make sure plotting function works
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          type = "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -958,7 +955,7 @@ test_that("Imroper prior and homoscedastic model works", {
   
   
   # Make sure parallelization works
-  if(run_parallel_code & do_full_testing){
+  if(run_parallel_tests() & run_slow_tests()){
     plan(multisession,workers = 5)
     expect_no_error(
       aov_b(outcome ~ x1,

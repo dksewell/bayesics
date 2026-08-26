@@ -107,25 +107,27 @@ summary.lm_b = function(object,
   
   
   # Print analysis high level info
-  if("lm_b_fits" %in% names(object)){
-    header = 
-      "\n----------\n\nBayesian model averaging for linear regression models\n"
-  }else{
-    header = 
-      paste0("\n----------\n\n",
-             ifelse(object$family$family == "gaussian",
-                    "Linear ",
-                    "Generalized linear ")
-      ) |> 
-      paste0("regression fit using Bayesian techniques",
-             ifelse(object$model_type == "nonparametric",
-                    " (non-parametric)",""),
-             "\n")
+  if(print_results){
+    if("lm_b_fits" %in% names(object)){
+      header = 
+        "\n----------\n\nBayesian model averaging for linear regression models\n"
+    }else{
+      header = 
+        paste0("\n----------\n\n",
+               ifelse(object$family$family == "gaussian",
+                      "Linear ",
+                      "Generalized linear ")
+        ) |> 
+        paste0("regression fit using Bayesian techniques",
+               ifelse(object$model_type == "nonparametric",
+                      " (non-parametric)",""),
+               "\n")
+    }
+    cat(header)
+    cat("\n----------\n\n")
+    print(object$formula)
+    cat("\n----------\n\n")
   }
-  cat(header)
-  cat("\n----------\n\n")
-  print(object$formula)
-  cat("\n----------\n\n")
   
   
   # Print if scale is transformed
@@ -203,10 +205,12 @@ summary.lm_b = function(object,
   if(print_results) print(summ)
   
   # Print CI level
-  cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-             100 * CI_level,
-             "% credible interval.)\n"))
+  if(print_results){
+    cat("\n----------\n")
+    cat(paste0("(Note: Lower and upper bounds are for the ",
+               100 * CI_level,
+               "% credible interval.)\n"))
+  }
   
   invisible(summ)
 }

@@ -1,10 +1,4 @@
 
-go_fast_for_cran_checks = TRUE
-
-do_full_testing = FALSE
-
-go_fast_for_cran_checks = TRUE
-
 # avoid the automatic warning from future
 suppressWarnings({
   future.apply::future_sapply(1:2,sum)
@@ -15,7 +9,7 @@ suppressWarnings({
 # Binomial ----------------------------------------------------------------
 
 
-if(do_full_testing){
+if(run_slow_tests()){
   test_that("Test np_glm_b for binomial data fitting with bootstrapping",{
   
     # Generate some data
@@ -96,7 +90,7 @@ if(do_full_testing){
   
   
     # Test number of inputs
-    if(!go_fast_for_cran_checks){
+    if(run_slow_tests()){
       expect_no_error(
         np_glm_b(test_data$outcome ~ test_data$x1,
               family = binomial(),
@@ -351,7 +345,7 @@ test_that("Test np_glm_b for binomial data with >1 trials",{
 # Poisson -----------------------------------------------------------------
 
 
-if(do_full_testing){
+if(run_slow_tests()){
   test_that("Test np_glm_b for poisson data fitting with bootstrapping",{
 
   # Generate some data
@@ -432,7 +426,7 @@ if(do_full_testing){
 
 
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
+  if(run_slow_tests()){
     
     expect_no_error(
       np_glm_b(test_data$outcome ~ test_data$x1,
@@ -633,7 +627,7 @@ test_that("Test np_glm_b for poisson data fitting with LSA",{
 # Negative Binomial -------------------------------------------------------
 
 
-if(do_full_testing){
+if(run_slow_tests()){
   test_that("Test np_glm_b for negative binomial data fitting with bootstrapping",{
 
   # Generate some data
@@ -713,7 +707,7 @@ if(do_full_testing){
 
 
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
+  if(run_slow_tests()){
     
     expect_no_error(
       np_glm_b(test_data$outcome ~ test_data$x1,
@@ -917,7 +911,7 @@ test_that("Test np_glm_b for negative binomial data fitting with LSA",{
 # Gaussian ----------------------------------------------------------------
 
 
-if(do_full_testing){
+if(run_slow_tests()){
   test_that("Test np_glm_b for gaussian data fitting with bootstrapping",{
 
   # Generate some data
@@ -994,7 +988,7 @@ if(do_full_testing){
 
 
   # Test number of inputs
-  if(!go_fast_for_cran_checks){
+  if(run_slow_tests()){
     
     expect_no_error(
       np_glm_b(test_data$outcome ~ test_data$x1,

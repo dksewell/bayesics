@@ -1,6 +1,4 @@
 
-do_full_testing = FALSE
-
 test_that("Bayesian model averaging", {
   
   # Create data
@@ -64,7 +62,7 @@ test_that("Bayesian model averaging", {
             predict(fita,PI_level = 0.9)$PI_lower[1])
   
   # Test plot
-  if(do_full_testing){
+  if(run_slow_tests()){
     expect_s3_class(plot(fita,
                          "diagnostics"),
                     c("patchwork","ggplot2::ggplot","ggplot",
@@ -95,7 +93,7 @@ test_that("Bayesian model averaging", {
   
   
   
-  if(do_full_testing){
+  if(run_slow_tests()){
     # Test if response transformation works
     test_data$e_outcome = exp(test_data$outcome)
     
@@ -107,7 +105,7 @@ test_that("Bayesian model averaging", {
                       user.int = FALSE)
     )
     
-    if(do_full_testing){
+    if(run_slow_tests()){
       fita2
       plot(fita2, type="c",
            backtransformation = exp,
