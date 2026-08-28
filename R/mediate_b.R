@@ -248,10 +248,10 @@ mediate_b = function(model_m,
       
       mediator_draws = 
         get_posterior_draws(model_m,
-                            n_draws = n_draws)
+                            n_draws = n_more_draws)
       outcome_draws = 
         get_posterior_draws(model_y,
-                            n_draws = n_draws)
+                            n_draws = n_more_draws)
       next_draws = 
         tibble::tibble(
           ACME = 
@@ -330,7 +330,7 @@ mediate_b = function(model_m,
     }
     if(("glm_b" %in% class(model_y)) && (model_y$algorithm == "IS")){
       suppressMessages({
-        model_m <- 
+        model_y <- 
           glm_b(formula = model_y$formula,
                 data = model_y$data,
                 family = model_y$family,
@@ -512,7 +512,7 @@ mediate_b = function(model_m,
         c(seq(1,n_more_draws,by = batch_size),n_more_draws + 1) |> 
         diff() |> 
         pmax(2)
-      results$posterior_draws = 
+      additional_draws = 
         do.call(dplyr::bind_rows,
                 future.apply::future_lapply(1:length(batch_size_vector),
                                             function(b){
@@ -522,6 +522,13 @@ mediate_b = function(model_m,
                                             future.seed = seed + 1)
         ) |> 
         na.omit()
+      
+      results$posterior_draws =
+        dplyr::bind_rows(
+          prelim_draws,
+          additional_draws
+        )
+      
     }else{
       results$message = 
         paste0(n_draws + n_more_draws,

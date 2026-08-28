@@ -1,3 +1,9 @@
+# bayesics 3.0.2
+
+* Caught bug in mediate_b.  Wasn't combining final posterior draws with preliminary posterior draws.
+
+
+
 # bayesics 3.0.1
 
 * Fixed remaining two titles to be in title case
