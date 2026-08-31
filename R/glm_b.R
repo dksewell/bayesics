@@ -48,7 +48,11 @@
 #'  \code{algorithm = LSA}. 
 #' @param mc_error If importance sampling is used, the number of posterior 
 #' draws will ensure that with 99% probability the bounds of the credible 
-#' intervals will be within \eqn{\pm} \code{mc_error}.
+#' intervals will be within \eqn{\pm} \code{mc_error}. 
+#' NOTE: Cross-platform reproducibility may not be 
+#' guaranteed due to numerical differences in stats::density() between 
+#' operating systems, leading to slightly different numbers of posterior 
+#' samples obtained.
 #' @param save_memory logical.  If TRUE, a more memory efficient approach 
 #' will be taken at the expense of computataional time (for important 
 #' sampling only.  But if memory is an issue, it's probably because you have a 

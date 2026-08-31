@@ -59,7 +59,10 @@
 #' @param mc_error The number of posterior draws will ensure that with 99% 
 #' probability the bounds of the credible intervals will be within \eqn{\pm} 
 #' \code{mc_error}\eqn{\times 4s_y}, that is, within 100\code{mc_error}% of the 
-#' trimmed range of y.
+#' trimmed range of y. NOTE: Cross-platform reproducibility may not be 
+#' guaranteed due to numerical differences in stats::density() between 
+#' operating systems, leading to slightly different numbers of posterior 
+#' samples obtained.
 #' @param compute_bayes_factor logical.  Computing the BF can be done 
 #'  analytically, but it requires an nxn matrix.  If this will require more 
 #'  than 1GB of memory, compute_bayes_factor will automatically be set to 

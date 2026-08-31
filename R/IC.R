@@ -14,7 +14,11 @@
 #' within \eqn{\pm}\code{mc_error}.  For WAIC, this is based on 
 #' extrapolating the standard error from the preliminary 
 #' posterior samples and may be inaccurate (at least 2000 samples 
-#' will be used in final calculation).
+#' will be used in final calculation). 
+#' NOTE: Cross-platform reproducibility may not be 
+#' guaranteed due to numerical differences in stats::density() between 
+#' operating systems, leading to slightly different numbers of posterior 
+#' samples obtained.
 #' @param ... Passed to methods.
 #' 
 #' @returns Numeric (or in the case of DIC, a numeric vector)

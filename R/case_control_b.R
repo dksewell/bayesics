@@ -45,7 +45,11 @@
 #' credible interval.
 #' @param seed integer.  Always set your seed!!! (ignored if \code{large_sample_approx = TRUE}.)
 #' @param mc_error The relative monte carlo error of the quantiles of the CIs. 
-#' (ignored if \code{large_sample_approx = TRUE}.)
+#' (ignored if \code{large_sample_approx = TRUE}.) 
+#' NOTE: Cross-platform reproducibility may not be 
+#' guaranteed due to numerical differences in stats::density() between 
+#' operating systems, leading to slightly different numbers of posterior 
+#' samples obtained.
 #' 
 #' 
 #' @returns An object of class \code{\link{b_procedure-class}}.

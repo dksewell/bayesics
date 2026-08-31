@@ -17,7 +17,11 @@
 #' @param mc_error This is the error in probability from the posterior CDF 
 #' evaluated at the ROPE bounds. Note that if it is estimated that these
 #' probabilities are between 0.11 and 0.89, the more relaxed value of 0.01 is 
-#' used.
+#' used. 
+#' NOTE: Cross-platform reproducibility may not be 
+#' guaranteed due to numerical differences in stats::density() between 
+#' operating systems, leading to slightly different numbers of posterior 
+#' samples obtained.
 #' 
 #' @details
 #' For a 2-way contingency table with R rows and C columns, evaluate 

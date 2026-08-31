@@ -62,7 +62,11 @@ and the outcome models respectively.}
 
 \item{mc_error}{The number of posterior draws will ensure that with
 99\% probability the estimated Bayesian p-value will be within
-\eqn{\pm} \code{mc_error} of the actual Bayesian p-value.}
+\eqn{\pm} \code{mc_error} of the actual Bayesian p-value.
+NOTE: Cross-platform reproducibility may not be
+guaranteed due to numerical differences in stats::density() between
+operating systems, leading to slightly different numbers of posterior
+samples obtained.}
 
 \item{seed}{integer.}
 

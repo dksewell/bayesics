@@ -68,7 +68,11 @@ If missing, defaults go to those suggested by Kruchke (2018).}
 
 \item{mc_error}{If large sample approximation is not used, the number of
 posterior draws will ensure that with 99\% probability the bounds of the
-credible intervals will be within \eqn{\pm} \code{mc_error}.}
+credible intervals will be within \eqn{\pm} \code{mc_error}.
+NOTE: Cross-platform reproducibility may not be
+guaranteed due to numerical differences in stats::density() between
+operating systems, leading to slightly different numbers of posterior
+samples obtained.}
 }
 \value{
 Object of class \code{np_glm_b} and \code{\link[=lm_b-class]{lm_b}}.

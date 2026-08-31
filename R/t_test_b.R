@@ -30,7 +30,11 @@
 #' @param mc_error The number of posterior draws will ensure that with 99% 
 #' probability the bounds of the credible intervals will be within \eqn{\pm} 
 #' \code{mc_error}\eqn{\times 4s_y}, that is, within 100\code{mc_error}% of the 
-#' trimmed range of y. (Ignored for single population inference.)
+#' trimmed range of y. (Ignored for single population inference.) 
+#' NOTE: Cross-platform reproducibility may not be 
+#' guaranteed due to numerical differences in stats::density() between 
+#' operating systems, leading to slightly different numbers of posterior 
+#' samples obtained.
 #' @param improper logical.  Should we use an improper prior that is proportional 
 #' to the inverse of the variance?
 #' @param seed integer.  Always set your seed!!!
