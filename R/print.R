@@ -46,11 +46,8 @@ print.aov_b = function(x, ...){
     
     cat("\n\n----------\n\n")
   }
-  print(x$summary,...)
+  print(coef(x),...)
   cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-             100 * x$CI_level,
-             "% credible interval.)\n"))
 }
 
 #' @rdname print
@@ -78,11 +75,8 @@ print.lm_b = function(x, ...){
   cat("\n----------\n\n")
   print(x$formula)
   cat("\n----------\n\n")
-  print(x$summary,...)
+  print(coef(x),...)
   cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-             100 * x$CI_level,
-             "% credible interval.)\n"))
 }
 
 
@@ -97,11 +91,13 @@ print.mediate_b = function(x, ...){
   cat("\nOutcome model:\n")
   print(x$model_y$formula)
   cat("\n----------\n\n")
-  print(x$summary,...)
+  print_object = 
+    x$summary$Estimate
+  names(print_object) = 
+    x$summary$Estimand
+  
+  print(print_object,...)
   cat("\n----------\n")
-  cat(paste0("(Note: Lower and upper bounds are for the ",
-               100 * x$CI_level,
-               "% credible interval.)\n"))
 }
 
 
