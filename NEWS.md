@@ -1,3 +1,10 @@
+# bayesics 3.1.0
+
+* Added `summary.b_procedure`.  Slightly simplified `print.b_procedure`.
+* Fixed missing documentation for formula in `cor_test_b.formula`.
+* Added `summary.survfit_b`.  Simplified `print.survfit_b`.
+
+
 # bayesics 3.0.3
 
 * Added text to documentation regarding cross-platform reproducibility issues due to `stats::density`

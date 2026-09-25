@@ -2,14 +2,16 @@
 #' 
 #' @title Summary Functions for bayesics Objects
 #' 
-#' @param object bayesics object
-#' @param CI_level Posterior probability covered by credible interval
+#' @param object \code{bayesics} object
+#' @param CI_level Posterior probability covered by credible interval.  
+#' Unused for \code{b_procedure} objects.
 #' @param interpretable_scale If a GLM is fit using 
 #' \code{binomial(link="logit")}, \code{poisson(link="log")}, or 
 #' \code{negbinom()}, and if \code{interpretable_scale = TRUE} 
 #' then the results will be exponentiated.
 #' @param print_results logical
-#' @param ... optional arguments.
+#' @param ... optional arguments.  for \code{print.survfit_b}, 
+#' this goes into `tibble::print.tbl_df`.
 #' 
 #' @returns tibble with summary values
 #' 
@@ -414,3 +416,355 @@ summary.mediate_b = function(object,
   if(print_results) print(summ)
   invisible(summ)
 }
+
+
+
+
+#' @rdname summary
+#' @method summary b_procedure
+#' @export
+summary.b_procedure = function(object,
+                               ...){
+  cat(paste0("\n----------\n\n",
+             object$name,
+             " using Bayesian techniques\n\n----------\n\n"))
+  
+  # Data
+  if(object$print_data){
+    cat("Data: \n")
+    print(object$data)
+    cat("\n")
+  }
+  
+  
+  # Prior
+  if(is.list(object$prior)){
+    
+    cat("\n\n")
+    cat(object$prior$description)
+    cat("\n")
+    format(signif(object$prior$prior, 3), 
+           scientific = FALSE) |> 
+      noquote() |> 
+      print()
+    
+  }else{
+    
+    cat(object$prior)
+    
+  }
+  
+  
+  # Results
+  ## Estimate, CI, ROPE, pdir
+  if(isTRUE(object$display_as_matrices)){ # This is for chisq_test_b
+    
+    ## Get row and column numbers
+    results = 
+      object$results |> 
+      mutate(row = 
+               as.integer(stringr::str_extract(.data$Quantity, "(?<=Row )\\d+")),
+             col = 
+               as.integer(stringr::str_extract(.data$Quantity, "(?<=Col )\\d+"))
+      )
+    nR = max(results$row)
+    nC = max(results$col)
+    
+    ## Get the type of probability being modeled
+    prob_type = 
+      dplyr::case_when(
+        is.null(object$sampling_design) ~ "",
+        object$sampling_design == "multinomial" ~ "P_(row,col)",
+        object$sampling_design == "fixed columns" ~ "P_(row|col)",
+        object$sampling_design == "multinomial" ~ "P(col|row)"
+      )
+    
+    ## Print posterior mean
+    cat(paste0(
+      "\n\nEstimated probabilities ",
+      prob_type,
+      ":\n"))
+    x_matrix = 
+      matrix(0.0,nR,nC,
+             dimnames = dimnames(object$data))
+    x_matrix[cbind(results$row,
+                   results$col)] = 
+      results$`Post Mean`
+    x_matrix |> 
+      signif(3) |> 
+      format(scientific = FALSE) |> 
+      noquote() |> 
+      print()
+    
+    
+    ## Print CIs
+    cat(paste0("\n\n",
+               100 * object$CI_level, "% credible intervals: \n"))
+    
+    ci_lower = ci_upper = x_matrix
+    ci_lower[cbind(results$row,
+                   results$col)] = 
+      results$Lower
+    ci_upper[cbind(results$row,
+                   results$col)] = 
+      results$Upper
+    credints = matrix("",nR,nC,
+                      dimnames = dimnames(object$data))
+    for(i in 1:nR){
+      for(j in 1:nC){
+        credints[i, j] = paste0("(", format(signif(ci_lower[i,j], 3),
+                                            scientific = FALSE),
+                                ", ",
+                                format(signif(ci_upper[i,j], 3),
+                                       scientific = FALSE),
+                                ")")
+      }
+    }
+    credints |> 
+      noquote() |> 
+      print()
+    
+    
+    ## Print ROPE
+    if(!is.null(object$ROPE)){
+      cat(
+        paste0("\n\n",
+               object$ROPE$description,
+               " is in the ROPE (i.e., between ",
+               format(signif(object$ROPE$ROPE_lower_bound, 3), 
+                      scientific = FALSE),
+               " and ",
+               format(signif(object$ROPE$ROPE_upper_bound, 3), 
+                      scientific = FALSE),
+               "): \n")
+      )
+      
+      x_matrix[cbind(results$row,
+                     results$col)] = 
+        results$Pr_in_ROPE
+      x_matrix |> 
+        signif(3) |> 
+        format(scientific = FALSE) |> 
+        noquote() |> 
+        print()
+      
+    }
+    
+    
+    ## Print pdir
+    if(!is.null(object$pdir)){
+      cat(paste0("\n\n",
+                 object$pdir$description,
+                 ": \n"))
+      x_matrix[cbind(results$row,
+                     results$col)] = 
+        object$pdir$pdir
+      x_matrix |> 
+        signif(3) |> 
+        format(scientific = FALSE) |> 
+        noquote() |> 
+        print()
+    }
+    
+    
+  }else{ #End: if(isTRUE(object$display_as_matrices))
+    
+    cat("\n\nPosterior Results:\n")
+    
+    for(j in 1:nrow(object$results)){
+      cat(paste0("\n---",
+                 object$results$Quantity[j],
+                 "\n"))
+      cat(
+        paste0("      Estimate: ",
+               format(signif(object$results$`Post Mean`[j], 3), 
+                      scientific = FALSE),
+               "\n      ",
+               object$CI_level*100,
+               "% CI: (",
+               format(signif(object$results$Lower[j], 3), 
+                      scientific = FALSE),
+               ",",
+               format(signif(object$results$Upper[j], 3), 
+                      scientific = FALSE),
+               ")")
+      )
+      if( ("ROPE_lower_bound" %in% colnames(object$results)) &&
+          (!is.na(object$results$Pr_in_ROPE[j])) ){
+        cat(
+          paste0("\n      Probability that ",
+                 tolower(object$results$Quantity[j]),
+                 " is between ",
+                 format(signif(object$results$ROPE_lower_bound[j], 3), 
+                        scientific = FALSE),
+                 " and ",
+                 format(signif(object$results$ROPE_upper_bound[j], 3), 
+                        scientific = FALSE),
+                 ": ",
+                 format(signif(object$results$Pr_in_ROPE[j], 3), 
+                        scientific = FALSE))
+        )
+      }
+    }
+    
+    ## PDir
+    if(!is.null(object$pdir)){
+      cat(paste0("\n\n",
+                 object$pdir$description,
+                 ": ",
+                 format(signif(object$pdir$pdir, 3),
+                        scientific = FALSE)))
+    }
+    
+  }#End: if(!isTRUE(object$display_as_matrices))
+  
+  
+  ## Overall ROPE (see chisq_test)
+  if(!is.null(object$overall_ROPE)){
+    cat(paste0("\n\n",
+               object$overall_ROPE$description,
+               ": ",
+               format(signif(object$overall_ROPE$Pr_in_ROPE, 3), 
+                      scientific = FALSE)))
+  }
+  
+  
+  ## Bayes factor
+  if(!is.null(object$BF)){
+    cat(paste0("\n\n",
+               object$BF$description,
+               ": ",
+               format(signif(object$BF$BF, 3), 
+                      scientific = FALSE),
+               "\n    =>Level of evidence: ",
+               object$BF$interpretation))
+  }
+  
+  
+  
+  cat("\n\n----------\n\n")
+  
+  if(!is.null(object$notes)){
+    for(j in 1:length(object$notes)){
+      message(paste0(paste(rep("*",j),collapse=""),
+                     "Note: ",
+                     object$notes[j]))
+    }
+  }
+  
+  invisible(object)
+}
+
+
+
+
+
+#' @rdname summary
+#' @method summary survfit_b
+#' @export
+summary.survfit_b = function(object, ...){
+  cat("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques\n")
+  cat("\n----------\n\n")
+  
+  if(object$single_group_analysis){
+    
+    cat(paste0("Number of intervals: ",
+               nrow(object$intervals),
+               "\nSurvival curve fitted up to: ",
+               max(object$intervals),
+               "\n\n"))
+    
+    summary_object = 
+      tibble::tibble(Interval = 
+                       object$intervals |> 
+                       apply(1,function(x) paste0("(",
+                                                  format(signif(x[1], 3)),
+                                                  ",",
+                                                  format(signif(x[2], 3)),
+                                                  ")")),
+                     `Estimated rate` = 
+                       object$posterior_parameters[,1] / 
+                       object$posterior_parameters[,2],
+                     `2.5%` = 
+                       qgamma(0.025,
+                              object$posterior_parameters[,1],
+                              object$posterior_parameters[,2]),
+                     `97.5%` =
+                       qgamma(0.975,
+                              object$posterior_parameters[,1],
+                              object$posterior_parameters[,2]),
+                     Shape = 
+                       format(signif(object$posterior_parameters[,1], 3)),
+                     Rate = 
+                       format(signif(object$posterior_parameters[,2], 3))
+      )
+    
+    print(summary_object, ...)
+    
+  }else{
+    
+    cat(paste0("\nNumber of intervals: ",
+               nrow(object[[1]]$intervals),
+               "\n\nSurvival curve fitted up to: ",
+               max(object[[1]]$intervals),
+               "\n\n"))
+    
+    
+    for(g in object$group_names){
+      cat(g)
+      cat("\n\n")
+      
+      temp = 
+        tibble::tibble(Interval = 
+                         object[[g]]$intervals |> 
+                         apply(1,function(x) paste0("(",
+                                                    format(signif(x[1], 3)),
+                                                    ",",
+                                                    format(signif(x[2], 3)),
+                                                    ")")),
+                       `Estimated rate` = 
+                         object[[g]]$posterior_parameters[,1] / 
+                         object[[g]]$posterior_parameters[,2],
+                       `2.5%` = 
+                         qgamma(0.025,
+                                object[[g]]$posterior_parameters[,1],
+                                object[[g]]$posterior_parameters[,2]),
+                       `97.5%` =
+                         qgamma(0.975,
+                                object[[g]]$posterior_parameters[,1],
+                                object[[g]]$posterior_parameters[,2]),
+                       Shape = 
+                         format(signif(object[[g]]$posterior_parameters[,1], 3)),
+                       Rate = 
+                         format(signif(object[[g]]$posterior_parameters[,2], 3))
+        )
+      
+      print(temp, ...)
+      
+      if(g == object$group_names[1]){
+        summary_object = 
+          temp |> 
+          dplyr::mutate(Group = g)
+      }else{
+        summary_object = 
+          bind_rows(
+            summary_object,
+            temp |> 
+              dplyr::mutate(Group = g)
+          )
+      }
+      summary_object = 
+        summary_object |> 
+        dplyr::relocate(Group)
+      
+      cat("\n----------\n\n")
+      
+    }
+    
+  }
+  
+  cat("Note: The time-to-event data follow a piecewise exponential model.  Each interval follows an exponential distribution, whose rate has a posterior of Gamma(<Shape>,<Rate>).\n")
+  
+  invisible(summary_object)
+}
+

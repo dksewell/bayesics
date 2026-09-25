@@ -163,7 +163,7 @@ independence_b = function(x,
         prior_shapes = rep(prior_shapes,nR * nC)
     }
     results$prior = 
-      list(description = "Dirichlet with shape parameters = ",
+      list(description = "Prior on cell probabilities is: Dirichlet with shape parameters = ",
            prior = matrix(prior_shapes,
                           nR,nC,
                           dimnames = dimnames(x)))
@@ -441,7 +441,7 @@ independence_b = function(x,
         prior_shapes = matrix(prior_shapes,nR, nC)
     }
     results$prior = 
-      list(description = "Dirichlet prior with shape parameters = ",
+      list(description = "Prior on cell probabilities is: Dirichlet prior with shape parameters = ",
            prior = matrix(prior_shapes,
                           nR,nC,
                           dimnames = dimnames(x)))

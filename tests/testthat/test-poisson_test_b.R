@@ -8,6 +8,7 @@ test_that("Test poisson_test_b for a single population",{
       poisson_test_b(x = 12)
   )
   expect_no_error(fita)
+  expect_no_error(summary(fita))
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -19,6 +20,7 @@ test_that("Test poisson_test_b for a single population",{
                      offset = 2)
   )
   expect_no_error(fitb)
+  expect_no_error(summary(fitb))
   expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -31,6 +33,7 @@ test_that("Test poisson_test_b for a single population",{
                      r = 10)
   )
   expect_no_error(fitc)
+  expect_no_error(summary(fitc))
   expect_s3_class(plot(fitc),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -62,6 +65,7 @@ test_that("Test poisson_test_b for two populations",{
       poisson_test_b(x = c(12,20))
   )
   expect_no_error(fita)
+  expect_no_error(summary(fita))
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -74,6 +78,7 @@ test_that("Test poisson_test_b for two populations",{
                      offset = c(10,9))
   )
   expect_no_error(fitb)
+  expect_no_error(summary(fitb))
   expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -87,6 +92,7 @@ test_that("Test poisson_test_b for two populations",{
   )
   expect_equal(fitb$results,
                fitc$results)
+  expect_no_error(summary(fitc))
   
   # With different prior
   expect_no_error(
@@ -102,4 +108,3 @@ test_that("Test poisson_test_b for two populations",{
   
   
 })
-

@@ -18,6 +18,7 @@ test_that("Test independence analysis for 2-way tables",{
     fit <- independence_b(round(N * dep_probs))
   )
   expect_no_error(fit)
+  expect_no_error(summary(fit))
   expect_warning(plot(fit))
   
   expect_no_error(

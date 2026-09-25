@@ -15,6 +15,7 @@ test_that("Test Wilcoxon signed rank analysis",{
         wilcoxon_test_b(test_data_small$x - test_data_small$y)
     )
     expect_no_error(fita)
+    expect_no_error(summary(fita))
     expect_s3_class(plot(fita),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -25,6 +26,7 @@ test_that("Test Wilcoxon signed rank analysis",{
                         paired = TRUE)
     )
     expect_no_error(fitb)
+    expect_no_error(summary(fitb))
     expect_s3_class(plot(fitb),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -69,6 +71,7 @@ test_that("Test Wilcoxon signed rank analysis",{
       wilcoxon_test_b(test_data_big$x - test_data_big$y)
   )
   expect_no_error(fitc)
+  expect_no_error(summary(fitc))
   expect_s3_class(plot(fitc),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -121,6 +124,7 @@ test_that("Test Wilcoxon rank sum analysis",{
         wilcoxon_test_b(x,y)
     )
     expect_no_error(fita)
+    expect_no_error(summary(fita))
     expect_s3_class(plot(fita),
                     c("patchwork","ggplot2::ggplot","ggplot",
                       "ggplot2::gg","S7_object","gg"))
@@ -165,6 +169,7 @@ test_that("Test Wilcoxon rank sum analysis",{
       wilcoxon_test_b(x,y)
   )
   expect_no_error(fitb)
+  expect_no_error(summary(fitb))
   expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))

@@ -33,6 +33,11 @@ test_that("Test single population semi-parametric survival curve fitting",{
     fita
   )
   
+  # Check summary
+  expect_no_error(
+    summary(fita)
+  )
+  
   # Check plotting
   expect_no_error(
     survplot <- 
@@ -77,6 +82,11 @@ test_that("Test multiple populations via semi-parametric survival curve fitting"
   # Check print
   expect_no_error(
     fita
+  )
+  
+  # Check summary
+  expect_no_error(
+    summary(fita)
   )
   
   # Check plotting

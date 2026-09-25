@@ -9,7 +9,10 @@ test_that("Testing Kendall's tau analysis",{
   
   # Check input
   expect_no_error(
-    cor_test_b(x,y)
+    fit <- cor_test_b(x,y)
+  )
+  expect_no_error(
+    summary(fit)
   )
   expect_no_error(
     cor_test_b(~ asdf + qwer,

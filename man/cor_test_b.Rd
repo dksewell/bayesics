@@ -56,9 +56,10 @@ interval.}
 
 \item{plot}{logical. Should a plot be shown?}
 
-\item{formula}{ADD description!}
+\item{formula}{A formula of the form \eqn{~ u + v}, where each of \code{u}
+and \code{v} are numeric variables giving the data values for one sample.}
 
-\item{data}{ADD description!}
+\item{data}{A data.frame containing the variables in \code{formula}.}
 }
 \value{
 An object of class \code{\link{b_procedure-class}}.

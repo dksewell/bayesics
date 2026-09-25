@@ -6,6 +6,7 @@ test_that("Simple case-control analysis", {
     fita <- case_control_b(matrix(c(8,47,1,26),2,2))
   )
   expect_no_error(fita)
+  expect_no_error(summary(fita))
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -15,6 +16,7 @@ test_that("Simple case-control analysis", {
                            c(1,26))
   )
   expect_no_error(fitb)
+  expect_no_error(summary(fitb))
   expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -23,6 +25,7 @@ test_that("Simple case-control analysis", {
     fitc <- case_control_b(x = matrix(c(8,47,1,26),2,2))
   )
   expect_no_error(fitc)
+  expect_no_error(summary(fitc))
   expect_s3_class(plot(fitc),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -32,6 +35,7 @@ test_that("Simple case-control analysis", {
     fitd <- case_control_b(x = 5 + matrix(c(8,47,1,26),2,2))
   )
   expect_no_error(fitd)
+  expect_no_error(summary(fitd))
   expect_s3_class(plot(fitd),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -42,6 +46,7 @@ test_that("Simple case-control analysis", {
                            ROPE = 1.05)
   )
   expect_no_error(fite)
+  expect_no_error(summary(fite))
   expect_s3_class(plot(fite),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -51,6 +56,7 @@ test_that("Simple case-control analysis", {
                            ROPE = 1.05)
   )
   expect_no_error(fitf)
+  expect_no_error(summary(fitf))
   expect_s3_class(plot(fitf),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -61,6 +67,7 @@ test_that("Simple case-control analysis", {
                            ROPE = 1.05)
   )
   expect_no_error(fitg)
+  expect_no_error(summary(fitg))
   expect_s3_class(plot(fitg),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -71,6 +78,7 @@ test_that("Simple case-control analysis", {
                            prior_mean = 10)
   )
   expect_no_error(fith)
+  expect_no_error(summary(fith))
   expect_s3_class(plot(fith),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -81,6 +89,7 @@ test_that("Simple case-control analysis", {
                            prior_sd = 0.01)
   )
   expect_no_error(fiti)
+  expect_no_error(summary(fiti))
   expect_s3_class(plot(fiti),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))

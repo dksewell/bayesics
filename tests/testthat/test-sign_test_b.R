@@ -7,6 +7,7 @@ test_that("Test sign_test_b",{
       sign_test_b(x = rnorm(50))
   )
   expect_no_error(fita)
+  expect_no_error(summary(fita))
   expect_s3_class(plot(fita),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -17,6 +18,7 @@ test_that("Test sign_test_b",{
                   y = rnorm(50,0))
   )
   expect_no_error(fitb)
+  expect_no_error(summary(fitb))
   expect_s3_class(plot(fitb),
                   c("patchwork","ggplot2::ggplot","ggplot",
                     "ggplot2::gg","S7_object","gg"))
@@ -32,18 +34,21 @@ test_that("Test sign_test_b",{
                   y = y,
                   prior = "uniform")
   )
+  expect_no_error(summary(fitb))
   expect_no_error(
     fitc <-
       sign_test_b(x = x,
                   y = y,
                   prior_shapes = c(1,1))
   )
+  expect_no_error(summary(fitc))
   expect_no_error(
     fitd <-
       sign_test_b(x = x,
                   y = y,
                   prior_shapes = c(2,2))
   )
+  expect_no_error(summary(fitd))
   expect_equal(fitb$results,
                fitc$results)
   expect_true(!isTRUE(all.equal(fitb$results,
@@ -80,6 +85,7 @@ test_that("Test sign_test_b",{
                   y = y,
                   p0 = 0.7)
   )
+  expect_no_error(summary(fith))
   expect_lt(fite$pdir$pdir,
             fith$pdir$pdir)
   expect_error(
