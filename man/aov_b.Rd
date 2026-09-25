@@ -70,10 +70,11 @@ than 1GB of memory, compute_bayes_factor will automatically be set to
 FALSE.  This setting can be overridden by setting \code{compute_bayes_factor="force"}.}
 }
 \value{
-Object of class \code{aov_b} and \code{\link[=lm_b-class]{lm_b}}.
+Object of class \code{aov_b} and \code{\link[lm_b-class]{lm_b}}.
 }
 \description{
-Analysis of Variance Using Bayesian Methods
+Analysis of Variance using Bayesian methods, including both
+proper and improper priors.
 }
 \details{
 \strong{MODEL:}

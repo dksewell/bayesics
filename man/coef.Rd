@@ -19,7 +19,8 @@
 vector of coefficients
 }
 \description{
-Coefficient Extraction for \code{bayesics} Objects
+Extract the regression coefficients for \code{lm_b} and \code{aov_b} and
+return them as a vector.
 }
 \examples{
 \donttest{

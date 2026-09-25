@@ -2,7 +2,12 @@
 #' 
 #' @title Plot Credible and Prediction Bands
 #' 
-#' @param x object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}
+#' @description
+#' Plot credible and prediction bands for \code{aov_b} and \code{lm_b}, and 
+#' credible bands for \code{np_glm_b}.  
+#' 
+#' 
+#' @param x object of class \code{aov_b} and \code{lm_b}, or \code{np_glm_b}
 #' @param type character. Select "cred band", and/or "pred band".  
 #'  NOTE: the credible and prediction bands only work for numeric 
 #'  variables.

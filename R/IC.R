@@ -1,11 +1,13 @@
 #' @name IC
-#' @aliases AIC
-#' @aliases BIC
 #' @aliases DIC
 #' @aliases WAIC
 #' 
-#' @title Compute AIC, BIC, DIC, or WAIC for \code{aov_b} or \code{lm_b} Objects.  
-#' (Lower is Better.)  
+#' @title Compute DIC or WAIC
+#' 
+#' @description
+#' Compute either Deviance Information Criterion (DIC) or Watanabe–Akaike 
+#' Information Criterion (WAIC) for \code{aov_b} or \code{lm_b} objects.  
+#' (Lower is better.)  
 #' 
 #' @param object \code{aov_b}, \code{lm_b}, or \code{glm_b} object
 #' @param seed integer.  Always set your seed!!!

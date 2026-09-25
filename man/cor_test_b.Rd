@@ -4,7 +4,7 @@
 \alias{cor_test_b}
 \alias{cor_test_b.default}
 \alias{cor_test_b.formula}
-\title{Test for Association/Correlation Between Paired Samples via Kendall's tau}
+\title{Test for Association/Correlation Between Paired Samples}
 \usage{
 cor_test_b(x, ...)
 
@@ -65,7 +65,8 @@ and \code{v} are numeric variables giving the data values for one sample.}
 An object of class \code{\link{b_procedure-class}}.
 }
 \description{
-Test for Association/Correlation Between Paired Samples via Kendall's tau
+Non-parametric test for association/correlation between paired samples via
+Kendall's tau, comparing the number of concordant and discordant pairs.
 }
 \details{
 cor_test_b relies on the robust Kendall's tau, defined to be

@@ -102,7 +102,10 @@ of survival curves.  Ignored if \code{x} is not a \code{survfit_b} object.}
 If \code{return_as_list=TRUE}, a list of requested ggplots.
 }
 \description{
-Plots \code{bayesics} Objects.
+Create diagnostic plots, regression curve plots, and
+survival curves for \code{lm_b}, \code{mediate_b}, and
+\code{survfit_b}, and other procedure-specific plots for
+\code{b_procedure} objects.
 }
 \examples{
 \donttest{

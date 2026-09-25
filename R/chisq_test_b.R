@@ -3,6 +3,12 @@
 #' 
 #' @title Test of Independence for 2-way Contingency Tables
 #' 
+#' @description
+#' Test independence assumption for 2-way contingency tables, where the 
+#' data have been collected according to a multinomial, fixed row marginals, 
+#' or fixed column marginals design.
+#' 
+#' 
 #' @param x Either a table or a matrix of counts
 #' @param sampling_design Either "multinomial", "fixed rows", or "fixed columns"
 #' @param prior Either "jeffreys" (Dirichlet(1/2)) or "uniform" (Dirichlet(1)).  

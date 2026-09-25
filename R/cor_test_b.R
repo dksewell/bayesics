@@ -1,7 +1,13 @@
-#' Test for Association/Correlation Between Paired Samples via Kendall's tau
 #' @name cor_test_b
 #' @rdname cor_test_b
 #' @export
+#' 
+#' @title Test for Association/Correlation Between Paired Samples
+#' 
+#' @description
+#'  Non-parametric test for association/correlation between paired samples via 
+#'  Kendall's tau, comparing the number of concordant and discordant pairs.
+#' 
 
 #' @export
 cor_test_b = function(x, ...){

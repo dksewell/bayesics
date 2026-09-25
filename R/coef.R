@@ -2,6 +2,11 @@
 #' 
 #' @title Coefficient Extraction for \code{bayesics} Objects
 #' 
+#' @description
+#' Extract the regression coefficients for \code{lm_b} and \code{aov_b} and 
+#' return them as a vector.
+#' 
+#' 
 #' @param object bayesics object
 #' @param ... optional arguments.
 #' 

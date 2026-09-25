@@ -54,7 +54,7 @@ and small \code{mc_error}.}
 Object of class \code{lm_b_bma} and \code{\link[=lm_b-class]{lm_b}}.
 }
 \description{
-Estimates and CIs from BMA
+Estimates, CIs, and more from Bayesian Model Averaging.
 }
 \details{
 \code{bma_inference} leverages the \code{bms} function from its

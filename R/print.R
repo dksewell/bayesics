@@ -2,6 +2,10 @@
 #' 
 #' @title Print \code{bayesics} Objects.
 #' 
+#' @description Print \code{bayesics} objects, including objects 
+#' of class \code{aov_b}, \code{lm_b}, \code{mediate_b}, 
+#' \code{survfit_b}, and \code{b_procedure}.
+#' 
 #' @param x an object used to select a method.
 #' @param ... optional arguments passed to `tibble::print.tbl_df`
 #' 

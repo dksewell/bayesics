@@ -1,6 +1,12 @@
 #' @name summary
 #' 
-#' @title Summary Functions for bayesics Objects
+#' @title Summarizing \code{bayesics} Fits
+#' 
+#' @description
+#' \code{summary} method for objects of class \code{lm_b}, 
+#' \code{aov_b}, \code{mediate_b}, \code{b_procedure}, and 
+#' \code{survfit_b}.
+#' 
 #' 
 #' @param object \code{bayesics} object
 #' @param CI_level Posterior probability covered by credible interval.  

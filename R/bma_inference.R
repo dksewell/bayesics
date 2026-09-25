@@ -1,6 +1,6 @@
 #' Bayesian Model Averaging 
 #' 
-#' Estimates and CIs from BMA
+#' Estimates, CIs, and more from Bayesian Model Averaging.
 #' 
 #' \code{bma_inference} leverages the \code{bms} function from its 
 #' eponymous R package, and then uses \code{lm_b} to obtain inference 

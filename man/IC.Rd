@@ -3,15 +3,12 @@
 \name{IC}
 \alias{IC}
 \alias{DIC}
-\alias{AIC}
-\alias{BIC}
 \alias{WAIC}
 \alias{DIC.lm_b}
 \alias{DIC.aov_b}
 \alias{WAIC.lm_b}
 \alias{WAIC.aov_b}
-\title{Compute AIC, BIC, DIC, or WAIC for \code{aov_b} or \code{lm_b} Objects.
-(Lower is Better.)}
+\title{Compute DIC or WAIC}
 \usage{
 DIC(object, ...)
 
@@ -45,8 +42,9 @@ samples obtained.}
 Numeric (or in the case of DIC, a numeric vector)
 }
 \description{
-Compute AIC, BIC, DIC, or WAIC for \code{aov_b} or \code{lm_b} Objects.
-(Lower is Better.)
+Compute either Deviance Information Criterion (DIC) or Watanabe–Akaike
+Information Criterion (WAIC) for \code{aov_b} or \code{lm_b} objects.
+(Lower is better.)
 }
 \details{
 AIC and BIC are constructed using the posterior mean. DIC

@@ -1,4 +1,9 @@
-#' Find Parameters for Inverse Gamma Prior Based on Prior Mean and One Quantile
+#' @title Find Parameters for Inverse Gamma Prior
+#' @description
+#' Find parameters for inverse gamma prior based on prior mean and one 
+#' quantile, or, if in the context of linear regression, based on the 
+#' a priori lower and upper bounds on the coefficient of determination
+#' 
 #' 
 #' @details
 #' Either provide the lower and upper quantiles that contain \code{probability} 

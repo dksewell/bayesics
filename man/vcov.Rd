@@ -20,7 +20,10 @@ that for \code{lm_b} and \code{aov_b} objects, this function already takes into 
 uncertainty around the residual variance.
 }
 \description{
-Calculate Posterior Variance-Covariance Matrix for a Bayesian Fitted Model Object
+Returns the variance-covariance matrix of the parameters of a fitted
+model object.  Note that if the family is \code{negbinom}, then the
+final row/column of this matrix will correspond to the log dispersion
+parameter.
 }
 \examples{
 \donttest{

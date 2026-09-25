@@ -3,7 +3,7 @@
 \name{predict.lm_b}
 \alias{predict.lm_b}
 \alias{predict.aov_b}
-\title{Predict Method for \code{lm_b} Model Fits}
+\title{Predict Method for \code{bayesics} Model Fits}
 \usage{
 \method{predict}{lm_b}(
   object,
@@ -19,7 +19,8 @@
 \method{predict}{aov_b}(object, CI_level = 0.95, PI_level = 0.95, ...)
 }
 \arguments{
-\item{object}{Object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}}
+\item{object}{Object of class \code{aov_b}, \code{lm_b},
+\code{np_glm_b}, or \code{lm_b_bma}}
 
 \item{newdata}{An optional data.frame in which to look for variables with which
 to predict.}
@@ -44,7 +45,9 @@ tibble with estimate (posterior mean), prediction intervals, and credible interv
 for the mean.
 }
 \description{
-Predict Method for \code{lm_b} Model Fits
+Get prediction point and interval estimates for objects of class
+\code{aov_b}, \code{lm_b}, \code{np_glm_b}, or
+\code{lm_b_bma}.
 }
 \examples{
 \donttest{

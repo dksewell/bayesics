@@ -1,4 +1,7 @@
-#' Find Parameters for Beta Prior Based on Prior Mean and One Quantile
+#' @title Find Parameters for Beta Prior
+#' @description
+#' Find parameters for Beta prior based on prior mean and one quantile.
+#' 
 #' 
 #' @param mean numeric between 0 and 1 giving the prior mean
 #' @param quantile numeric between 0 and 1 giving the quantile lying at left_tail_prob

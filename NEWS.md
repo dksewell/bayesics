@@ -3,6 +3,7 @@
 * Added `summary.b_procedure`.  Slightly simplified `print.b_procedure`.
 * Fixed missing documentation for formula in `cor_test_b.formula`.
 * Added `summary.survfit_b`.  Simplified `print.survfit_b`.
+* Ensured the description provides additional information from the title in all R functions and defined classes.
 
 
 # bayesics 3.0.3

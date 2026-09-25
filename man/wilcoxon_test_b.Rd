@@ -57,7 +57,11 @@ beta distribution that will act as the prior on the population proportions.}
 An object of class \code{\link{b_procedure-class}}.
 }
 \description{
-Bayesian Wilcoxon Rank Sum (aka Mann-Whitney U) and Signed Rank Analyses
+Non-parametric tests comparing one or two samples via an implementation
+of the Bayesian Wilcoxon rank sum (aka Mann-Whitney U) and
+signed rank analyses.  The analyses are being performed by
+\link[DFBA]{dfba_wilcoxon} and \link[DFBA]{dfba_mann_whitney}, with
+additional posterior quantities of interest provided here.
 }
 \details{
 \strong{Bayesian Wilcoxon signed rank analysis}

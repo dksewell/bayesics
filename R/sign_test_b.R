@@ -1,6 +1,6 @@
 #' Paired Sign Test
 #' 
-#' Sign test for paired data.
+#' Non-parametric sign test for paired data.
 #' 
 #' @details
 #' The sign test looks at \eqn{z_i:= 1_{[x_i > y_i]}} rather than trying to model the 

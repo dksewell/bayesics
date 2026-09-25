@@ -1,6 +1,6 @@
 #' \code{lm_b} Objects
 #'
-#' Objects of Class \code{lm_b} 
+#' Objects of class \code{lm_b} 
 #'
 #' @details
 #' An object of class \code{lm_b} contains at least the following:

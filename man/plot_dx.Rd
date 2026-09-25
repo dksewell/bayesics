@@ -53,5 +53,8 @@ rather than a single plot produced by the patchwork package.}
 \item{...}{arguments passed on to plot_dx}
 }
 \description{
-Diagnostic Plots for Bayesian Regression Objects
+For regression objects based on a Gaussian distribution, qqplots and
+residuals-vs-fitted plots are provided.  For all regression objects,
+a scatterplot of Bayesian p-values is provided (one hopes it will be
+cleanly bisected by the \eqn{y=x} line).
 }

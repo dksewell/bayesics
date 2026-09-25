@@ -2,6 +2,11 @@
 #' 
 #' @title Bayesian P-values for Regression Models
 #' 
+#' @description
+#' Model diagnostics via Bayesian p-values for \code{lm_b} and \code{aov_b} 
+#' objects
+#' 
+#' 
 #' @param object object of class \code{lm_b} or \code{aov_b}
 #' @param statistic Statistic used to compute Bayesian p-value. 
 #' If missing, the default statistic will either be the Shapiro-Wilk 

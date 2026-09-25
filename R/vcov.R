@@ -2,6 +2,13 @@
 #' 
 #' @title Calculate Posterior Variance-Covariance Matrix for a Bayesian Fitted Model Object
 #' 
+#' @description
+#' Returns the variance-covariance matrix of the parameters of a fitted 
+#' model object.  Note that if the family is \code{negbinom}, then the  
+#' final row/column of this matrix will correspond to the log dispersion 
+#' parameter.
+#' 
+#' 
 #' @param object a fitted model object from \code{bayesics}.
 #' @param ... Passed to methods.
 #' 

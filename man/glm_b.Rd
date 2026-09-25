@@ -144,9 +144,10 @@ covariates, this is simply \eqn{|\beta| < \log(1.125)}.}
 }
 }
 \description{
-glm_b is used to fit linear models.  It can be used to carry out
-regression for gaussian, binomial, and poisson data.  Note that if
-the family is gaussian, this is just a wrapper for \code{lm_b}.
+glm_b is used to fit generalized linear models.  It can be used to
+carry out regression for gaussian, binomial, poisson, and negative
+binomial data.  Note that if the family is gaussian, this is just
+a wrapper for \code{lm_b}.
 }
 \examples{
 \donttest{

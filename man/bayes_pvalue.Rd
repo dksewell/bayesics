@@ -45,7 +45,8 @@ See details.
 }
 }
 \description{
-Bayesian P-values for Regression Models
+Model diagnostics via Bayesian p-values for \code{lm_b} and \code{aov_b}
+objects
 }
 \details{
 \strong{Overview:}

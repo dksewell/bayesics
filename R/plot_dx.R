@@ -2,6 +2,13 @@
 #' 
 #' @title Diagnostic Plots for Bayesian Regression Objects
 #' 
+#' @description
+#' For regression objects based on a Gaussian distribution, qqplots and 
+#' residuals-vs-fitted plots are provided.  For all regression objects, 
+#' a scatterplot of Bayesian p-values is provided (one hopes it will be 
+#' cleanly bisected by the \eqn{y=x} line).
+#' 
+#' 
 #' @param x object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, or
 #' \code{mediate_b}
 #' @param statistic, Statistic used to compute Bayesian p-value.

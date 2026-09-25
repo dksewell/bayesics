@@ -2,7 +2,6 @@
 % Please edit documentation in R/prop_test_b.R
 \name{prop_test_b}
 \alias{prop_test_b}
-\alias{binom_test_b}
 \title{Binomial Procedures}
 \usage{
 prop_test_b(
@@ -66,7 +65,6 @@ An object of class \code{\link{b_procedure-class}}.
 \description{
 \code{prop_test_b} either makes inference on a single population
 proportion, or else compares two population proportions.
-\code{binom_test_b} is the same as \code{prop_test_b}.
 }
 \details{
 The likelihood is given by

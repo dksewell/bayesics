@@ -4,7 +4,7 @@
 \alias{get_posterior_draws}
 \alias{get_posterior_draws.lm_b}
 \alias{get_posterior_draws.aov_b}
-\title{Get Posterior Samples from \code{lm_b} Object}
+\title{Get Posterior Samples}
 \usage{
 get_posterior_draws(object, n_draws, seed, ...)
 
@@ -13,7 +13,7 @@ get_posterior_draws(object, n_draws, seed, ...)
 \method{get_posterior_draws}{aov_b}(object, n_draws = 10000, seed = 1, ...)
 }
 \arguments{
-\item{object}{Object of class lm_b}
+\item{object}{Object of class \code{lm_b} or \code{aov_b}}
 
 \item{n_draws}{integer.  Number of posterior draws to obtain.}
 
@@ -25,7 +25,7 @@ get_posterior_draws(object, n_draws, seed, ...)
 matrix of posterior draws
 }
 \description{
-Get Posterior Samples from \code{lm_b} Object
+Obtain a matrix of posterior samples for \code{lm_b} or \code{aov_b} objects
 }
 \examples{
 \donttest{

@@ -1,10 +1,11 @@
 #' @name bayes_factors
 #'
 #' 
-#' @title Bayes Factors for \code{lm_b}, \code{glm_b}, and \code{survfit_b} Objects
+#' @title Bayes Factors
 #' 
 #' @description
-#' Bayes factors for Bayesian regression objects using the Savage-Dickey ratio
+#' Bayes factors for for \code{lm_b}, \code{glm_b}, and \code{survfit_b} 
+#' objects
 #' 
 #' 
 #' @details

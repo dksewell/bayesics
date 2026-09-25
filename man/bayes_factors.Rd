@@ -5,7 +5,7 @@
 \alias{bayes_factors.lm_b}
 \alias{bayes_factors.glm_b}
 \alias{bayes_factors.survfit_b}
-\title{Bayes Factors for \code{lm_b}, \code{glm_b}, and \code{survfit_b} Objects}
+\title{Bayes Factors}
 \usage{
 bayes_factors(object, ...)
 
@@ -31,7 +31,8 @@ other classes.}
 A tibble with Bayes factors and interpretations.
 }
 \description{
-Bayes factors for Bayesian regression objects using the Savage-Dickey ratio
+Bayes factors for for \code{lm_b}, \code{glm_b}, and \code{survfit_b}
+objects
 }
 \details{
 Bayes factors are given in terms of favoring the two-tailed alternative hypothesis

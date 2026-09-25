@@ -2,6 +2,12 @@
 #' 
 #' @title Plots \code{bayesics} Objects.
 #' 
+#' @description
+#'  Create diagnostic plots, regression curve plots, and 
+#' survival curves for \code{lm_b}, \code{mediate_b}, and 
+#' \code{survfit_b}, and other procedure-specific plots for
+#' \code{b_procedure} objects.
+#' 
 #' @param x A \code{bayesics} object
 #' @param type character. Select any of "diagnostics", 
 #' "cred band", and/or "pred band".  If plotting a 

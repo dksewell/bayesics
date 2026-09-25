@@ -47,7 +47,7 @@ plot_bands(
 )
 }
 \arguments{
-\item{x}{object of class \code{aov_b}, \code{lm_b}, or \code{glm_b}}
+\item{x}{object of class \code{aov_b} and \code{lm_b}, or \code{np_glm_b}}
 
 \item{type}{character. Select "cred band", and/or "pred band".
 NOTE: the credible and prediction bands only work for numeric
@@ -79,5 +79,6 @@ rather than a single plot produced by the patchwork package.}
 Used to fix other covariates while varying the variable of interest for the plot.}
 }
 \description{
-Plot Credible and Prediction Bands
+Plot credible and prediction bands for \code{aov_b} and \code{lm_b}, and
+credible bands for \code{np_glm_b}.
 }

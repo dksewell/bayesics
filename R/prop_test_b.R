@@ -1,11 +1,9 @@
 #' Binomial Procedures
-#' @aliases binom_test_b
 #' @aliases prop_test_b
 #' 
 #' @description
 #' \code{prop_test_b} either makes inference on a single population 
-#' proportion, or else compares two population proportions.  
-#' \code{binom_test_b} is the same as \code{prop_test_b}.
+#' proportion, or else compares two population proportions.
 #' 
 #' 
 #' @details

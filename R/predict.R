@@ -1,7 +1,13 @@
-#' Predict Method for \code{lm_b} Model Fits
+#' @title Predict Method for \code{bayesics} Model Fits
+#' 
+#' @description
+#' Get prediction point and interval estimates for objects of class 
+#' \code{aov_b}, \code{lm_b}, \code{np_glm_b}, or 
+#' \code{lm_b_bma}.
 #' 
 #' 
-#' @param object Object of class \code{aov_b}, \code{lm_b}, \code{glm_b}, \code{np_glm_b}, or \code{lm_b_bma}
+#' @param object Object of class \code{aov_b}, \code{lm_b}, 
+#' \code{np_glm_b}, or \code{lm_b_bma}
 #' @param newdata An optional data.frame in which to look for variables with which 
 #' to predict. 
 #' @param trials Integer vector giving the number of trials for each 

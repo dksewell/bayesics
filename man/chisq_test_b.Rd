@@ -48,7 +48,9 @@ samples obtained.}
 An object of class \code{\link{b_procedure-class}}.
 }
 \description{
-Test of Independence for 2-way Contingency Tables
+Test independence assumption for 2-way contingency tables, where the
+data have been collected according to a multinomial, fixed row marginals,
+or fixed column marginals design.
 }
 \details{
 For a 2-way contingency table with R rows and C columns, evaluate

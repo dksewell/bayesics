@@ -7,7 +7,7 @@
 \alias{summary.mediate_b}
 \alias{summary.b_procedure}
 \alias{summary.survfit_b}
-\title{Summary Functions for bayesics Objects}
+\title{Summarizing \code{bayesics} Fits}
 \usage{
 \method{summary}{lm_b}(
   object,
@@ -45,7 +45,9 @@ this goes into \code{tibble::print.tbl_df}.}
 tibble with summary values
 }
 \description{
-Summary Functions for bayesics Objects
+\code{summary} method for objects of class \code{lm_b},
+\code{aov_b}, \code{mediate_b}, \code{b_procedure}, and
+\code{survfit_b}.
 }
 \examples{
 \donttest{

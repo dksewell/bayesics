@@ -44,7 +44,7 @@ credible interval for \eqn{p}.}
 An object of class \code{\link{b_procedure-class}}.
 }
 \description{
-Sign test for paired data.
+Non-parametric sign test for paired data.
 }
 \details{
 The sign test looks at \eqn{z_i:= 1_{[x_i > y_i]}} rather than trying to model the

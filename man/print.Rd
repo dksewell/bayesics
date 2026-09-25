@@ -28,7 +28,9 @@
 None
 }
 \description{
-Print \code{bayesics} Objects.
+Print \code{bayesics} objects, including objects
+of class \code{aov_b}, \code{lm_b}, \code{mediate_b},
+\code{survfit_b}, and \code{b_procedure}.
 }
 \examples{
 \donttest{

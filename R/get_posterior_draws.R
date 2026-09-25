@@ -1,8 +1,12 @@
 #' @name get_posterior_draws
 #' 
-#' @title Get Posterior Samples from \code{lm_b} Object
+#' @title Get Posterior Samples
 #' 
-#' @param object Object of class lm_b
+#' @description
+#' Obtain a matrix of posterior samples for \code{lm_b} or \code{aov_b} objects
+#' 
+#' 
+#' @param object Object of class \code{lm_b} or \code{aov_b}
 #' @param n_draws integer.  Number of posterior draws to obtain.
 #' @param seed integer.
 #' @param ... optional arguments.

@@ -1,7 +1,8 @@
 #' Mediation using Bayesian Methods
 #' 
 #' 
-#' Mediation analysis done in the framework of Imai et al. (2010).
+#' Mediation analysis done using the potential outcomes framework 
+#' outlined in Imai et al. (2010).
 #' 
 #' @details
 #' The model is the same as that of Imai et al. (2010):
