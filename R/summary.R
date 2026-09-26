@@ -359,13 +359,15 @@ summary.mediate_b = function(object,
   summ = object$summary
   nr = nrow(summ)
   
-  cat("\n----------\n\nMediation analysis using Bayesian techniques\n")
-  cat("\n----------\n\n")
-  cat("Mediator model:\n")
-  print(object$model_m$formula)
-  cat("\nOutcome model:\n")
-  print(object$model_y$formula)
-  cat("\n----------\n\n")
+  if(print_results){
+    cat("\n----------\n\nMediation analysis using Bayesian techniques\n")
+    cat("\n----------\n\n")
+    cat("Mediator model:\n")
+    print(object$model_m$formula)
+    cat("\nOutcome model:\n")
+    print(object$model_y$formula)
+    cat("\n----------\n\n")
+  }
   
   # Simple case
   if(nr == 4){
@@ -427,8 +429,10 @@ summary.mediate_b = function(object,
       )
   }
   
-  if(print_results) print(summ, ...)
-  cat("\n----------\n")
+  if(print_results){ 
+    print(summ, ...)
+    cat("\n----------\n")
+  }
   invisible(summ)
 }
 
@@ -770,7 +774,7 @@ summary.survfit_b = function(object, ...){
       }
       summary_object = 
         summary_object |> 
-        dplyr::relocate(Group)
+        dplyr::relocate(.data$Group)
       
       cat("\n----------\n\n")
       

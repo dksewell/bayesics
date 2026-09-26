@@ -72,7 +72,7 @@
 #'  than 1GB of memory, compute_bayes_factor will automatically be set to 
 #'  FALSE.  This setting can be overridden by setting \code{compute_bayes_factor="force"}.
 #' 
-#' @returns Object of class \code{aov_b} and \code{\link[lm_b-class]{lm_b}}.
+#' @returns Object of class \code{aov_b} and \code{\link[=lm_b-class]{lm_b}}.
 #' 
 #' @references 
 #' Charles R. Doss, James M. Flegal, Galin L. Jones, Ronald C. Neath "Markov chain Monte Carlo estimation of quantiles," Electronic Journal of Statistics, Electron. J. Statist. 8(2), 2448-2478, (2014)
