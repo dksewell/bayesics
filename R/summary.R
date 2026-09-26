@@ -760,16 +760,15 @@ summary.survfit_b = function(object, ...){
       
       print(temp, ...)
       
+      temp$Group = g
+      
       if(g == object$group_names[1]){
-        summary_object = 
-          temp |> 
-          dplyr::mutate(Group = g)
+        summary_object = temp
       }else{
         summary_object = 
           bind_rows(
             summary_object,
-            temp |> 
-              dplyr::mutate(Group = g)
+            temp
           )
       }
       summary_object = 
