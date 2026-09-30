@@ -1,7 +1,8 @@
 # bayesics 3.1.1
 
-* Added ... to `summary.lm_b`
+* Fixed bug in `summary` functions (weren't passing ... through)
 * Added `print_results` argument to `summary.survfit_b`
+* Fixed misc. documentation inconsistencies
 
 
 # bayesics 3.1.0
