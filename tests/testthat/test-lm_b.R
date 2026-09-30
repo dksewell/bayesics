@@ -53,6 +53,10 @@ test_that("Test lm_b with conjugate prior",{
     s <- 
       summary(fita)
   )
+  expect_no_error(
+    summary(fita,
+            width = Inf)
+  )
   expect_silent(
     summary(fita, print_results=FALSE)
   )

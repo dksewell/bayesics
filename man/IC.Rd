@@ -47,8 +47,7 @@ Information Criterion (WAIC) for \code{aov_b} or \code{lm_b} objects.
 (Lower is better.)
 }
 \details{
-AIC and BIC are constructed using the posterior mean. DIC
-and WAIC are computed via independent posterior sampling,
+DIC and WAIC are computed via independent posterior sampling,
 ensuring that the final computed numbers is within
 \code{mc_error} of the actual DIC/WAIC with high probability.
 }

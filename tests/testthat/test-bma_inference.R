@@ -40,6 +40,13 @@ test_that("Bayesian model averaging", {
     s <- 
       summary(fita)
   )
+  expect_no_error(
+    summary(fita,width=Inf)
+  )
+  expect_silent(
+    summary(fita, print_results=FALSE)
+  )
+  
   ## Check output format
   expect_s3_class(s,c("tbl_df", "tbl", "data.frame"))
   expect_named(s,

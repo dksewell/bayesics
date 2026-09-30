@@ -22,7 +22,7 @@
 \arguments{
 \item{x}{an object used to select a method.}
 
-\item{...}{optional arguments passed to \code{tibble::print.tbl_df}}
+\item{...}{optional arguments}
 }
 \value{
 None

@@ -37,6 +37,9 @@ test_that("Proper prior and heteroscedastic model works", {
     s <- 
       summary(fita)
   )
+  expect_no_error(
+    summary(fita,width=Inf)
+  )
   expect_silent(
     summary(fita,print_results=FALSE)
   )

@@ -1,3 +1,9 @@
+# bayesics 3.1.1
+
+* Added ... to `summary.lm_b`
+* Added `print_results` argument to `summary.survfit_b`
+
+
 # bayesics 3.1.0
 
 * Added `summary.b_procedure` and `summary.survfit_b`.

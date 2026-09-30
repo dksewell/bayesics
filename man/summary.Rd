@@ -23,7 +23,7 @@
 
 \method{summary}{b_procedure}(object, ...)
 
-\method{summary}{survfit_b}(object, ...)
+\method{summary}{survfit_b}(object, print_results = TRUE, ...)
 }
 \arguments{
 \item{object}{\code{bayesics} object}
@@ -38,8 +38,7 @@ then the results will be exponentiated.}
 
 \item{print_results}{logical}
 
-\item{...}{optional arguments.  for \code{print.survfit_b},
-this goes into \code{tibble::print.tbl_df}.}
+\item{...}{optional arguments for \code{tibble::print.tbl_df}.}
 }
 \value{
 tibble with summary values

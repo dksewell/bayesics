@@ -37,6 +37,13 @@ test_that("Test single population semi-parametric survival curve fitting",{
   expect_no_error(
     summary(fita)
   )
+  expect_no_error(
+    summary(fita,width=Inf,n=5)
+  )
+  expect_silent(
+    summary(fita,print_results=FALSE)
+  )
+  
   
   # Check plotting
   expect_no_error(

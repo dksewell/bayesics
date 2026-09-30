@@ -7,7 +7,7 @@
 #' \code{survfit_b}, and \code{b_procedure}.
 #' 
 #' @param x an object used to select a method.
-#' @param ... optional arguments passed to `tibble::print.tbl_df`
+#' @param ... optional arguments
 #' 
 #' @returns None
 #' 
@@ -117,7 +117,7 @@ print.survfit_b = function(x, ...){
   
     cat(paste0("\nNumber of intervals: ",
                nrow(x$intervals),
-               "\n\nSurvival curve fitted up to: ",
+               "\nSurvival curve fitted up to: ",
                max(x$intervals),
                "\n"))
     
@@ -125,7 +125,7 @@ print.survfit_b = function(x, ...){
     
     cat(paste0("\nNumber of intervals: ",
                nrow(x[[1]]$intervals),
-               "\n\nSurvival curve fitted up to: ",
+               "\nSurvival curve fitted up to: ",
                max(x[[1]]$intervals),
                "\n"))
     

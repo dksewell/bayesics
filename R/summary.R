@@ -16,8 +16,7 @@
 #' \code{negbinom()}, and if \code{interpretable_scale = TRUE} 
 #' then the results will be exponentiated.
 #' @param print_results logical
-#' @param ... optional arguments.  for \code{print.survfit_b}, 
-#' this goes into `tibble::print.tbl_df`.
+#' @param ... optional arguments for `tibble::print.tbl_df`.
 #' 
 #' @returns tibble with summary values
 #' 
@@ -210,7 +209,7 @@ summary.lm_b = function(object,
   }#End: add in s^2
   
   # Print results
-  if(print_results) print(summ)
+  if(print_results) print(summ,...)
   
   # Print CI level
   if(print_results){
@@ -681,17 +680,23 @@ summary.b_procedure = function(object,
 #' @rdname summary
 #' @method summary survfit_b
 #' @export
-summary.survfit_b = function(object, ...){
-  cat("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques\n")
-  cat("\n----------\n\n")
+summary.survfit_b = function(object,
+                             print_results = TRUE,
+                             ...){
+  if(print_results){
+    cat("\n----------\n\nSemi-parametric survival curve fitting using Bayesian techniques\n")
+    cat("\n----------\n\n")
+  }
   
   if(object$single_group_analysis){
     
-    cat(paste0("Number of intervals: ",
-               nrow(object$intervals),
-               "\nSurvival curve fitted up to: ",
-               max(object$intervals),
-               "\n\n"))
+    if(print_results){
+      cat(paste0("Number of intervals: ",
+                 nrow(object$intervals),
+                 "\nSurvival curve fitted up to: ",
+                 max(object$intervals),
+                 "\n\n"))
+    }
     
     summary_object = 
       tibble::tibble(Interval = 
@@ -713,25 +718,29 @@ summary.survfit_b = function(object, ...){
                               object$posterior_parameters[,1],
                               object$posterior_parameters[,2]),
                      Shape = 
-                       format(signif(object$posterior_parameters[,1], 3)),
+                       object$posterior_parameters[,1],
                      Rate = 
-                       format(signif(object$posterior_parameters[,2], 3))
+                       object$posterior_parameters[,2]
       )
     
-    print(summary_object, ...)
+    if(print_results) print(summary_object, ...)
     
   }else{
     
-    cat(paste0("\nNumber of intervals: ",
-               nrow(object[[1]]$intervals),
-               "\n\nSurvival curve fitted up to: ",
-               max(object[[1]]$intervals),
-               "\n\n"))
+    if(print_results){
+      cat(paste0("\nNumber of intervals: ",
+                 nrow(object[[1]]$intervals),
+                 "\n\nSurvival curve fitted up to: ",
+                 max(object[[1]]$intervals),
+                 "\n\n"))
+    }
     
     
     for(g in object$group_names){
-      cat(g)
-      cat("\n\n")
+      if(print_results){
+        cat(g)
+        cat("\n\n")
+      }
       
       temp = 
         tibble::tibble(Interval = 
@@ -753,12 +762,12 @@ summary.survfit_b = function(object, ...){
                                 object[[g]]$posterior_parameters[,1],
                                 object[[g]]$posterior_parameters[,2]),
                        Shape = 
-                         format(signif(object[[g]]$posterior_parameters[,1], 3)),
+                         object[[g]]$posterior_parameters[,1],
                        Rate = 
-                         format(signif(object[[g]]$posterior_parameters[,2], 3))
+                         object[[g]]$posterior_parameters[,2]
         )
       
-      print(temp, ...)
+      if(print_results) print(temp, ...)
       
       temp$Group = g
       
@@ -775,13 +784,13 @@ summary.survfit_b = function(object, ...){
         summary_object |> 
         dplyr::relocate(.data$Group)
       
-      cat("\n----------\n\n")
+      if(print_results) cat("\n----------\n\n")
       
     }
     
   }
   
-  cat("Note: The time-to-event data follow a piecewise exponential model.  Each interval follows an exponential distribution, whose rate has a posterior of Gamma(<Shape>,<Rate>).\n")
+  if(print_results) cat("Note: The time-to-event data follow a piecewise exponential model.  Each interval follows an exponential distribution, whose rate has a posterior of Gamma(<Shape>,<Rate>).\n")
   
   invisible(summary_object)
 }
