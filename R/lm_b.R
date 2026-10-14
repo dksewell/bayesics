@@ -370,7 +370,11 @@ lm_b = function(formula,
     V_tilde_inv = qr.solve(V_tilde)
     mu_tilde = V_tilde_inv %*% (V%*%mu + crossprod(X,y))
     a_tilde = a + N
-    b_tilde = b + crossprod(y) - crossprod(mu_tilde, V_tilde %*% mu_tilde)
+    b_tilde = 
+      b + 
+      crossprod(y) + 
+      crossprod(mu, V %*% mu) - 
+      crossprod(mu_tilde, V_tilde %*% mu_tilde)
     b_tilde = drop(b_tilde)
     
     results = 
