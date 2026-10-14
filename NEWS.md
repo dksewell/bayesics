@@ -1,3 +1,8 @@
+# bayesics 3.1.2
+
+* Fixed bug in `lm_b` 
+
+
 # bayesics 3.1.1
 
 * Fixed bug in `summary` functions (weren't passing ... through)
